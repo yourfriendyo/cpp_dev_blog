@@ -1,0 +1,1192 @@
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>18. 重建二叉树 - AcWing题库</title>
+    
+
+<meta charset="UTF-8">
+<meta name="keywords" content="剑指Offer,亚马逊面试题，重建二叉树，AcWing题库"/>
+<meta name="description" content="高质量的算法题库"/>
+<meta name="baidu-site-verification" content="UW1SBiMHO7" />
+<meta name="google-site-verification" content="YTgbOq_0TDShJS6KTcUYCQoAAZTm308SJ7ibsafBD_Y" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" type="image/png" href="https://cdn.acwing.com/static/web/img/favicon.ico"/>
+<link rel="stylesheet" href="https://cdn.acwing.com/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css">
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/signform.css">
+<link rel="stylesheet" href="https://cdn.acwing.com/static/jquery-ui-dist/jquery-ui.min.css">
+
+    <link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/success_modal.css" />
+
+
+    
+        <link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/wss/chat/chat_list-0.0.1.css">
+    
+
+<!--link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/pace.css"-->
+<!--script src="https://cdn.acwing.com/static/web/js/pace.js"></script-->
+<script>
+    let onbeforeunload_functions = [];
+</script>
+
+
+<style>
+    /* latin */
+    @font-face {
+      font-family: 'Satisfy';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Satisfy Regular'), local('Satisfy-Regular'), url(https://cdn.acwing.com/static/web/fonts/rP2Hp2yn6lkG50LoCZOIHQ.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+    /* latin-ext */
+    @font-face {
+      font-family: 'Lato';
+      font-style: italic;
+      font-weight: 400;
+      src: local('Lato Italic'), local('Lato-Italic'), url(https://cdn.acwing.com/static/web/fonts/S6u8w4BMUTPHjxsAUi-qJCY.woff2) format('woff2');
+      unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+      font-family: 'Lato';
+      font-style: italic;
+      font-weight: 400;
+      src: local('Lato Italic'), local('Lato-Italic'), url(https://cdn.acwing.com/static/web/fonts/S6u8w4BMUTPHjxsAXC-q.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    /* latin-ext */
+    @font-face {
+      font-family: 'Lato';
+      font-style: italic;
+      font-weight: 700;
+      src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://cdn.acwing.com/static/web/fonts/S6u_w4BMUTPHjxsI5wq_FQft1dw.woff2) format('woff2');
+      unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+      font-family: 'Lato';
+      font-style: italic;
+      font-weight: 700;
+      src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://cdn.acwing.com/static/web/fonts/S6u_w4BMUTPHjxsI5wq_Gwft.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    /* latin-ext */
+    @font-face {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Lato Regular'), local('Lato-Regular'), url(https://cdn.acwing.com/static/web/fonts/S6uyw4BMUTPHjxAwXjeu.woff2) format('woff2');
+      unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Lato Regular'), local('Lato-Regular'), url(https://cdn.acwing.com/static/web/fonts/S6uyw4BMUTPHjx4wXg.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    /* latin-ext */
+    @font-face {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 700;
+      src: local('Lato Bold'), local('Lato-Bold'), url(https://cdn.acwing.com/static/web/fonts/S6u9w4BMUTPHh6UVSwaPGR_p.woff2) format('woff2');
+      unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 700;
+      src: local('Lato Bold'), local('Lato-Bold'), url(https://cdn.acwing.com/static/web/fonts/S6u9w4BMUTPHh6UVSwiPGQ.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+</style>
+<script src="https://cdn.acwing.com/static/jquery/js/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.acwing.com/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.acwing.com/static/web/node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+<script src="https://cdn.acwing.com/static/jquery-ui-dist/jquery-ui.min.js"></script>
+<script src="https://cdn.acwing.com/static/web/node_modules/jquery.cookie/jquery.cookie.js"></script>
+<script>
+    $(document).ready(function () {
+        var csrftoken = $.cookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            cache: true
+        });
+    });
+</script>
+<script src="https://cdn.acwing.com/static/web/js/signform-0.0.1.js"></script>
+<script src="https://cdn.acwing.com/static/web/js/handlebars-v1.3.0.js"></script>
+<script src="https://cdn.acwing.com/static/web/js/effect_anchor-0.0.1.js"></script>
+<script src="https://cdn.acwing.com/static/web/js/editor/utils-0.0.1.js"></script>
+
+    <script>
+    let chat_state = {
+        me_id: 189515,
+    };
+</script>
+<div style="display: none;">
+    <div id="message_template_me">
+        <div class="row" style="margin: 0; margin-bottom: 10px;">
+            <div class="col-xs-2 pull-right" style="width: 30px; padding: 0; margin-right: 10px;">
+                <a href="https://message_host_space_url">
+                    <img class="img-responsive img-circle" width="30px" height="30px" src="https://www.acwing.com/static/web/img/favicon.ico" alt="我的头像">
+                </a>
+            </div>
+            <div class="col-xs-10 pull-right">
+                <span class="chat-bubble-me pull-right" style="word-break: break-all;">
+                    message_content
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="message_template_you">
+        <div class="row" style="margin: 0; margin-bottom: 10px;">
+            <div class="col-xs-2" style="width: 30px; padding: 0; margin-left: 10px;">
+                <a href="https://message_host_space_url">
+                    <img class="img-responsive img-circle" width="30px" height="30px" src="https://www.acwing.com/static/web/img/favicon.ico" alt="好友头像">
+                </a>
+            </div>
+            <div class="col-xs-10">
+                <span class="chat-bubble-you pull-left" style="word-break: break-all;">
+                    message_content
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="message_create_time">
+        <div class="text-center">
+            <span class="chat-time-format">message create time</span>
+        </div>
+        <br>
+    </div>
+    <div id="message_code_template">
+        <a id="message_code_template_0_message_id_0" style="cursor:pointer;">
+            <img src="https://cdn.acwing.com/static/web/img/chat/code.png" width="75px" style="margin: -17px -22px -14px -22px;" alt="代码">
+        </a>
+    </div>
+    <div id="message_emoji_gif_template">
+        <a style="cursor:pointer;">
+            <img src="https://www.acwing.com/static/web/img/favicon.ico"
+                 width="100px"
+                 style="margin: 0"
+                 title="emoji_gif_description"
+                 alt="表情动画">
+        </a>
+    </div>
+</div>
+    <script src="https://cdn.acwing.com/static/web/js/wss/chat/utils.js"></script>
+
+
+
+    <script src="https://cdn.acwing.com/static/web/third_party/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.acwing.com/static/web/third_party/ace-builds/src-min-noconflict/ext-language_tools-0.0.1.js"></script>
+    <script src="https://cdn.acwing.com/static/web/js/editor/code_completer/dist/code_completer-0.0.11.min.js"></script>
+    <script src="https://cdn.acwing.com/static/web/js/wss/chat/emoji-data.js"></script>
+
+
+
+
+<script>
+    let user_state = {
+        is_authenticated: true,
+        is_pc: false,
+        is_tablet: false,
+        is_mobile: false,
+    };
+    if (user_state.is_authenticated){
+        user_state.user_id = 189515;
+        user_state.info = "";
+    }
+    
+        user_state.is_pc = true;
+    
+</script>
+<script>
+    let GLOBAL_COMMENT_SONS = {};
+</script>
+<style>
+    
+        #acwing_body {
+            background: white url("https://video.acwing.com/image/default/405FE29815E64429B5914E6DFEDED878-6-2.png?auth_key=1669833360-ad773a986b-0-b0d7a12c1373ec59462ad03f76d8cc8d") fixed;
+            background-size: auto;
+        }
+    
+
+    
+    @media (min-width: 768px) and (max-width: 1000px) {
+       .collapse {
+           display: none !important;
+       }
+    }
+    .popover {
+        z-index: 1000000 !important;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        width: 750px;
+      }
+    }
+    @media (min-width: 992px) {
+      .container {
+        width: 900px;
+      }
+    }
+    @media (min-width: 1200px) {
+      .container {
+        width: 1000px;
+      }
+    }
+
+    @media (min-width: 1300px) {
+      .container {
+        width: 1170px;
+      }
+    }
+</style>
+
+
+<link rel="stylesheet" href="https://cdn.acwing.com/static/plugins/css/ace.min.css">
+<link rel="stylesheet" href="https://cdn.acwing.com/static/martor/css/martor.min.css">
+
+    <link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/martor.css">
+
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/file_system/file/content/comment.css">
+
+
+    <link rel ="stylesheet" href="https://cdn.acwing.com/static/web/css/style-0.0.16.css">
+
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/base/navbar.css">
+
+    
+
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/file_system/gui/window/base-0.0.4.css">
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/file_system/file/content/whole/application/file_explorer/base-0.0.1.css">
+<link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/file_system/gui/taskbar/base-0.0.5.css">
+<script>
+    let DESKTOP_STATE_WINDOW_OPERATE_OPEN_URL = "/file_system/gui/window/operate/open/666/";
+    let DESKTOP_STATE_TASKBAR_SEARCH_URL = "/file_system/gui/taskbar/search/base/search/";
+    let DESKTOP_STATE_OS_THIRD_PARTY_API_OAUTH2_AUTHORIZE_URL = "/third_party/api/oauth2/acapp/authorize/";
+</script>
+<script src="https://cdn.acwing.com/static/web/js/file_system/file/content/whole/application/file_explorer/dist/file_explorer-0.0.7.min.js"></script>
+<script src="https://cdn.acwing.com/static/web/js/file_system/gui/dist/gui-0.0.56.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let urls = {
+            add: "/file_system/file/operation/content/add/",
+            update: "/file_system/file/operation/content/update/",
+            delete: "/file_system/file/operation/content/delete/",
+            update_refactor_rename: "/file_system/file/operation/content/update/refactor/rename/",
+            command_ls: "/file_system/file/operation/content/command/ls/",
+            command_cp: "/file_system/file/operation/content/command/cp/",
+            command_mv: "/file_system/file/operation/content/command/mv/",
+            command_read: "/file_system/file/operation/content/command/read/",
+        };
+        desktop_state.os.builtin.api.file.operation.set(urls);
+
+        let applications = {
+            file_explorer: 284475,
+            ac_editor: 172575,
+            ac_saber: 118289,
+            settings: 589618,
+            ac_chat: 994425,
+        };
+        desktop_state.os.builtin.application.set(applications);
+
+        let configs = {
+            media_url: "https://cdn.acwing.com/media/",
+            static_url: "https://cdn.acwing.com/static/",
+        };
+        desktop_state.os.builtin.settings.set(configs);
+
+        let auto_open_apps = [];
+        
+            auto_open_apps.push({
+                title: "AC Chat",
+                icon: "https://cdn.acwing.com/media/file_system/file/application/icon/2220490481555590627-128_UQONKkk.png",
+                file_id: 994425,
+            });
+        
+        desktop_state.taskbar.widgets.apps.set(auto_open_apps);
+    });
+</script>
+
+    
+    
+        <link rel="stylesheet" href="https://cdn.acwing.com/static/web/css/problem/content-0.0.2.css">
+    
+    
+
+</head>
+<body id="acwing_body" style="min-height: 100vh;">
+
+ 
+    
+
+<div class="panel panel-default fs-gui-taskbar"
+        
+            style="width: 3vw;"
+        >
+    <div class="panel-body fs-gui-taskbar-body dropup">
+        <div class="panel panel-default fs-gui-taskbar-begin-menu">
+    <div class="panel-body" style="padding: 0;">
+        <div class="fs-gui-taskbar-begin-menu-item fs-gui-taskbar-begin-menu-item-file">
+            文件
+        </div>
+        <div class="fs-gui-taskbar-begin-menu-item fs-gui-taskbar-begin-menu-item-application">
+            应用
+        </div>
+        <hr style="height: 1vh; margin: 1vh;">
+        <div class="fs-gui-taskbar-begin-menu-item fs-gui-taskbar-begin-menu-item-settings">
+            设置
+        </div>
+    </div>
+</div>
+        <button class="fs-gui-taskbar-begin pull-left btn btn-default">
+            <img src="https://cdn.acwing.com/static/web/img/favicon.ico" alt="开始" title="开始" style="width: 60%;" />
+        </button>
+        <div class="fs-gui-taskbar-search pull-left">
+            <span class="glyphicon glyphicon-search fs-gui-taskbar-search-icon"></span>
+            <label for="fs-gui-taskbar-search-field" class="sr-only"></label>
+            <input id="fs-gui-taskbar-search-field" placeholder="在这里输入你要搜索的内容" />
+        </div>
+        <div class="fs-gui-taskbar-right">
+            <div class="fs-gui-taskbar-task-list"></div>
+            <div class="fs-gui-taskbar-widgets">
+                <div class="fs-gui-taskbar-widgets-clock">
+                    <div class="fs-gui-taskbar-widgets-clock-time">04:56</div>
+                    <div class="fs-gui-taskbar-widgets-clock-date">2022-11-29</div>
+                </div>
+                <div class="fs-gui-taskbar-widgets-apps">
+                    
+                        <div class="fs-gui-taskbar-widgets-apps-item fs-gui-taskbar-widgets-apps-item-994425" title="AC Chat">
+                            <img src="https://cdn.acwing.com/media/file_system/file/application/icon/2220490481555590627-128_UQONKkk.png" alt="AC Chat">
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="fs-gui-advertisement-base"
+        style="position: fixed; top: 15vh; cursor: pointer; display: none; z-index:999999999">
+    <div>
+        <div id="fs-gui-advertisement-base-title"></div>
+        <div style="text-align: left; font-size: 80%;">
+            <span style="font-size: 80%;">¥</span>
+            <span id="fs-gui-advertisement-base-price" style="font-size: 135%;"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="fs-gui-advertisement-base-inventory" style="font-size: 135%;"></span> 份秒杀
+            <span class="glyphicon glyphicon-triangle-right" style="font-size: 70%; top: 0.25vh"></span>
+        </div>
+        <div id="fs-gui-advertisement-base-close-btn"
+                style="color: white; position: absolute; top: -0.4vh; right: 4px; cursor: pointer; font-size: 18px;">x</div>
+    </div>
+</div>
+    
+
+<style>
+    .file-explorer-main-field-item-desktop:hover {
+        background-color: rgba(204,232,255, 0.5);
+    }
+</style>
+
+<div style="position: fixed; top: 71px; left: 17px;">
+    <div class="file-explorer-main-field-item file-explorer-main-field-item-desktop" style="border: none"
+        ondblclick="desktop_state.window.open_outer_window(desktop_state.os.builtin.application.applications.file_explorer,'main&address=~/');">
+        <div class="file-explorer-main-field-item-icon">
+            <img src="https://cdn.acwing.com/static/web/img/file_system/file/application/file_explorer/folder_icon.png" alt="文件图标"/>
+        </div>
+        <div class="file-explorer-main-field-item-title" style="color: white; font-size: 1.8vh; text-shadow: 3px 3px 3px grey;">文件</div>
+    </div>
+    <br>
+    <div class="file-explorer-main-field-item file-explorer-main-field-item-desktop" style="border: none"
+         ondblclick="desktop_state.window.open_outer_window(desktop_state.os.builtin.application.applications.file_explorer,'main&address=/我的空间/应用/');">
+        <div class="file-explorer-main-field-item-icon">
+            <img src="https://cdn.acwing.com/static/web/img/file_system/file/application/file_explorer/folder_icon.png" alt="文件图标"/>
+        </div>
+        <div class="file-explorer-main-field-item-title" style="color: white; font-size: 1.8vh; text-shadow: 3px 3px 3px grey;">应用</div>
+    </div>
+</div>
+
+
+<div id="acwing_page" >
+    <nav class="navbar navbar-inverse navbar-fixed-top navbar-expand-lg" style="z-index: 10;">
+        <div class="container">
+            <!-- Header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    
+                </button>
+                
+                <a class="navbar-brand" href="/">AcWing</a>
+            </div>
+
+            <!-- Items -->
+            <div class="collapse navbar-collapse" id="topNavBar">
+                <ul class="nav navbar-nav">
+                    <li class=""><a href="/about/">首页</a></li>
+                    <li id="navigation_activity_active_id" class=""><a href="/activity/">活动</a></li>
+                    <li class="active"><a href="/problem/">题库</a></li>
+                    <li id="navigation_competition_active_id" class=""><a href="/activity/1/competition/">竞赛</a></li>
+                    <li class=""><a href="/file_system/file/content/whole/index/content/whole/application/1/">应用</a></li>
+                    <li class="">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            其它
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/solution/">题解</a></li>
+                            <li><a href="/blog/">分享</a></li>
+                            <li id="navigation_store_active_id" class=""><a href="/activity/1/product/">商店</a></li>
+                            <li><a href="/community/">问答</a></li>
+                        </ul>
+                    </li>
+                    <li class=""><a href="/http_wss/danmu/world/">吐槽</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    
+                        <li>
+                            <a href="/user/myspace/notification/1/">
+                                <span class="glyphicon glyphicon-bell" style="font-size: 20px;"></span>
+                                
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img class="img-circle" src="https://cdn.acwing.com/media/user/profile/photo/189515_sm_078c8b0ebd.jpg" alt="AKA你的闺蜜 的头像" style="margin: -5px;" width="35px">
+                                &nbsp;
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <span style="cursor: pointer;" title="AC币">
+                                        <img src="https://cdn.acwing.com/static/web/img/acb2.png"
+                                             width="15px" alt="AC币图标"
+                                             style="margin-left: 20px; margin-bottom: 4px;">
+                                        &nbsp;
+                                        <span class="hidden-sm hidden-md hidden-lg" style="color: white;">10</span>
+                                        <span class="hidden-xs">10</span>
+                                    </span>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href = "/user/myspace/index/189515/">我的空间</a></li>
+                                <li><a href = "/user/profile/index/">个人信息</a></li>
+                                <li class="divider"></li>
+                                <li id="navigation_public_group_active_id" class=""><a href="/activity/content/public_group/entry/">校园</a></li>
+                                <li class="divider"></li>
+                                <li><a href = "/user/payment/order/index/">我的订单</a></li>
+                                <li><a href = "/user/work_sheet/index/">我的工单</a></li>
+                                <li class = "divider"></li>
+                                <li>
+                                    <form id="signout-form" action="/user/account/signout/" method="post">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="ELxsQcysZcWIsGiXB2Tp2N3Nuqt34ZA8YtN8e2TasEYFQiYZgjuZFN3tgM56eFiI">
+                                    </form>
+                                    <a id="signout-link" style="cursor: pointer">退出</a>
+                                    <script>
+                                        $(document).ready(function (){
+                                            $('#signout-link').click(function (){
+                                                $('#signout-form').submit();
+                                            });
+                                        });
+                                    </script>
+                                </li>
+                            </ul>
+                        </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="base_body">
+    <div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="nice_font problem-content-title">
+                18. 重建二叉树
+            </div>
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active">
+                    <a class="problem-content-sub-btn" href="/problem/content/description/23/" style="padding-left: 30px; padding-right: 30px;">
+                        <span class="glyphicon glyphicon-list-alt" style="top: 4px;"></span>
+                        &nbsp;
+                        题目
+                    </a>
+                </li>
+                
+                    <li role="presentation" class="">
+                        <a class="problem-content-sub-btn" href="/problem/content/submission/23/" style="padding-left: 30px; padding-right: 30px;">
+                            <span class="glyphicon glyphicon-list" style="top: 4px;"></span>
+                            &nbsp;
+                            提交记录
+                        </a>
+                    </li>
+                
+                <li role="presentation" class="">
+                    <a class="problem-content-sub-btn" href="/problem/content/discussion/index/23/1/" style="padding-left: 30px; padding-right: 30px;">
+                        <span class="glyphicon glyphicon-comment" style="top: 4px;"></span>
+                        &nbsp;
+                        讨论
+                    </a>
+                </li>
+                
+                    <li role="presentation" class="">
+                        <a class="problem-content-sub-btn" href="/problem/content/solution/23/1/" style="padding-left: 30px; padding-right: 30px;">
+                            <span class="glyphicon glyphicon-book" style="top: 4px;"></span>
+                            &nbsp;
+                            题解
+                        </a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a class="problem-content-sub-btn" href="/problem/content/video/23/" style="padding-left: 30px; padding-right: 30px;">
+                            <span class="glyphicon glyphicon-book" style="top: 4px;"></span>
+                            &nbsp;
+                            视频讲解
+                        </a>
+                    </li>
+                
+            </ul>
+            <br>
+            
+    <div class="row">
+        <div class="col-sm-9 col-xs-12">
+            <div class="main-martor main-martor-content" data-field-name="content">
+                <div class="section-martor">
+                    <div class="ui bottom attached tab active martor-preview" data-tab="preview-tab-content">
+                        <p>输入一棵二叉树前序遍历和中序遍历的结果，请重建该二叉树。</p>
+<p><strong>注意</strong>:</p>
+<ul>
+<li>二叉树中每个节点的值都互不相同；</li>
+<li>输入的前序遍历和中序遍历一定合法；</li>
+</ul>
+<h4>数据范围</h4>
+<p>树中节点数量范围 $[0,100]$。</p>
+<h4>样例</h4>
+<pre><code>给定：
+前序遍历是：[3, 9, 20, 15, 7]
+中序遍历是：[9, 3, 15, 20, 7]
+
+返回：[3, 9, 20, null, null, 15, 7, null, null, null, null]
+返回的二叉树如下所示：
+    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 hidden-xs" style="padding-left: 0;top: -20px;">
+            <div class="table-responsive">
+                <table class="table table-striped table-responsive" style="border-left: 1px solid #f0f0f0;">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 15px 8px 15px 8px;">
+                                难度：
+                                <span class="label label-warning round" style="float:right;">中等</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px 8px 15px 8px;">
+                                时/空限制：
+                                <span style="float:right;">1s / 64MB</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px 8px 15px 8px;">
+                                总通过数：
+                                <span style="float:right;">10087</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px 8px 15px 8px;">
+                                总尝试数：
+                                <span style="float: right;">15117</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px 8px 15px 8px;">
+                                来源：
+                                <span style="float: right;">剑指Offer,亚马逊面试题</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px 8px 15px 8px;">
+                                <span class="problem-algorithm-tag" style="cursor: pointer">算法标签<span class="caret"></span></span>
+                                <div class="problem-algorithm-tag-field" style="display: none;"></div>
+                                <script>
+                                    $(document).ready(function () {
+                                        let $tag = $('.problem-algorithm-tag');
+                                        let $field = $('.problem-algorithm-tag-field');
+                                        let keywords = "树的遍历,递归,哈希表".replace('，', ',').split(',');
+                                        for (let i = 0; i < keywords.length; i ++ ) {
+                                            let keyword = keywords[i].trim();
+                                            if (keywords) {
+                                                let $span = $(`<a href="/problem/search/1/?search_content=${keyword}"` +
+                                                        `style="text-decoration: none;" target="_blank">` +
+                                                    `<span class="problem-algorithm-tag-field-item">${keyword}</span></a>`);
+                                                $field.append($span);
+                                            }
+                                        }
+
+                                        $tag.click(function () {
+                                            if ($field.is(":visible")) {
+                                                $field.hide();
+                                            } else {
+                                                $field.show();
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    
+
+<div id="code_tool_bar">
+    
+        <button id="open_ac_saber_btn" class="btn btn-link"
+                style="position: relative; left: 10px; top: 10px; font-size: 18px;">
+            挑战模式
+        </button>
+        <script>
+            $('#open_ac_saber_btn').click(function () {
+                desktop_state.window.open_outer_window(
+                    desktop_state.os.builtin.application.applications.ac_saber,
+                    `menu_training_problem&chapter_name=基础知识` +
+                    `&session_name=快速排序&move_right_cnt=0` +
+                    `&move_down_cnt=0&problem_number=18`
+                );
+            });
+        </script>
+    
+    <button class="btn btn-link pull-right" data-toggle="modal" data-target="#code_editor_confg_modal" title="编辑器设置">
+        <span class="glyphicon glyphicon-cog editor_tool_btn"></span>
+    </button>
+    <button class="btn btn-link pull-right" data-toggle="modal" id="code-editor-refresh-btn" title="代码重置">
+        <span class="glyphicon glyphicon-refresh editor_tool_refresh_btn"></span>
+    </button>
+    <div class="code_editor_option_language form-group" style="float: right; margin: 8px 10px 0 10px;" title="选择编程语言">
+        <select name="language" style="height: 40px; width: 220px; border-radius: 4px;" class="form-control code-editor-option" id="id_language">
+  <option value="1" selected>C++</option>
+
+  <option value="2">C</option>
+
+  <option value="3">Java</option>
+
+  <option value="4">Python</option>
+
+  <option value="5">Javascript</option>
+
+  <option value="6">Python3</option>
+
+  <option value="8">Go</option>
+
+</select>
+    </div>
+    <div class="modal fade" id="code_editor_confg_modal">
+        <div class="modal-dialog" style="width: 85%; max-width: 600px;">
+            <div class="modal-content" style="margin-top: auto;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <div class="modal-title code-editor-option-head">
+                        代码编辑器设置
+                    </div>
+                </div>
+                <hr style="margin: 0 0 10px 0;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-8 col-xs-12">
+                            <div class="code-editor-option-title">
+                                界面风格
+                            </div>
+                            <div class="code_editor_option_theme visible-xs-block">
+                                <select name="theme_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_theme_option">
+  <option value="1" selected>Textmate</option>
+
+  <option value="2">Monoka</option>
+
+  <option value="3">Eclipse</option>
+
+</select>
+                            </div>
+                            <div class="code-editor-option-description">
+                                对白色界面感到厌倦了吗？可以尝试其他的背景和代码高亮风格。
+                            </div>
+                        </div>
+                        <div class="code_editor_option_theme col-sm-4 hidden-xs">
+                            <select name="theme_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_theme_option">
+  <option value="1" selected>Textmate</option>
+
+  <option value="2">Monoka</option>
+
+  <option value="3">Eclipse</option>
+
+</select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-8 col-xs-12">
+                            <div class="code-editor-option-title">
+                                编辑类型
+                            </div>
+                            <div class="code_editor_option_key_binding visible-xs-block">
+                                <select name="key_binding_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_key_binding_option">
+  <option value="1" selected>Standard</option>
+
+  <option value="2">Vim</option>
+
+  <option value="3">Emacs</option>
+
+</select>
+                            </div>
+                            <div class="code-editor-option-description">
+                                更喜欢Vim或者Emacs的输入方式吗？我们也为你提供了这些选项。
+                            </div>
+                        </div>
+                        <div class="code_editor_option_key_binding col-sm-4 hidden-xs">
+                            <select name="key_binding_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_key_binding_option">
+  <option value="1" selected>Standard</option>
+
+  <option value="2">Vim</option>
+
+  <option value="3">Emacs</option>
+
+</select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-8 col-xs-12">
+                            <div class="code-editor-option-title">
+                                缩进长度
+                            </div>
+                            <div class="code_editor_option_tab_size visible-xs-block">
+                                <select name="tab_size_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_tab_size_option">
+  <option value="1">2个空格</option>
+
+  <option value="2" selected>4个空格</option>
+
+  <option value="3">8个空格</option>
+
+</select>
+                            </div>
+                            <div class="code-editor-option-description">
+                                选择代码缩进的长度。默认是4个空格。
+                            </div>
+                        </div>
+                        <div class="code_editor_option_tab_size col-sm-4 hidden-xs">
+                            <select name="tab_size_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_tab_size_option">
+  <option value="1">2个空格</option>
+
+  <option value="2" selected>4个空格</option>
+
+  <option value="3">8个空格</option>
+
+</select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-8 col-xs-12">
+                            <div class="code-editor-option-title">
+                                代码补全
+                            </div>
+                            <div class="code_editor_option_code_complete visible-xs-block">
+                                <select name="code_complete_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_tab_size_option">
+                                    <option value="1">无补全</option>
+                                    <option value="2" selected>单词级补全</option>
+                                    <option value="3">模板级补全</option>
+                                </select>
+                            </div>
+                            <div class="code-editor-option-description">
+                                写代码疲惫了吗？让我们来帮你一把。唤醒词列表在<a href="https://www.acwing.com/file_system/file/content/whole/index/content/2145234/" target="_blank">这里</a>。
+                            </div>
+                        </div>
+                        <div class="code_editor_option_code_complete col-sm-4 hidden-xs">
+                            <select name="code_complete_option" style="max-width: 220px; border-radius: 4px; margin-bottom: 10px;" class="form-control code-editor-option" id="id_tab_size_option">
+                                <option value="1">无补全</option>
+                                <option value="2" selected>单词级补全</option>
+                                <option value="3">模板级补全</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin: 10px 0 0 0;">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"  style="float: right; border-radius: 5px;">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div>
+        <form id="code-eidtor-option-update-language-form" action="/problem/content/code_editor_preference/update/language/" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="ELxsQcysZcWIsGiXB2Tp2N3Nuqt34ZA8YtN8e2TasEYFQiYZgjuZFN3tgM56eFiI">
+        </form>
+        <form id="code-eidtor-option-update-theme-form" action="/problem/content/code_editor_preference/update/theme/" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="ELxsQcysZcWIsGiXB2Tp2N3Nuqt34ZA8YtN8e2TasEYFQiYZgjuZFN3tgM56eFiI">
+        </form>
+        <form id="code-eidtor-option-update-key-binding-form" action="/problem/content/code_editor_preference/update/key_binding/" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="ELxsQcysZcWIsGiXB2Tp2N3Nuqt34ZA8YtN8e2TasEYFQiYZgjuZFN3tgM56eFiI">
+        </form>
+        <form id="code-eidtor-option-update-tab-size-form" action="/problem/content/code_editor_preference/update/tab_size/" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="ELxsQcysZcWIsGiXB2Tp2N3Nuqt34ZA8YtN8e2TasEYFQiYZgjuZFN3tgM56eFiI">
+        </form>
+    </div>
+    <script>
+        let code_editor_name_config_mappings = {
+            "C++": "c_cpp",
+            "C": "c_cpp",
+             "Java": "java",
+            "Python": "python",
+            "Python3": "python",
+            "Javascript": "javascript",
+            "Go": "golang",
+            "Textmate": "textmate",
+            "Monoka": "monokai",
+            "Eclipse": "eclipse",
+            "Standard": "null",
+            "Vim": "vim",
+            "Emacs": "emacs",
+            "2个空格": "2",
+            "4个空格": "4",
+            "8个空格": "8",
+        };
+        let problem_code_show_mappings = {'C++': '/**\r\n * Definition for a binary tree node.\r\n * struct TreeNode {\r\n *     int val;\r\n *     TreeNode *left;\r\n *     TreeNode *right;\r\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\r\n * };\r\n */\r\nclass Solution {\r\npublic:\r\n    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {\r\n        \r\n    }\r\n};', 'C': '/**\r\n * Definition for a binary tree node.\r\n * struct TreeNode {\r\n *     int val;\r\n *     struct TreeNode *left;\r\n *     struct TreeNode *right;\r\n * };\r\n */\r\nstruct TreeNode* buildTree(int* preorder, int preorder_size, int* inorder, int inorder_size) {\r\n    \r\n}', 'Java': '/**\r\n * Definition for a binary tree node.\r\n * class TreeNode {\r\n *     int val;\r\n *     TreeNode left;\r\n *     TreeNode right;\r\n *     TreeNode(int x) { val = x; }\r\n * }\r\n */\r\nclass Solution {\r\n    public TreeNode buildTree(int[] preorder, int[] inorder) {\r\n        \r\n    }\r\n}', 'Python': '# Definition for a binary tree node.\r\n# class TreeNode(object):\r\n#     def __init__(self, x):\r\n#         self.val = x\r\n#         self.left = None\r\n#         self.right = None\r\nclass Solution(object):\r\n    def buildTree(self, preorder, inorder):\r\n        """\r\n        :type preorder: List[int]\r\n        :type inorder: List[int]\r\n        :rtype: TreeNode\r\n        """\r\n        ', 'Python3': '# Definition for a binary tree node.\r\n# class TreeNode(object):\r\n#     def __init__(self, x):\r\n#         self.val = x\r\n#         self.left = None\r\n#         self.right = None\r\nclass Solution(object):\r\n    def buildTree(self, preorder, inorder):\r\n        """\r\n        :type preorder: List[int]\r\n        :type inorder: List[int]\r\n        :rtype: TreeNode\r\n        """\r\n        ', 'Go': '/**\r\n * Definition for a binary tree node.\r\n * type TreeNode struct {\r\n *     Val int\r\n *     Left *TreeNode\r\n *     Right *TreeNode\r\n * }\r\n */\r\nfunc buildTree(preorder []int, inorder []int) *TreeNode {\r\n    \r\n}', 'Javascript': '/**\r\n * Definition for a binary tree node.\r\n * function TreeNode(val) {\r\n *     this.val = val;\r\n *     this.left = this.right = null;\r\n * }\r\n */\r\n/**\r\n * @param {number[]} preorder\r\n * @param {number[]} inorder\r\n * @return {TreeNode}\r\n */\r\nvar buildTree = function(preorder, inorder) {\r\n    \r\n};'};
+    </script>
+</div>
+<div id="code_editor"></div>
+
+    <div>
+        <div id="data-augmentation-div" hidden style="color: grey; padding-top: 10px; padding-left: 10px; float: left;">
+            数据有点弱吗？可以申请<a href="/user/work_sheet/content/add/data_augmentation/18/" target="_blank">加强数据</a>
+        </div>
+        <button id="submit_code_btn" class="btn btn-success" style="float: right; border-radius: 20px; margin: 20px 0 0 20px;">
+            <span class="glyphicon glyphicon-cloud-upload" style="top: 1px;"></span>
+            &nbsp;
+            提交答案
+            &nbsp;
+        </button>
+        <button id="run_code_btn" class="btn btn-default" style="float: right; border-radius: 20px; margin: 20px 0 0 0;">
+            <span class="glyphicon glyphicon-play-circle" style="top: 2px;"></span>
+            &nbsp;
+            调试代码
+            &nbsp;
+        </button>
+    </div>
+    <div id="submit-code-status-block" style="margin-top: 75px; display: none;">
+        <hr>
+        <span class="submit-code-status-label">代码提交状态：</span>
+        <span id="submit-code-status-value-id" class="submit-code-status-value"></span>
+        &nbsp;&nbsp;
+        <img id="submit-code-status-loading-gif-id" src="https://cdn.acwing.com/static/web/gif/code_status_loading.gif" width="18px;" style="margin-top: -5px;">
+        <pre id="submit-code-status-compilation-log-id" class="submit-code-status-compilation-log"
+             style="margin-top: 10px; border-radius: 5px; padding: 10px; background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
+        </pre>
+    </div>
+    <div id="run-code-status-block" class="panel panel-default" style="margin-top: 75px;">
+        <div class="panel-heading">
+            <span class="submit-code-status-label">代码运行状态：</span>
+            <span id="run-code-status-value-id" class="submit-code-status-value"></span>
+            &nbsp;&nbsp;
+            <img id="run-code-status-loading-gif-id" src="https://cdn.acwing.com/static/web/gif/code_status_loading.gif" width="18px;" style="margin-top: -5px;">
+            <button type="button" id="run-code-status-block-remove-btn" class="close">
+                &times;
+            </button>
+        </div>
+        <div class="panel-body" style="padding: 25px;">
+            <label for="run-code-stdin" style="font-weight: normal; font-size: 15px;">输入</label>
+            <textarea id="run-code-stdin" class="form-control autofit" maxlength="2000"
+                      rows="1"
+                      style="background-color: #f8f8f8; border-radius: 5px; resize: none; font-family: monospace; overflow: hidden; min-height: 40px;"
+            >[3, 9, 20, 15, 7]
+[9, 3, 15, 20, 7]</textarea>
+            <br>
+            <span style="font-weight: normal; font-size: 15px;">输出</span>
+            <pre id="run-code-stdout" style="background-color: #f8f8f8; border-radius: 5px; margin-top: 5px; min-height: 40px;"></pre>
+            <div id="run-code-expected-stdout-block" style="margin-top: 20px; display: none;">
+                <span style="font-weight: normal; font-size: 15px;">标准答案</span>
+                <pre id="run-code-expected-stdout" style="background-color: #f8f8f8; border-radius: 5px; margin-top: 5px; min-height: 40px;"></pre>
+            </div>
+            <span id="run-code-time" style="display: none;"></span>
+        </div>
+    </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+    
+
+<div id="1024-activity" style="position: fixed; top: 15vh; cursor: pointer; display: none; z-index:999999999">
+    <div id="1024-activity-whole">
+        <img id="1024-img" src="https://cdn.acwing.com/static/web/img/base/national_activity/discount2.png" width="80" alt="1024" style="border-radius: 5px">
+        <div id="1024-close-btn" style="color: black; position: fixed; top: calc(15vh - 8px); left: 70px; cursor: pointer; font-size: 20px;">x</div>
+        <div id="1024-timer" style="position: fixed; top: calc(15vh + 55px); color: white; font-size: 17px; font-weight: 600; display: none;">
+            <span id="1024-timer-hour"></span>:
+            <span id="1024-timer-minute"></span>:
+            <span id="1024-timer-second"></span>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            const start_date = 28;
+            let $activity = $('#1024-activity');
+            let $img = $('#1024-img');
+            let $timer = $('#1024-timer');
+            if ((new Date()).getDate() >= start_date) {
+                $img.attr('src', "https://cdn.acwing.com/static/web/img/base/national_activity/discount2.png");
+            }
+
+            if (typeof(localStorage) !== "undefined") {
+                let last_time = localStorage.getItem("1024-activity-last-close-time");
+                let delta_time = Math.ceil((Date.now() - last_time) / 1000);
+
+                if (delta_time < 6 * 3600) return false;  // 6小时内关闭过，则不再展示
+            }
+
+            $activity.show("slide", { direction: "left" }, 200);
+            if ((new Date()).getDate() < start_date) {
+                $timer.show();
+            }
+
+            let has_closed = false;
+            let myeffect = function () {
+                if (has_closed) return false;  // 如果已经关闭，则不再抖动
+                setTimeout(function () {
+                    $activity.effect("bounce", "slow", function () {
+                        myeffect();
+                    });
+                }, 5000);  // 每5s循环一次
+            };
+            myeffect();
+
+            let $close_btn = $('#1024-close-btn');
+            $close_btn.click(function () {
+                $activity.hide("slide", { direction: "left" }, 200);
+                if (typeof(localStorage) !== "undefined") {
+                    localStorage.setItem("1024-activity-last-close-time", Date.now());
+                }
+                return false;
+            });
+            $activity.click(function () {
+                $activity.hide("slide", { direction: "left" }, 200);
+                if (typeof(localStorage) !== "undefined") {
+                    localStorage.setItem("1024-activity-last-close-time", Date.now());
+                }
+                window.open(/activity/, '_blank').focus();
+            });
+
+            let update_timer = function (time) {
+                let secs = Math.ceil((Date.parse(time) - Date.now()) / 1000);
+                let interval_function = function () {
+                    if (secs <= 0) {
+                        $timer.hide();
+                        $img.attr('src', "https://cdn.acwing.com/static/web/img/base/national_activity/discount2.png");
+                        return false;
+                    }
+                    let second = secs;
+                    let hours = Math.floor(second / 3600);
+                    second -= hours * 3600;
+                    let minutes = Math.floor(second / 60);
+                    second -= minutes * 60;
+
+                    let $hour = $('#1024-timer-hour');
+                    let $minute = $('#1024-timer-minute');
+                    let $second = $('#1024-timer-second');
+
+                    $hour.text(hours >= 10 ? hours: "0" + hours);
+                    $minute.text(minutes >= 10 ? minutes : "0" + minutes);
+                    $second.text(second >= 10 ? second : "0" + second);
+                    secs -- ;
+                };
+
+                interval_function();
+                setInterval(interval_function, 1000)
+            };
+
+            if ((new Date()).getDate() < start_date) {
+                update_timer("2022-10-27T03:00:00");
+            }
+        });
+    </script>
+</div>
+    <footer id="acwing_footer" class="footer">
+    <div class="container">
+        <hr>
+        <div class="row">
+            <div class="col-sm-8 copyright">
+                <span>
+                    © 2018-2022 AcWing 版权所有
+                    &nbsp;|&nbsp;
+                    <a href="http://beian.miit.gov.cn/">京ICP备17053197号-1</a>
+                </span>
+            </div>
+            <div class="text-right col-sm-4 region-us">
+                <div class="links">
+                    <a href="/footer/agreement/">用户协议</a>
+                    &nbsp;|&nbsp;
+                    <a href="/footer/faq/">常见问题</a>
+                    &nbsp;|&nbsp;
+                    <a href="/footer/contactus/">联系我们</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+
+
+    <div id="need-to-bandage-cell-phone-modal-warning" class="modal modal-message modal-warning fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="glyphicon glyphicon-warning-sign"></i>
+                </div>
+                <div class="modal-body">
+                    该操作需要绑定手机号
+                </div>
+                <div class="modal-footer">
+                    <a href="/user/profile/index/#security-cell-phone" class="btn btn-warning" target="_blank">去绑定</a>
+                </div>
+            </div> <!-- / .modal-content -->
+        </div> <!-- / .modal-dialog -->
+    </div>
+
+
+
+
+
+
+<div id="modal-warning" class="modal modal-message modal-warning fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="glyphicon glyphicon-warning-sign"></i>
+            </div>
+            <div id="warning_message_content" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">OK</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div>
+
+
+    <script>
+        let GLOBAL_PROBLEM_MODE = "normal";
+        let GLOBAL_PROBLEM_ACTIVITY_ID = 0;
+        let GLOBAL_PROBLEM_RECORD = [];
+        let GLOBAL_PROBLEM_CHALLENGE_MODE_STATUS = 0;   // 0 表示未结束，1表示赢，2表示输
+        
+    </script>
+    
+    
+    <script src="https://cdn.acwing.com/static/web/js/editor/code_editor-0.0.7.js"></script>
+    <script src="https://cdn.acwing.com/static/web/js/editor/debug_code-0.0.24.js"></script>
+    <script>
+        let PROBLEM_ID = 23;
+    </script>
+
+
+
+
+
+<script src="https://cdn.acwing.com/static/web/js/copy_with_link.js"></script>
+<script>
+    let article_author = "";
+    if (article_author.length === 0) article_author = "AcWing";
+    let VIDEO_CONTENT_WATERMARK_LOGO_URL = "https://cdn.acwing.com/static/web/img/32X32.ico";
+</script>
+<script src="https://cdn.acwing.com/static/plugins/js/highlight.min.js"></script>
+<script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+          showMathMenu: false,
+        });
+</script>
+<script type="text/javascript" src="https://cdn.acwing.com/static/MathJax-2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    $('pre').each(function(i, block){
+        hljs.highlightBlock(block);
+    });
+</script>
+
+    <script src="https://cdn.acwing.com/static/web/js/file_system/file/operation/collect/favorite-0.0.2.js"></script>
+    <script src="https://cdn.acwing.com/static/web/js/file_system/file/operation/vote/vote-0.0.2.js"></script>
+    <script type="text/javascript" src="https://cdn.acwing.com/static/web/js/file_system/file/operation/content/delete-0.0.4.js"></script>
+    <script type="text/javascript" src="https://cdn.acwing.com/static/web/js/file_system/file/operation/comment/add-0.0.5.js"></script>
+    <script type="text/javascript" src="https://cdn.acwing.com/static/web/js/file_system/file/operation/comment/delete-0.0.4.js"></script>
+    <script type="text/javascript" src="https://cdn.acwing.com/static/web/js/file_system/file/operation/comment/vote-0.0.7.js"></script>
+    <script src="https://cdn.acwing.com/static/web/js/file_system/file/content/abstract/vote-0.0.3.js"></script>
+    <script src="https://cdn.acwing.com/static/web/js/file_system/file/content/abstract/collect-0.0.4.js"></script>
+
+<script type="text/javascript" src="https://cdn.acwing.com/static/web/js/file_system/file/operation/comment/pull-0.0.6.js"></script>
+<script>
+    
+    
+    window.onbeforeunload = function (ev) {
+
+        
+            let windows = desktop_state.window.windows;
+            for (let i = 0; i < windows.length; i ++ ) {  // 把所有未关闭的窗口关闭
+                if (windows[i]) {
+                    desktop_state.window.close(i);
+                }
+            }
+        
+
+        let notify = false;
+        for (let i = 0; i < onbeforeunload_functions.length; i ++ ){
+            let ret = onbeforeunload_functions[i]();
+            if (ret){
+                notify = true;
+            }
+        }
+        if (notify){
+            return true;
+        }
+    };
+
+    let CLICK_URL = "/status/count/click/";
+</script>
+<script src="https://cdn.acwing.com/static/web/js/status/click.js"></script>
+
+</body>
+</html>
