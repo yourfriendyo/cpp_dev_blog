@@ -457,12 +457,7 @@ DESCRIPTION
 ```c
 int main()
 {
-    int fd = open("./log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0664);
-    if (fd < 0) {
-        perror("open");
-        exit(1);
-    }
-    dup2(fd, 1); //将fd号文件拷贝至1号文件位置，如此访问1号文件就成了访问fd文件
+2
     printf("hello world\n");
     fprintf(stdout, "hello world\n");
     fputs("hello world\n", stdout);

@@ -599,8 +599,8 @@ int main() {
 ##### epoll_create
 
 ```c
-       #include <sys/epoll.h>
-       int epoll_create(int size);
+#include <sys/epoll.h>
+int epoll_create(int size);
 ```
 
 - 自Linux内核版本2.6.8之后，size参数是默认忽略的，但为了向前兼容，大多写成128或256。
@@ -615,7 +615,7 @@ int main() {
 ##### epoll_ctl
 
 ```c
-       int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
 ```
 
 不管是哪种多路转接方案，都要进行的工作步骤是：用户告诉内核和内核告诉用户。而`epoll_ctl`负责的就是用户告诉内核的任务。
@@ -664,7 +664,7 @@ int main() {
 ##### epoll_wait
 
 ```c
-       int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
 ```
 
 显然`epoll_wait`负责的就是内核告诉用户特定fd事件就绪的任务。
