@@ -1,41 +1,34 @@
 # vector
 
-### 0. vector 的介绍
+### 0. vector的介绍
 
-vector 是用数组实现的、可变长度的顺序容器，本质是一种类模板。
+vector是用数组实现的、可变长度的顺序容器，本质是一种类模板。
 
 ~~~cpp
 template < 
 	class T, // 元素类型
 	class Alloc = allocator<T> > // 空间配置器类型
 
-class vector; // 类模板的声明
+class vector; // 类模板声明
 ~~~
 
-## 1. vector 的接口
+## 1. vector的接口
 
 ### 1.1 默认成员函数
 
-| 接口声明                                                   | 解释                         |
-| ---------------------------------------------------------- | ---------------------------- |
-| **`vector ()`**                                            | **默认构造**                 |
-| `vecotr (size_type n, const_value_type& val=value_type())` | 填充构造，填充n个元素        |
-| `vector (InputIter first, InputIter last)`                 | 范围构造，用迭代器区间初始化 |
-| **`vector (const vector& v)`**                             | **拷贝构造**                 |
-| `vector& operator= (const vector& x)`                      | 赋值重载                     |
-
-利用迭代器区间进行构造对象时，可以使用任意类型变量的迭代器，因为这里的参数是迭代器模板，支持任意的迭代器。
-
-~~~cpp
-template <class InputIterator> //迭代器模板
-	vector(InputIter first, InputIter last);
-~~~
+| 接口声明                                                   | 解释                       |
+| ---------------------------------------------------------- | -------------------------- |
+| **`vector()`**                                             | **默认构造**               |
+| `vecotr (size_type n, const_value_type& val=value_type())` | 填充构造，填充n个元素      |
+| `vector(InputIter first, InputIter last)`                  | 范围构造，迭代器区间初始化 |
+| **`vector(const vector& v)`**                              | **拷贝构造**               |
+| **`vector& operator= (const vector& x)`**                  | **赋值重载**               |
 
 ### 1.2 容量操作
 
 | 容量操作                                                     | 解释                           |
 | ------------------------------------------------------------ | ------------------------------ |
-| **`size_type size()`**                                       | **有效元素个数**               |
+| **`size_type size()`**                                       | **元素个数**                   |
 | **`size_type capacity()`**                                   | **容量大小**                   |
 | `size_type max_size()`                                       | 最大能存储的元素个数（无意义） |
 | **`void reserve (size_type n);`**                            | **增加容量**                   |
@@ -47,26 +40,28 @@ v.resize(100, 1); // 有效元素个数变为100,新增元素初始化为1
 v.resize(10);     // 有效元素个数变为10
 ~~~
 
-<img src="05-vector.assets/vector增容操作具体情况图示.png" style="zoom:80%;" />
+<img src="05-vector.assets/vector增容具体情况.png" style="zoom: 67%;" />
 
-由图可知，vs 下 vector 增容按1.5倍增。
+> 由图可知，vs下vector按1.5倍增容。
 
 ### 1.3 访问操作
 
-| 接口声明                                         | 解释                           |
-| ------------------------------------------------ | ------------------------------ |
-| **`reference operator[](size_type n)`**          | **返回对应下标位置元素的引用** |
-| `const_reference operator[] (size_type n) const` |                                |
-| `reference at(size_type n)`                      |                                |
-| `const_reference at (size_type n) const`         |                                |
+| 接口声明                                         | 解释                   |
+| ------------------------------------------------ | ---------------------- |
+| **`reference operator[](size_type n)`**          | **返回下标位置的引用** |
+| `const_reference operator[] (size_type n) const` |                        |
+| `reference at(size_type n)`                      |                        |
+| `const_reference at (size_type n) const`         |                        |
 
 `[]`重载和`at`的区别是，`[]`越界会断言报错，`at`是抛异常。
 
-| 迭代器接口          | 解释                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| **`begin`,`end`**   | **起始位置的迭代器，末尾元素的下一个位置的迭代器**。         |
-| **`rbegin`,`rend`** | **反向起始位置的迭代器，反向末尾元素的下一个位置的迭代器**。 |
-| `cbegin`,`cend`     | begin 和 end 的 const 版本                                   |
+| 迭代器接口      | 解释                             |
+| --------------- | -------------------------------- |
+| `begin`         | 起始位置的迭代器                 |
+| `end`           | 末尾元素的下一个位置的迭代器     |
+| `rbegin`        | 反向起始位置的迭代器             |
+| `rend`          | 反向末尾元素的下一个位置的迭代器 |
+| `cbegin`,`cend` | begin 和 end 的 const 版本       |
 
 `[]`重载就已经能方便的访问 vector，但并不意味着放弃迭代器。大部分容器都支持迭代器访问，且迭代器使用简单规范统一。
 
@@ -74,15 +69,19 @@ STL 中容器的迭代器区间都是采用 $[first,last)$ 左闭右开的方式
 
 ~~~cpp
 //[]
-for (size_t i = 0; i < v1.size(); i++) {
+for (size_t i = 0; i < v.size(); i++) {
     v1[i] += 1;
 }
 
 //iterator
-vector<int>::iterator it = v1.begin();
-while (it != v1.end()) {
+vector<int>::iterator it = v.begin();
+while (it != v.end()) {
     cout << *it << " ";
     it++;
+}
+
+for (auto e : v) {
+    cout << e << " ";
 }
 ~~~
 
@@ -92,26 +91,12 @@ while (it != v1.end()) {
 | ------------------------------------------------------------ | ---------------------- |
 | **`void push_back (const value_type& val)`**                 | **尾插**               |
 | **`void pop_back()`**                                        | **尾删**               |
-| `iterator insert (iterator position, const value_type& val)` | 迭代器位置插入         |
-| `void insert (iterator position, InputIter first, InputIter last)` | 迭代器位置插入一段区间 |
-| **`iterator erase (iterator position)`**                     | **迭代器位置删除**     |
+| **`iterator insert (iterator pos, const value_type& val)`**  | **迭代器位置插入**     |
+| `void insert (iterator pos, size_type n, const value_type& val);` | 迭代器位置插入         |
+| `void insert (iterator pos, InputIter first, InputIter last)` | 迭代器位置插入一段区间 |
+| **`iterator erase (iterator pos)`**                          | **迭代器位置删除**     |
 | `iterator erase (iterator first, iterator last)`             | 删除一段迭代器区间     |
 | `void assign (size_type n, const value_type& val)`           | 覆盖数据               |
-
-~~~cpp
-/* assign */
-template <class InputIterator>                             
-void assign (InputIterator first, InputIterator last);                     // range (1)	
-void assign (size_type n, const value_type& val);                          // fill (2)	
-/* insert */
-iterator insert (iterator position, const value_type& val);                // single element (1)
-void insert (iterator position, size_type n, const value_type& val);       // fill (2)	
-template <class InputIterator>
-void insert (iterator position, InputIterator first, InputIterator last);  // range (3)	
-/* erase */
-iterator erase (iterator position);
-iterator erase (iterator first, iterator last);
-~~~
 
 ~~~cpp
 v.insert(ret, 30);
@@ -121,11 +106,18 @@ v1.erase(pos);
 v1.erase(v1.begin(), v1.end());
 ~~~
 
+```cpp
+#include <algorithm>
+// 查找接口
+template <class InputIter, class T>
+   InputIter find (InputIter first, InputIter last, const T& val);
+```
+
 &nbsp;
 
-## 2. vector 的模拟实现
+## 2. vector的模拟实现
 
-<img src="05-vector.assets/STL vector源码解释图.png" style="zoom: 67%;" />
+<img src="05-vector.assets/vector结构图.png" style="zoom: 67%;" />
 
 ### 2.1 类的定义
 
@@ -209,16 +201,16 @@ vector(const vector<T>& v)
 
 函数模板的模板参数要传迭代器区间时，命名是有规定的，范围构造中的`InputIterator`就是一种指定的迭代器类型。因容器的结构各有不同，迭代器分为五种类型：
 
-| 迭代器类型              | 名称            | 解释                                                 | 适用容器            |
-| ----------------------- | --------------- | ---------------------------------------------------- | ------------------- |
-| input / output_iterator | 输入/输出迭代器 | 只读迭代器只能读取，只写迭代器可以写入该位置的值     | 无实际容器          |
-| forward_iterator        | 向前迭代器      | 只能向前移动（++），允许在迭代器位置进行读写         | forward_list        |
-| bidirectional_iterator  | 双向迭代器      | 可以双向移动（++,--），允许在迭代器位置进行读写      | list, map, set      |
-| random_access_iterator  | 随机迭代器      | 支持指针运算，可移动（++,--）任意跳转（+,-）读写(\*) | deque,vector,string |
+| 迭代器类型             | 名称            | 解释                                                 | 适用容器            |
+| ---------------------- | --------------- | ---------------------------------------------------- | ------------------- |
+| input/output_iterator  | 输入/输出迭代器 | 只读迭代器只能读取，只写迭代器可以写入该位置的值     | 无实际容器          |
+| forward_iterator       | 向前迭代器      | 只能向前移动（++），允许在迭代器位置进行读写         | forward_list        |
+| bidirectional_iterator | 双向迭代器      | 可以双向移动（++,--），允许在迭代器位置进行读写      | list, map, set      |
+| random_access_iterator | 随机迭代器      | 支持指针运算，可移动（++,--）任意跳转（+,-）读写(\*) | deque,vector,string |
 
 可以看出，下方的迭代器类型是上方的父类，也就是说**下方迭代器满足上方的所有要求**。
 
-![](05-vector.assets/迭代器分类的父子关系示例图示.gif)
+![](05-vector.assets/迭代器分类的父子关系示例图示.png)
 
 之所以划分出不同的迭代器类型，是为了限制传入的迭代器的类型，因为其必须满足指定的需求才能完成接下来的函数。 
 
@@ -298,14 +290,14 @@ v.push_back("1111111");
 v.push_back("1111111"); //增容浅拷贝
 ~~~
 
-> 假如用 vector 数组存储 string 对象，四次尾插元素都没问题，当第五次尾插元素时出现了内存问题。
+> 假如用 vector数组存储 string 对象，四次尾插元素都没问题，当第五次尾插元素时出现了内存问题。
 
 其实，第五次尾插出现问题，是因为第五次时正好数组已满需要增容。而模拟实现的`reserve`函数使用`memcpy`将原空间的内容按字节拷贝至新空间。
 
-1. 若 vector 存储的是内置类型的数据，则浅拷贝至新空间没有问题。
-2. 若 vector 存储的是自定义类型的数据，由于浅拷贝粗暴地复制变量后再释放原空间，使得新变量指向已释放的空间。
+1. 若 vector存储的是内置类型的数据，则浅拷贝至新空间没有问题。
+2. 若 vector存储的是自定义类型的数据，由于浅拷贝粗暴地复制变量后再释放原空间，使得新变量指向已释放的空间。
 
-<img src="05-vector.assets/vector类reverse增容memcpy浅拷贝问题图示示例.gif"  />
+<img src="05-vector.assets/reverse增容memcpy浅拷贝问题图示示例.gif"  />
 
 如图所示，将对象中的原变量浅拷贝一份，再释放原空间，导致拷贝来的新变量指向了已释放的空间。故应该改为深拷贝。深拷贝需要调用自定义类型的拷贝构造或者赋值重载。
 
@@ -410,19 +402,19 @@ while (pos != v1.end()) {
 - `erase`同样有迭代器失效的问题，**删除后 pos 就已经指向了下一个元素，再直接`++pos`会跳过该元素**。须不符合删除条件时再 ++。
 - `pos=erase(pos)`保证删除后 pos 的位置依然正确，避免有些少见的 STL 版本可能会缩容导致`pos`为野指针。
 
-> 漏掉元素是 erase 删除元素出现的所有问题的根源。迭代器失效的问题只有在连续使用迭代器时才会出现。不光 vector 会迭代器失效，只要能够使用迭代器访问的容器，都可能发生迭代器失效的问题。
+> 漏掉元素是 erase 删除元素出现的所有问题的根源。迭代器失效的问题只有在连续使用迭代器时才会出现。不光 vector会迭代器失效，只要能够使用迭代器访问的容器，都可能发生迭代器失效的问题。
 
 &nbsp;
 
-## 3. vector 的 OJ题
+## 3. vector的OJ题
 
 | 题目                                                         | 题解                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [只出现一次的数字](https://leetcode.cn/problems/single-number/description/) | [【简洁明了】只出现一次的数字 I](https://leetcode.cn/problems/single-number/solutions/2148111/jian-ji-ming-liao-zhi-chu-xian-yi-ci-de-resn0/) |
 | [杨辉三角](https://leetcode.cn/problems/pascals-triangle/description/) | [【简洁明了】cpp 杨辉三角](https://leetcode.cn/problems/pascals-triangle/solutions/2148504/jian-ji-ming-liao-cpp-yang-hui-san-jiao-r68z0/?orderBy=newest_to_oldest) |
 | [删除有序数组中的重复项](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/) | [【双指针 简单明了】数组去重](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/solutions/2148460/shuang-zhi-zhen-jian-dan-ming-liao-shu-z-9p32/?orderBy=newest_to_oldest) |
-| [只出现一次的数字 II](https://leetcode.cn/problems/single-number-ii/) |                                                              |
-| [只出现一次的数字 III](https://leetcode.cn/problems/single-number-iii/) |                                                              |
+| [只出现一次的数字 II](https://leetcode.cn/problems/single-number-ii/) | [【简单明了 注释】只出现一次的数字](https://leetcode.cn/problems/single-number-ii/solutions/2149532/jian-dan-ming-liao-zhu-shi-zhi-chu-xian-1iwno/) |
+| [只出现一次的数字 III](https://leetcode.cn/problems/single-number-iii/) | [【详细解析】只出现一次的数字 系列 I II III](https://leetcode.cn/problems/single-number-iii/solutions/2152031/xiang-xi-jie-xi-zhi-chu-xian-yi-ci-de-sh-1vsp/) |
 | [多数元素](https://leetcode.cn/problems/majority-element/description/) | [【哈希 排序 投票】三种解法 简洁明了](https://leetcode.cn/problems/majority-element/solutions/2148590/ha-xi-pai-xu-tou-piao-san-chong-jie-fa-j-qzoi/) |
 | [连续子数组的最大和](https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/) | [【动归】连续子数组的最大和](https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/solutions/2148610/dong-gui-lian-xu-zi-shu-zu-de-zui-da-he-ovcf3/) |
 | [电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/) | [【注释解析 回溯】电话号码字母组合](https://leetcode.cn/problems/letter-combinations-of-a-phone-number/solutions/2148604/zhu-shi-jie-xi-hui-su-dian-hua-hao-ma-zi-uokb/) |
