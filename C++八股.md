@@ -141,7 +141,10 @@ int main() {
 }
 ```
 
+- 构造的调用顺序：C A B D
+- 析构的调用顺序：A B D C
 
+先全局，再局部。**静态属性不会影响对象调用构造和析构的顺序。**
 
 <font color=green>17. 类模版的声明 class 和 typename，有什么讲究？</font>
 
