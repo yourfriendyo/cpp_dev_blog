@@ -322,3 +322,149 @@ char buffer[] = "hello world";   // 栈区数组保存栈区字符串
 任何的 $n$ 维数组都可以理解为一维数组，$n$ 维数组是元素为 $n-1$ 维数组的一维数组。
 
 二维数组名，除`&`和`sizeof`两种情况，都看作是首元素的地址，也就是一维数组的地址。
+
+```cpp
+int a[3][4] = {0};
+cout << sizeof(a[0])         << endl; // 第一个元素int[4]
+cout << sizeof(a[0] + 1)     << endl; // 第一个元素int[4]的第二个元素int的地址
+cout << sizeof(&a[0] + 1)    << endl; // 第二个元素int[4]的地址
+cout << sizeof(*(a[0] + 1))  << endl; // 第二个元素int[4]的第一个元素
+cout << sizeof(*(&a[0] + 1)) << endl; // 第二个元素int[4]
+cout << sizeof(*a)           << endl; // 第一个元素int[4]
+cout << sizeof(a[3])         << endl; // 第四个元素int[4]
+```
+
+所有数组传参，都要发生降维，降维成首元素指针。二维数组降维就是一维数组的指针。
+
+```cpp
+void test(int(*a)[4]) {}
+int a[3][4] = {0};
+test(a);
+```
+
+### 4.3 函数指针
+
+函数名和取地址函数名，都是获取函数的地址。因为函数不会写入，不会作左值，函数只关心函数代码的起始位置。 
+
+&nbsp;
+
+## 5. 函数
+
+### 5.1 函数栈帧的创建和销毁
+
+| 常见寄存器 | 作用                                   |
+| ---------- | -------------------------------------- |
+| `eax`      | 通用寄存器，保存临时数据，常用于返回值 |
+| `ebx`      | 通用寄存器，保存临时数据               |
+| `ebp`      | 栈底寄存器                             |
+| `esp`      | 栈顶寄存器                             |
+| `eip`      | 指令寄存器，保存下一条指令的地址       |
+
+| 相关汇编指令 | 作用                                   |
+| ------------ | -------------------------------------- |
+| `mov`        | 数据转移指令（开辟空间，数据移入空间） |
+| `push`       | 数据入栈                               |
+| `pop`        | 数据出栈                               |
+| `sub`        | 减法指令                               |
+| `add`        | 加法指令                               |
+| `call`       | 函数调用（压入返回地址和转入目标函数） |
+| `jump`       | 转入目标函数（修改eip）                |
+| `ret`        | 恢复返回地址（弹出返回地址和修改eip）  |
+
+```cpp
+int Test(int a, int b) {
+    int c = 0;
+    c = a + b;
+    return c;
+}
+int main() {
+    int x = 0xA;
+    int y = 0xB;
+    int z = Test(x, y);
+    return 0;
+}
+```
+
+<img src="https://img.gejiba.com/images/6227087e0bce48ce74e2bf824d10efe8.gif"  style="zoom:50%;" >
+
+- 函数内临时变量，是在该函数对应栈帧内部开辟的。临时变量的临时性，是因为栈帧会被自动释放。
+- 函数调用之前，会提前开辟好指定大小的栈帧。函数调用之后，栈帧会被释放。
+- 形参列表的实例化，是按照从右往左的顺序压栈的。且压栈位置是紧挨着的。
+- 调用函数的成本，体现在栈帧创建和销毁的消耗上。
+
+### 5.2 可变参数列表
+
+```cpp
+void Test(int num, ...) 
+{}
+Test(5, 1, 2, 3, 4, 5);
+```
+
+使用可变参数列表，必须至少声明一个明确的参数。
+
+<img src="https://img.gejiba.com/images/756ba31bd34182be859554e90fc1f0a3.png" style="zoom:50%;" >
+
+> 既然我们理解可变参数列表的栈帧结构，我们就可以自行用指针获取每个变量。库中实现也是这个原理。
+
+```cpp
+int Max(int num, ...)
+{
+    va_list arg; // 定义char*类型的指针
+    va_start(arg, num); // 根据num确定开始位置，并将arg指针指向第一个可变形参
+
+    int max = va_arg(arg, int); // arg指针以int长度获取第一个可变形参
+    for (int i = 1; i < num; i++)
+    {
+        int cur = va_arg(arg, int); // 以int长度获取之后的形参
+        if (cur > max)
+            max = cur;
+    }
+    va_end(arg); // 将arg指针置空
+    return max;
+}
+```
+
+短整型传参一般都会整型提升至4字节整型，所以用 int 处理可变形参长度是合理的。
+
+```cpp
+// va_list va_start va_arg va_end 实现
+
+typedef char * va_list;
+
+#define va_start _crt_va_start
+#define va_arg   _crt_va_arg
+#define va_end   _crt_va_end
+
+#define _crt_va_start(ap, v) ( ap = (va_list)_ADDRESSOF(v) + _INTSIZEOF(v) )
+#define _crt_va_arg(ap, t)   ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
+#define _crt_va_end(ap)      ( ap = (va_slist)0 )
+
+#define _ADDRESSOF(v) ( &(v) )
+#define _INTSIZEOF(n) ( (sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1) ) // 4字节对齐
+```
+
+> 前面几个宏都很好理解，我们重点看一下最后一个`_INTSIZEOF(n)`。
+
+$$
+x \ge n \quad \&\&  \quad x \% 4 == 0
+$$
+
+`INTSIZEOF(n)`宏的含义就是求出满足上述条件的，最小的 $x$。也就是4字节倍数的向上取整。
+
+### 5.3 命令行参数
+
+```cpp
+int main(int argc, char* argv[], char* envp[]) 
+{
+    for (int i = 0; i < argc; i++)
+        cout << i << "->" << argv[i] << endl;
+
+    for (int i = 0; envp[i]; i++)
+        cout << i << "->" << envp[i] << endl;
+}
+// argc: 命令行参数的个数
+// argv: 命令行参数字符串数组
+// envp: 环境变量字符串数组
+```
+
+[Linux系统：进程概念](https://blog.csdn.net/yourfriendyo/article/details/124700053)
