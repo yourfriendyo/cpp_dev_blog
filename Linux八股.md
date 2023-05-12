@@ -197,13 +197,63 @@ test : test.c
 - 共享内存是所有进程间通信方式中最快的，其以一块裸露内存为载体，不存在数据拷贝。
 - 同时不提供任何同步互斥机制，需程序员自己保证数据安全。
 
-<font color=green>22. </font>
+<font color=green>22. 发送信号的本质是什么？</font>
+
+发送信号的本质就是操作系统向进程PCB中的pending信号位图写入数据。
+
+信号产生的方式多样，但最终都是要系统向进程发送信号。
+
+<font color=green>23. signal 接口的作用？</font>
+
+`signal`接口用来提前告知进程对于指定信号的处理动作，相当于是一种预定的注册机制，此时并没有任何信号产生。
+
+<font color=green>24. 信号产生的几种方式？</font>
+
+- 系统指令：`kill`命令、键盘输入`^C`,`^\`,`^Z`。
+- 系统调用：`kill`、`raise`、`abort`。
+- 软件条件：软件条件的不就绪导致产生信号，`alarm`。
+- 硬件异常：存在段错误或者浮点数溢出等错误的程序，运行起来会导致CPU或其他硬件出现异常，会被操作系统甄别到并向进程发送信号。
+
+<font color=green>25. PCB中用什么数据结构保存信号？</font>
+
+block位图用来记录信号阻塞信息，pending位图用来记录是否收到信号，函数指针数组`handler`用来保存信号对应的处理方法。
+
+<font color=green>26. 进程什么时候会进行信号处理？</font>
+
+信号产生是异步的，所以信号不一定产生时立即处理。进程每次发生状态切换时会通过系统之手进行信号的检测和处理。
+
+<font color=green>27. 整个信号处理过程会发生多少次状态切换？</font>
+
+1. 用户调用系统接口。从用户态到内核态。
+2. 系统调用结束时，会检测和处理信号，调用用户自定义该信号的处理方法，如果有的话。从内核态到用户态。
+3. 信号捕捉函数调用结束后，回到内核代码。从用户态到内核态。
+4. 通过系统接口`sys_sigreturn`返回用户代码位置。从内核态到用户态。
+
+> 整个过程用莫比乌斯环表示。
+
+<font color=green>28. 什么是用户态和内核态？</font>
+
+进程执行用户代码时必须处于用户态，执行内核代码时必须处于内核态。两种状态级别权限不一样，防止进程随意访问系统资源威胁系统安全。
+
+进程地址空间[0,3]GB为用户空间，[3,4]GB为内核空间。用户空间通过用户页表映射到用户代码数据，内核空间通过内核页表映射到内核代码数据。用户页表每个进程独有一份，内核页表所有进程共享。
 
 
 
-<font color=green>11. </font>
+<font color=green>29. </font>
 
-<font color=green>11. </font>
+<font color=green>30. </font>
 
-<font color=green>11. </font>
+<font color=green>31. </font>
+
+<font color=green>32. </font>
+
+<font color=green>33. </font>
+
+<font color=green>34. </font>
+
+<font color=green>35. </font>
+
+<font color=green>36. </font>
+
+<font color=green>37. </font>
 
