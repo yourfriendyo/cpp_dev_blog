@@ -140,100 +140,68 @@ __list_node 是链表节点类，list 是链表类，他的成员是 \_\_list_no
 
 ~~~cpp
 /* default constructor */
-list(T x = T())
-	:_head(new Node(x))
+void empty_init()
 {
+	_head = new Node(x);
     _head->_prev = _head;
     _head->_next = _head;
+}
+list()
+{
+    empty_init();
 }
 ~~~
 
 <img src="06-list.assets/空list图示.png" style="zoom:80%;" />
 
-~~~cpp
+```cpp
 /* copy constructor */  
 //传统写法
-list(const list<T>& lt)
-	:_head(new Node)
+list<T>(const list<T>& lt)
 {
-    _head->_prev = _head;
-    _head->_next = _head;
-    for (auto e : lt) {
+    empty_init();
+    for (auto e : lt)
         push_back(e);
-    }
 }
 //现代写法
-list(const list<T>& lt)
-	: _head(new Node)
+list<T>(const list<T>& lt)
 {
-    _head->_prev = _head;
-    _head->_next = _head; //处理随机值
-    list<T> tmp(lt.begin(),lt.end());
-    std::swap(_head, tmp._head);
+	empty_init();
+	list<T> tmp(lt.begin(), lt.end());
+    swap(_head, tmp._head);
 }
+
+
+```
+
+~~~cpp
 /* = operator */
 //传统写法
-list& operator=(const list<T>& lt)
-{
+list<T>& operator=(const list<T>& lt)
+{	
     if (this != &lt) {
         clear();
-        for (auto e : lt) {
+        for (auto e : lt)
             push_back(e);
-        }
     }
     return *this;
 }
 //现代写法
-list& operator=(list lt)
+list<T>& operator=(list<T> lt)
 {
-    std::swap(_head, lt._head);
+    swap(_head, lt._head);
     return *this;
 }
+~~~
 
-
+```cpp
 /* deconstructor */
 ~list() 
 {
     clear();
     delete _head;
-    _head = nullptr;
 }
-
-/* fill constructor */
-list(size_t n, const T& val = T());
-	:_head(new Node)
-{
-    _head->_prev = _head;
-    _head->_next = _head;
-    while (n) {
-        push_back(val);
-        n--;
-    }
-}
-/* range constructor */
-template <class InputIter>
-list(InputIter first, InputIter last)
-	:_head(new Node)
-{
-    _head->_prev = _head;
-    _head->_next = _head;
-    while (first != last) {
-        push_back(*first);
-        ++first;
-    }
-}
-~~~
-
-为防止范围构造`list(size_t n, T& val)`和填充构造`list(InIter first, InIter last)`产生冲突。当传入有符号整型会出现冲突，可以单独重载一个`(int n, int val)`的版本。
-
-~~~cpp
-list(int n, const int val = int()) {
-    //...
-}
-list(size_t n, const T& val = T()) {
-    //...
-}
-~~~
+```
 
 ### 2.3 迭代器
 
@@ -276,8 +244,10 @@ struct _list_iterator
 template <class T, class Ref, class Ptr> // 交由list类控制
 struct __list_iterator 
 {
+	typedef __list_iterator<T, Ref, Ptr> iterator;
     Ref operator* () { return  _node->_data; }
     Ptr operator->() { return &_node->_data; }
+    //...
 };
 
 class list
@@ -386,10 +356,10 @@ Ptr operator->()
 ~~~cpp
 class list 
 {
-typedef __list_iterator<T, T&, T*> iterator;
-typedef __list_iterator<T, const T&, const T*> const_iterator;
-typedef test::reverse_iterator<iterator, T&, T*> reverse_iterator;
-typedef test::reverse_iterator<const_iterator, const T&, const T*> const_reverse_iterator;
+    typedef __list_iterator<T, T&, T*> iterator;
+    typedef __list_iterator<T, const T&, const T*> const_iterator;
+    typedef reverse_iterator<iterator, T&, T*> reverse_iterator;
+    typedef reverse_iterator<const_iterator, const T&, const T*> const_reverse_iterator;
 
     iterator begin() { return iterator(_head->_next); }
     iterator end()   { return iterator(_head); }
@@ -431,7 +401,7 @@ iterator insert(iterator pos, const T& x)
 }
 iterator erase(iterator pos)
 {
-    assert(pos != end()); //断言位置合法
+    assert(pos != end());
     
     Node* prev = pos._node->_prev;
     Node* next = pos._node->_next;
@@ -449,7 +419,7 @@ iterator erase(iterator pos)
 - list 的插入操作迭代器不会失效，因为迭代器 pos 的值不会改变，始终指向原来的节点。
 - list 的删除操作迭代器一定失效，因为节点已经被释放了，应修正为 pos 下一个位置。
 
-<img src="06-list.assets/list模拟实现尾插元素图示示例.png" style="zoom: 67%;" />
+<img src="06-list.assets/list模拟实现尾插元素图示示例.png" style="zoom: 60%;" />
 
 &nbsp;
 

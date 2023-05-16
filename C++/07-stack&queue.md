@@ -1,86 +1,79 @@
 # stack&queue
 
-## 1. 栈和队列的介绍
+## 1. 介绍
 
-### 1.1 stack 的介绍
+### 1.1 stack
 
-栈是一种特殊的线性表，栈只允许在其固定的一端进行插入和删除元素的操作。进行数据插入删除操作的一端被称为**栈顶**，另一端被称为栈底。栈中的数据元素遵循**后进先出**的原则。
+栈是一种特殊的线性表，只允许固定一端进行插入和删除。
 
-压栈：栈的插入操作被称为压栈，也可以叫做进栈、入栈。出栈：栈的插入操作被称为出栈，或称弹栈。
+能够插入删除的一端被称为栈顶，另一端被称为栈底。栈的元素遵循后进先出的原则。
 
-后进先出，先进后出，即 $LIFO$ 原则（Last In First Out）。
+> 栈的插入被称为压栈、进栈、入栈，删除被称为出栈、弹栈。
 
-<img src="07-stack&queue.assets/进栈出栈图示.png" style="zoom:80%;" />
+后进先出，先进后出，$LIFO$ 原则（Last In First Out）。
 
-### 1.2 queue 的介绍
+<img src="07-stack&queue.assets/进栈出栈图示.png" style="zoom: 50%;" />
 
-队列同样是一种特殊的线性表，和栈相反，队列只允许在其一端进行插入而在另一端进行删除元素的操作。进行数据插入操作的一端被称为**队尾**，进行删除操作的另一端被称为**队头**。队列中的数据元素遵循**先进先出**的原则。
+### 1.2 queue
 
-入队列即在队尾插入数据，出队列则是在队头删除数据。先进先出，后进后出，即`FIFO`原则（First In First Out）。
+队列同样是一种特殊的线性表，和栈相反，队列只允许在其一端进行插入而在另一端进行删除。
 
-<img src="07-stack&queue.assets/队列结构功能示例图示.gif" style="zoom:80%;" />
+插入数据的一端被称为队尾，删除的另一端被称为队头。队列的元素遵循先进先出的原则。
+
+> 入队列就是队尾插入数据，出队列就是队头删除数据。
+
+先进先出，后进后出，即 $FIFO$ 原则（First In First Out）。
+
+<img src="07-stack&queue.assets/队列结构功能示例图示.gif" style="zoom: 50%;" />
 
 &nbsp;
 
-> 栈和队列的使用都非常简单。
+## 2. 接口
 
-## 2. 栈和队列的使用
+### 2.1 stack
 
-### 2.1 stack 的使用
-
-上文是数据结构时期对栈的介绍，现在栈作为 STL 的容器重新出现，此时栈和队列已不再是容器而是容器适配器。
+STL中的栈和队列不是容器而是容器适配器。
 
 ~~~cpp
-template <class T, class Container = deque<T> > class stack;
+template <class T, class Container = deque<T> > 
+class stack;
 ~~~
 
-1. stack 是一种容器适配器，专门用在具有后进先出操作的使用环境中。其只能从容器的一端进行元素的插入、删除、提取操作。
+stack 的底层可以使用任何容器，只要该容器支持`empty`、`back`、`push_back`、`pop_back`这些接口。如果没有为stack指定底层容器，默认使用deque。
 
-2. stack 作为一个容器适配器，其的特征就是使用方面非常简单，只有如下几个的接口：
+| 接口声明                                                     | 解释     |
+| ------------------------------------------------------------ | -------- |
+| `explicit stack (const container& ctnr = container())`       | 构造函数 |
+| `bool empty() const`                                         | 判空     |
+| `size_type size() const`                                     | 元素个数 |
+| `value_type& top()`                                          | 栈顶元素 |
+| `void push (const value_type& val)`                          | 尾插     |
+| `void pop()`                                                 | 尾删     |
+| `template <class... Args> void emplace (Args&&... args)`     |          |
+| `bool operator== (const stack<T,Ctnr>& lhs, const stack<T,Ctnr>& rhs)` | 关系运算 |
 
-  - `empty`：判空操作，`back`：获取尾部元素操作，`push_back`：尾部插入元素操作，`pop_back`：尾部删除元素操作。
+### 2.2 queue
 
-  stack 的底层容器可以是任何标准容器或者一些其他特定的容器类，这些容器类应该支持如上的操作。默认情况下，如果没有为 stack 指定特定的底层容器，默认情况下使用 deque。
+```cpp
+template <class T, class Container = deque<T> >
+class queue;
+```
 
-<img src="07-stack&queue.assets/Stack的各种接口图示.png" style="zoom:80%;" />
+queue也是容器适配器。底层容器要求和stack一样。
 
-~~~cpp
-void test_stack() {
-	stack<int> s;
-	s.push(1);
-	s.push(2);
-	s.push(3);
-	while (!s.empty()) {
-		cout << s.top() << " ";
-		s.pop();
-	}
-	cout << endl;
-}
-~~~
+| 接口声明                                                     | 解释     |
+| ------------------------------------------------------------ | -------- |
+| `explicit queue (const container& ctnr = container())`       | 构造函数 |
+| `bool empty() const`                                         | 判空     |
+| `size_type size() const`                                     | 元素个数 |
+| `value_type& front()`                                        | 队头元素 |
+| `value_type& back()`                                         | 队尾元素 |
+| `void push (const value_type& val)`                          | 尾插     |
+| `void pop()`                                                 | 头删     |
+| `template <class... Args> void emplace (Args&&... args)`     |          |
+| `bool operator== (const stack<T,Ctnr>& lhs, const stack<T,Ctnr>& rhs)` | 关系运算 |
 
-### 2.2 queue 的使用
-
-<img src="07-stack&queue.assets/Queue的各种接口图示.png" style="zoom:80%;" />
-
-~~~cpp
-void TestQueue()
-{
-	std::queue<int> q;
-	q.push(1);
-	q.push(2);
-	q.push(3);
-	q.push(4);
-	while (!q.empty()) {
-		cout << q.front() << " ";
-		q.pop();
-	}
-	cout << endl;
-}
-~~~
-
-
-
-## 3. 栈和队列的 OJ
+## 3. OJ
 
 ### 3.1 最小栈
 
@@ -120,11 +113,11 @@ private:
 
 出栈时，判断栈顶元素是否和最小值相等，相等则把最小栈中的元素也弹出。
 
-<img src="07-stack&queue.assets/双栈实现最小栈图示示例.gif" style="zoom:80%;" />
+<img src="07-stack&queue.assets/双栈实现最小栈图示示例.gif" style="zoom: 60%;" />
 
 ### 3.2 栈的出入序列匹配
 
-[栈的出入序列匹配 (newcode.com)](https://www.nowcoder.com/practice/d77d11405cc7470d82554cb292585106)
+[验证栈序列](https://leetcode.cn/problems/validate-stack-sequences/) / [剑指 Offer 31. 栈的压入、弹出序列](https://leetcode.cn/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/)
 
 一个入栈序列对应多种出栈序列，只能拿一个栈用来模拟，如果能匹配出当前的出栈序列，则两者是匹配的。
 
@@ -154,11 +147,11 @@ private:
 
 **成功示例图示**
 
-<img src="07-stack&queue.assets/模拟栈匹配出入栈序列成功示例图示.gif" style="zoom:80%;" />
+<img src="07-stack&queue.assets/模拟栈匹配出入栈序列成功示例图示.gif" style="zoom:60%;" />
 
 **不成功示例**
 
-<img src="07-stack&queue.assets/模拟栈匹配出入栈序列不成功示例图示.gif" style="zoom:80%;" />
+<img src="07-stack&queue.assets/模拟栈匹配出入栈序列不成功示例图示.gif" style="zoom:60%;" />
 
 待入栈数组遍历结束后，若出栈数组遍历结束或栈为空，说明匹配成功，若栈中仍有元素或出栈数组未遍历结束，说明匹配不成功。
 
@@ -263,7 +256,7 @@ private:
 };
 ~~~
 
-<img src="07-stack&queue.assets/栈实现队列的出栈操作图示.gif" alt="栈实现队列的出栈操作图示" style="zoom:80%;" />
+<img src="07-stack&queue.assets/栈实现队列的出栈操作图示.gif" style="zoom:60%;" />
 
 入栈`pushST`和出栈`popST`互不影响，分别完成入队的出队的任务。只要`popST`为空，就将`pushST`中元素移入即可。
 
@@ -304,13 +297,11 @@ private:
 
 &nbsp;
 
-## 4. 栈和队列模拟实现
+## 4. 模拟实现
 
-### 4.1 stack 模拟实现
+### 4.1 stack
 
-适配器是一种设计模式（设计模式是一套被反复使用的、多数人知晓的、经过分类编目的、代码设计经验的总结），该种模式是将一个类的接口转换成客户希望的另外一个接口。
-
-数据结构时期，栈可以用数组实现，也可以用链表实现，都是从零开始。C++ 中栈被实现成容器的适配器，可直接调用所适配的容器的接口，类似于这样：
+适配器是一种设计模式。数据结构栈可以用数组和链表实现，C++中栈被实现成容器的适配器，通过复用底层容器的接口。
 
 ~~~cpp
 template <class T> class stack {
@@ -349,9 +340,9 @@ private:
 };
 ~~~
 
-STL 源码中采用了更便捷的方式，将容器类型作为类模板参数传入，就支持自定义所适配的类型，并采用缺省参数的形式，指定默认容器为 deque。
+STL直接将容器类型作为类模板参数传入，支持自定义底层容器，并采用缺省参数的形式，指定默认容器为 deque。
 
-### 4.2 queue 模拟实现
+### 4.2 queue
 
 ~~~cpp
 template <class T, class Container = deque<T>>
@@ -377,17 +368,17 @@ private:
 };
 ~~~
 
-queue  的实现和 stack 类似，同样也是容器适配器，只需要按照 queue 的特性，将适配容器的接口换一下即可。
+> queue也是容器适配器，只要按照queue的特性，将适配容器的接口换一下即可。
 
 ### 4.3 deque
 
-#### deque 的介绍
+#### deque的介绍
 
 因为容器 vector 和 list 在随机访问和插入删除的方面各有不足又各有优势，为均衡一下二者的特性，C++ 设计者设计了一种容器叫做双端队列 deque。
 
 双端队列 deque 是一种双端的“连续”空间的数据结构。双端的含义是可以在头尾两端进行插入和删除操作，且时间复杂度为O(1)。
 
-<img src="07-stack&queue.assets/deque双端队列的原理介绍图示.png" style="zoom:80%;" />
+<img src="07-stack&queue.assets/deque双端队列的原理介绍图示.png" style="zoom:60%;" />
 
 | vector的缺点                                 | deque                                      |
 | -------------------------------------------- | ------------------------------------------ |
@@ -403,23 +394,23 @@ queue  的实现和 stack 类似，同样也是容器适配器，只需要按照
 
 两大容器的优点，deque 基本都可匹敌，两大容器的缺点，deque 基本都可避免。栈和队列不需要中间的修改，只需要头尾的插入删除，所以 stack 和 queue 使用 deque 作为默认适配容器。
 
-#### deque 的原理
+#### deque的原理
 
 deque 的底层实现并不是真正连续的空间，而是由一段段连续的小空间拼接而成的，实际 deque 类似于一个动态的二维数组，其底层结构如下图所示：
 
-<img src="07-stack&queue.assets/deque底层实现原理示例图示.gif" style="zoom:80%;" />
+<img src="07-stack&queue.assets/deque底层实现原理示例图示.gif" style="zoom:60%;" />
 
 deque 底层实际上是分段连续的，使用迭代器维护其“整体连续”以及随机访问的假象。
 
-<img src="07-stack&queue.assets/deque的迭代器底层实现结构.png" style="zoom:80%;" />
+<img src="07-stack&queue.assets/deque的迭代器底层实现结构.png" style="zoom:60%;" />
 
 > deque 使用颇具局限性，仅作了解。
 
 &nbsp;
 
-## 5. 优先级队列 priority_queue
+## 5. priority_queue
 
-### 5.1 介绍和使用
+### 5.1 接口使用
 
 优先级队列 priority_queue 同样是个容器适配器，不同于之前的 stack 和 queue 只是简单对所适配的容器进行封装，它有三个模板参数：
 
