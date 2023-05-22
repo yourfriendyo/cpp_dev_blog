@@ -2,7 +2,7 @@
 
 [list (cplusplus.com)](http://www.cplusplus.com/reference/list/list/)
 
-list 是双向链表，forward_list 是单向链表。
+list是双向链表，forward_list是单向链表。
 
 ~~~cpp
 template < 
@@ -16,7 +16,7 @@ class list; //类模板
 
 ## 1. list的使用
 
-### 1.1 基本接口
+### 1.1 增删查改
 
 | 默认成员函数                                                 | 说明           |
 | ------------------------------------------------------------ | -------------- |
@@ -100,18 +100,16 @@ lt.splice(pos, list, first, last); // 转移一段区间
 
 ~~~cpp
 // listnode
-template <class T>
-struct __list_node 
-{ 
-    listNode(T& x = T())
-    	: _data(x)
-        , _prev(nullptr)
-        , _next(nullptr)
-    {}
-    
-    T _data;
+template<class T>
+struct __list_node
+{
     __list_node<T>* _prev;
     __list_node<T>* _next;
+    T _data;
+
+    __list_node<T>(const T& t = T())
+        : _data(t), _prev(nullptr), _next(nullptr)
+    {}
 };
 
 // list
@@ -120,13 +118,9 @@ class list
 { 
 public:
     typedef __list_node<T> Node;
-    list()
-    	: _head(new Node)
-    {
-        _head->_prev = _head;
-        _head->_next = _head;
+    list() {
+        empty_init();
     }
-    
 private:
     Node* _head;
 }
@@ -146,6 +140,7 @@ void empty_init()
     _head->_prev = _head;
     _head->_next = _head;
 }
+
 list()
 {
     empty_init();
@@ -170,8 +165,6 @@ list<T>(const list<T>& lt)
 	list<T> tmp(lt.begin(), lt.end());
     swap(_head, tmp._head);
 }
-
-
 ```
 
 ~~~cpp
@@ -196,7 +189,16 @@ list<T>& operator=(list<T> lt)
 
 ```cpp
 /* deconstructor */
-~list() 
+void clear()
+{
+    iterator it = begin();
+    while (it != end())
+    {
+        it = erase(it);
+    }
+}
+
+~list<T>()
 {
     clear();
     delete _head;
@@ -212,25 +214,36 @@ list 的底层实现并不是 vector 一样的连续空间，而是通过节点�
 #### 正向迭代器
 
 ~~~cpp
-template <class T>
-struct _list_iterator 
+template<class T, class Ref, class Ptr>
+struct __list_iterator
 {
-    typedef __list_node<T> Node;
-    typedef __list_iterator<T> self;
-    
-    _list_iterator(Node* x)
-    	: _node(x) // 用节点地址初始化迭代器成员，相当于成员节点指针指向了链表中的该节点。
-    {}
-    
-    T&    operator* ();
-    self& operator++();
-    self  operator++(int);
-    self& operator--();
-    self  operator--(int);
-    bool  operator==(const self& it);
-    bool  operator!=(const self& it);
+    typedef __list_node<T> list_node;
+    typedef __list_iterator<T, Ref, Ptr> self;
 
-    Node* _node;
+    __list_iterator(list_node* n) : _node(n)
+    {}
+
+    Ref operator*() {
+        return _node->_data;
+    }
+    Ptr operator->() {
+        return &_node->_data;
+    }
+
+    self& operator++() {
+        _node = _node->_next;
+        return *this;
+    }
+    self& operator--() {
+        _node = _node->_prev;
+        return *this;
+    }
+
+    bool operator!=(const self& s) {
+        return _node != s._node;
+    }
+
+    list_node* _node;
 };
 ~~~
 
@@ -238,7 +251,7 @@ struct _list_iterator
 
 迭代器的拷贝构造、赋值重载都只需要浅拷贝指针。析构函数无需释放任何资源，节点交由链表进行管理。所以这些编译器默认生成就可以。
 
-#### 解引用箭头
+##### 解引用箭头
 
 ~~~cpp
 template <class T, class Ref, class Ptr> // 交由list类控制
@@ -300,6 +313,7 @@ void test_list()
 template <class Iterator, class Ref, class Ptr>
 struct reverse_iterator
 {
+    Iterator _it;
     typedef reverse_iterator self;
 
     reverse_iterator(Iterator it) // 利用正向迭代器构造出反向迭代器
@@ -323,39 +337,51 @@ struct reverse_iterator
         return _it != it._it;
     }
     
-    Iterator _it;
+    Ref operator*() 
+    {
+        Iterator tmp = _it;
+        return *--tmp;       // 前一个位置的迭代器
+    }
+    Ptr operator->()
+    {
+        Iterator tmp = _it;
+        return &*--tmp;
+    }
 };
 ~~~
 
-反向迭代器的成员是正向迭代器，是对正向迭代器的一种封装，这是一种适配器模式。基本接口都可以复用正向迭代器的。
-
-~~~cpp
-Ref operator*() 
-{
-    //return *_it;
-    Iterator tmp = _it;
-    return *--tmp;       // 前一个位置的迭代器
-}
-Ptr operator->()
-{
-    Iterator tmp = _it;
-    return &*--tmp;
-}
-~~~
+> 反向迭代器是对正向迭代器的封装。源码实现使用类型萃取难度较高，我们不使用。
 
 反向迭代器解引用和箭头不是访问当前位置，而是**前一个位置**。
 
-所有容器的正反向迭代器的`begin()`,`end()`和`rbegin()`,`rend()`所指向的位置正好对应相反。目的是设计出对称形式，因此解引用时返回的是上一个位置的数据。
+```cpp
+//list源码
+iterator begin() { return (link_type)((*node).next); }
+iterator end() { return node; }
+
+reverse_iterator rbegin() { return reverse_iterator(end()); }
+reverse_iterator rend() { return reverse_iterator(begin()); }
+
+const_iterator begin() const { return (link_type)((*node).next); }
+const_iterator end() const { return node; }
+
+const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+```
+
+**所有容器的迭代器`begin/end()`和`rbegin/rend()`指向的位置正好对应相反**。目的是设计出对称形式，因此解引用时返回的是上一个位置的数据。
 
 <img src="06-list.assets/正反迭代器的begin&end对应相反图示.png" style="zoom:67%;" />
 
-<img src="06-list.assets/反向迭代器遍历示例图示.gif" style="zoom: 67%;" />
+<img src="06-list.assets/反向迭代器遍历示例图示.gif" style="zoom: 60%;" />
 
 #### 迭代器接口
 
 ~~~cpp
+template<class T>
 class list 
 {
+public:
     typedef __list_iterator<T, T&, T*> iterator;
     typedef __list_iterator<T, const T&, const T*> const_iterator;
     typedef reverse_iterator<iterator, T&, T*> reverse_iterator;
@@ -375,13 +401,11 @@ class list
 };
 ~~~
 
-<img src="06-list.assets/list环形链表迭begin&end代器位置.png" style="zoom: 67%;" />
+<img src="06-list.assets/list环形链表迭begin&end代器位置.png" style="zoom: 60%;" />
 
-<img src="06-list.assets/反向迭代器rbegin&rend位置.png" style="zoom: 67%;" />
+<img src="06-list.assets/反向迭代器rbegin&rend位置.png" style="zoom: 60%;" />
 
-### 2.4 增删查改接口
-
-#### 插入删除
+### 2.4 基本功能
 
 ~~~cpp
 iterator insert(iterator pos, const T& x)
@@ -421,17 +445,25 @@ iterator erase(iterator pos)
 
 <img src="06-list.assets/list模拟实现尾插元素图示示例.png" style="zoom: 60%;" />
 
+```cpp
+void push_back(const T& x) { insert(end(), x); }
+void push_front(const T& x) { insert(begin(), x); }
+
+void pop_back() { erase(--end()); }
+void pop_front() { erase(begin()); }
+```
+
 &nbsp;
 
-## 3. list和vector对比
+## 3. list对比vector
 
-| 容器       | vector                                      | list                                     |
-| ---------- | ------------------------------------------- | ---------------------------------------- |
-| 底层结构   | 连续的物理空间，也就是数组                  | 带头双向循环链表，空间不连续             |
-| 随机访问   | 支持随机访问                                | 不支持随机访问                           |
-| 插入删除   | 非尾部的插入删除都要移动数据，效率低 $O(n)$ | 任意位置的插入删除，效率高               |
-| 空间利用率 | 增容代价大，倍数扩容存在一定的空间浪费      | 按需申请空间，不存在浪费                 |
-| 迭代器     | 原生指针支持随机访问                        | 构造迭代器类，模拟指针行为，支持双向访问 |
-| 适用场景   | 需要高效存储，随机访问，不关心增删效率      | 频繁使用插入删除，不关心随机访问         |
+| 容器       | vector                                  | list                               |
+| ---------- | --------------------------------------- | ---------------------------------- |
+| 底层结构   | 连续物理空间                            | 空间不连续                         |
+| 随机访问   | 支持随机访问                            | 不支持随机访问                     |
+| 插入删除   | 非尾部插入删除要移动数据，效率低 $O(n)$ | 任意位置的插入删除效率高 $O(1)$    |
+| 空间利用率 | 增容代价大，倍数扩容存在一定的空间浪费  | 按需申请空间，不存在浪费           |
+| 迭代器     | 原生指针支持随机访问                    | 迭代器类模拟指针行为，支持双向访问 |
+| 适用场景   | 高效存储，随机访问，不关心增删效率      | 频繁使用插入删除，不关心随机访问   |
 
-> vector 与 list 两种容器各有优劣，实际上 vector 用的更多些。因为 vector 支持随机访问这是最大的优点，其次，空间浪费也不是太严重的缺陷。
+vector与list两种容器各有优劣，实际上vector用的更多些。因为vector支持随机访问，其次空间浪费也不是太严重的问题。

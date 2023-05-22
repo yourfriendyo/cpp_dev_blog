@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+<title>README.md · 编辑文件 · AKA你的闺蜜/cpp_code_review - Gitee.com</title>
+<meta content='on' http-equiv='x-dns-prefetch-control'>
+<link href='//e.gitee.com' rel='dns-prefetch'>
+<link href='//files.gitee.com' rel='dns-prefetch'>
+<link href='//toscode.gitee.com' rel='dns-prefetch'>
+<link href='https://cn-assets.gitee.com' rel='dns-prefetch'>
+<link href='https://portrait.gitee.com' rel='dns-prefetch'>
+<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="https://cn-assets.gitee.com/assets/favicon-9007bd527d8a7851c8330e783151df58.ico" />
+<link rel="canonical" href="https://gitee.com/yourfriendyo/cpp_code_review" />
+<meta content='gitee.com/yourfriendyo/cpp_code_review git https://gitee.com/yourfriendyo/cpp_code_review.git' name='go-import'>
+<meta charset='utf-8'>
+<meta content='always' name='referrer'>
+<meta content='Gitee' property='og:site_name'>
+<meta content='Object' property='og:type'>
+<meta content='https://gitee.com/yourfriendyo/cpp_code_review/edit/master/README.md' property='og:url'>
+<meta content='https://gitee.com/static/images/logo_themecolor.png' itemprop='image' property='og:image'>
+<meta content='README.md · 编辑文件 · AKA你的闺蜜/cpp_code_review - Gitee.com' itemprop='name' property='og:title'>
+<meta content='Gitee.com（码云） 是 OSCHINA.NET 推出的代码托管平台，支持 Git 和 SVN，提供免费的私有仓库托管。目前已有超过 1000 万的开发者选择 Gitee。' property='og:description'>
+<meta content='码云,Gitee,代码托管,Git,Git@OSC,Gitee.com,开源,内源,项目管理,版本控制,开源代码,代码分享,项目协作,开源项目托管,免费代码托管,Git代码托管,Git托管服务' name='Keywords'>
+<meta content='Gitee.com（码云） 是 OSCHINA.NET 推出的代码托管平台，支持 Git 和 SVN，提供免费的私有仓库托管。目前已有超过 1000 万的开发者选择 Gitee。' itemprop='description' name='Description'>
+<meta content='pc,mobile' name='applicable-device'>
+
+<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="/tcyTAe/KD1jIYT37js5t/n81f6wB1IK3cMbXIYRMcO8eoZBBAXOgNKPnk4+4MWTWbgOY7dtgr2kztAO6nLgMQ==" />
+
+<link rel="stylesheet" media="all" href="https://cn-assets.gitee.com/assets/application-697d9872ee8039be9e5a6dd15644f10a.css" />
+<script>
+//<![CDATA[
+window.gon = {};gon.locale="zh-CN";gon.sentry_dsn=null;gon.baidu_register_hm_push=null;gon.sensor={"server_url":"https://haveaniceday.gitee.com:3443/sa?project=production","sdk_url":"https://cn-assets.gitee.com/assets/static/sensors-sdk-2f850fa5b654ad55ac0993fda2f37ba5.js","page_type":"其他"};gon.info={"controller_path":"blob","action_name":"edit","current_user":{"id":9213128,"name":"AKA你的闺蜜","username":"yourfriendyo","official":false,"admin":false,"avatar_url":"https://foruda.gitee.com/avatar/1677168033061655674/9213128_yourfriendyo_1622635900.png"}};gon.tour_env={"current_user":"yourfriendyo","action_name":"edit","original_url":"https://gitee.com/yourfriendyo/cpp_code_review/edit/master/README.md","controller_path":"blob"};gon.http_clone="https://gitee.com/yourfriendyo/cpp_code_review.git";gon.user_project="yourfriendyo/cpp_code_review";gon.manage_branch="管理分支";gon.manage_tag="管理标签";gon.enterprise_id=0;gon.create_reaction_path="/yourfriendyo/cpp_code_review/reactions";gon.ipipe_base_url="https://go-api.gitee.com";gon.artifact_base_url="https://go-repo.gitee.com";gon.gitee_go_remote_url="https://go.gitee.com/assets";gon.gitee_go_active=false;gon.current_project_is_mirror=false;gon.show_repo_comment=false;gon.diagram_viewer_path="https://diagram-viewer.giteeusercontent.com";
+//]]>
+</script>
+<script src="https://cn-assets.gitee.com/assets/static/sensor-6269b9ad61bbcdaff20078e5dcff62d5.js"></script>
+<script src="https://cn-assets.gitee.com/assets/static/sentry-5.1.0-a823fb0be1b61c5d7ca4a89f0536cb0a.js"></script>
+<script src="https://cn-assets.gitee.com/assets/application-7169872a7f3a9d6f6ae1a1ff8733a480.js"></script>
+<script src="https://cn-assets.gitee.com/assets/lib/jquery.timeago.zh-CN-4a4818e98c1978d2419ab19fabcba740.js"></script>
+
+<link rel="stylesheet" media="all" href="https://cn-assets.gitee.com/assets/projects/application-46b94c31ba11ae8c37eacce2bdb5603e.css" />
+<script src="https://cn-assets.gitee.com/assets/projects/app-afe0b82c163fe3ae58b48ab571c47734.js"></script>
+
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+  var title = document.title.replace(/( - Gitee| - 码云)$/, '')
+      imgUrl = '';
+  
+  document.addEventListener('DOMContentLoaded', function(event) {
+    var imgUrlEl = document.querySelector('.readme-box .markdown-body > img, .readme-box .markdown-body :not(a) > img');
+    imgUrl = imgUrlEl && imgUrlEl.getAttribute('src');
+  
+    if (!imgUrl) {
+      imgUrlEl = document.querySelector('meta[itemprop=image]');
+      imgUrl = imgUrlEl && imgUrlEl.getAttribute('content');
+      imgUrl = imgUrl || "https://gitee.com/static/images/logo_themecolor.png";
+    }
+  
+    wx.config({
+      debug: false,
+      appId: "wxff219d611a159737",
+      timestamp: "1684517402",
+      nonceStr: "3969175939a414d4acbb6e86b1e04391",
+      signature: "4332e66cfb6756940f73a61433fb6c863b491db6",
+      jsApiList: [
+        'onMenuShareTimeline',
+        'onMenuShareAppMessage'
+      ]
+    });
+  
+    wx.ready(function () {
+      wx.onMenuShareTimeline({
+        title: title, // 分享标题
+        link: "https://gitee.com/yourfriendyo/cpp_code_review/edit/master/README.md", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: imgUrl // 分享图标
+      });
+      wx.onMenuShareAppMessage({
+        title: title, // 分享标题
+        link: "https://gitee.com/yourfriendyo/cpp_code_review/edit/master/README.md", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        desc: document.querySelector('meta[name=Description]').getAttribute('content'),
+        imgUrl: imgUrl // 分享图标
+      });
+    });
+    wx.error(function(res){
+      console.error('err', res)
+    });
+  })
+</script>
+
+<script type='text/x-mathjax-config'>
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [["$$","$$"],["\\[","\\]"]],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    ignoreClass: "container|files",
+    processClass: "markdown-body"
+  }
+});
+</script>
+<script src="https://cn-assets.gitee.com/uploads/resources/MathJax-2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script>
+  (function () {
+    var messages = {
+      'zh-CN': {
+        addResult: '增加 <b>{term}</b>',
+        count: '已选择 {count}',
+        maxSelections: '最多 {maxCount} 个选择',
+        noResults: '未找到结果',
+        serverError: '连接服务器时发生错误'
+      },
+      'zh-TW': {
+        addResult: '增加 <b>{term}</b>',
+        count: '已選擇 {count}',
+        maxSelections: '最多 {maxCount} 個選擇',
+        noResults: '未找到結果',
+        serverError: '連接服務器時發生錯誤'
+      }
+    }
+  
+    if (messages[gon.locale]) {
+      $.fn.dropdown.settings.message = messages[gon.locale]
+    }
+  }());
+</script>
+
+<script>
+  var userAgent = navigator.userAgent;
+  var isLessIE11 = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1;
+  if(isLessIE11){
+    var can_access = ""
+    if (can_access != "true"){
+      window.location.href = "/incompatible.html";
+    }
+  }
+  document.addEventListener("error", function (ev) {
+    var elem = ev.target;
+    if (elem.tagName.toLowerCase() === 'img') {
+      elem.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAAAAACIM/FCAAACh0lEQVR4Ae3ch5W0OgyG4dt/mQJ2xgQPzJoM1m3AbALrxzrf28FzsoP0HykJEEAAAUQTBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEkKK0789+GK/I2ezfQB522PnS1qc8pGgXvr4tE4aY0XOUWlGImThWgyCk6DleixzE7qwBkg/MGiDPlVVAyp1VQGrPKiACDhFI6VkF5LmzCki+sg7IwDoglnVAil0IMkeG9CyUiwsxLFUVFzJJOQaKCjFCDN9RXMjIX7W6ztZXZDKKCyn8sWJvH+nca7WHDN9lROlAliPH9iRKCPI4cswFJQWxB46toLQgQ9jhn5QYZA9DOkoMUoQde5YapAxDWkoNYsOQR3KQd9CxUnIQF4S49CB9ENKlBxmDEKsFUgMCCCCAAHIrSF61f6153Ajy8nyiPr8L5MXnmm4CyT2fzN4DUvHZ+ntA2tOQBRBAAAEEEEAAAQQQ7ZBaC6TwSiDUaYHQ2yuB0MN+ft+43whyrs4rgVCjBUKTFshLC6TUAjGA3AxSaYFYLZBOC2RUAsk8h5qTg9QcbEoOsoQhQ2qQhsO5xCD5dgB5JQaZ+KBKGtKecvR81Ic0ZDjByKdDx0rSEDZ/djQbH+bkIdvfJFm98BfV8hD2zprfVdlu9PxVeyYAkciREohRAplJCaRSAplJCcQogTjSAdlyHRBvSAekJR0QRzogA+mADJkOiCPSAPEtqYBshlRAXC43hxix2QiOuEZkVERykGyNo9idIZKE0HO7XrG6OiMShlDWjstVzdPgXtUH9v0CEidAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQP4HgjZxTpdEii0AAAAASUVORK5CYII=";
+    }
+  }, true);
+</script>
+</head>
+
+<body class='git-project lang-zh-CN'>
+<header class='common-header fixed noborder' id='git-header-nav'>
+<div class='ui container'>
+<div class='ui menu header-menu header-container'>
+<div class='git-nav-expand-bar'>
+<i class='iconfont icon-mode-table'></i>
+</div>
+<div class='gitee-nav__sidebar'>
+<div class='gitee-nav__sidebar-container'>
+<div class='gitee-nav__sidebar-top'>
+<div class='gitee-nav__avatar-box'>
+<a href="/yourfriendyo"><img class="ui avatar image yourfriendyo-avatar" src="https://foruda.gitee.com/avatar/1677168033061655674/9213128_yourfriendyo_1622635900.png" alt="9213128 yourfriendyo 1622635900" />
+</a></div>
+<div class='gitee-nav__info-box'>
+<a href="/yourfriendyo">AKA你的闺蜜</a>
+</div>
+</div>
+<div class='gitee-nav__sidebar-middle'>
+<div class='gitee-nav__sidebar-list'>
+<ul>
+<li class='gitee-nav__sidebar-item'>
+<a href="/yourfriendyo"><i class='iconfont icon-ic-dashboard'></i>
+<span class='gitee-nav__sidebar-name'>个人主页</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/explore"><i class='iconfont icon-ic-discover'></i>
+<span class='gitee-nav__sidebar-name'>开源软件</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/enterprises"><i class='iconfont icon-ic-enterprise'></i>
+<span class='gitee-nav__sidebar-name'>企业版</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/education"><i class='iconfont icon-ic-education'></i>
+<span class='gitee-nav__sidebar-name'>高校版</span>
+</a></li>
+<li class='gitee-nav__sidebar-item split-line'></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/search"><i class='iconfont icon-ic-search'></i>
+<span class='gitee-nav__sidebar-name'>搜索</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/help"><i class='iconfont icon-help-circle'></i>
+<span class='gitee-nav__sidebar-name'>帮助中心</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/terms"><i class='iconfont icon-file'></i>
+<span class='gitee-nav__sidebar-name'>使用条款</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/about_us"><i class='iconfont icon-issuepx'></i>
+<span class='gitee-nav__sidebar-name'>关于我们</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a href="/profile/account_information"><i class='iconfont icon-edit'></i>
+<span class='gitee-nav__sidebar-name'>设置</span>
+</a></li>
+<li class='gitee-nav__sidebar-item'>
+<a rel="nofollow" data-method="delete" href="/logout"><i class='iconfont icon-ic-logout'></i>
+<span class='gitee-nav__sidebar-name'>
+退出
+</span>
+</a></li>
+</ul>
+</div>
+</div>
+<div class='gitee-nav__sidebar-bottom'>
+<div class='gitee-nav__sidebar-close-button'>
+<i class='fa fa-angle-double-left'></i>
+</div>
+</div>
+</div>
+</div>
+
+<div class='item gitosc-logo'>
+<a href="https://gitee.com"><img alt='Gitee — 基于 Git 的代码托管和研发协作平台' class='ui inline image' height='28' src='/static/images/logo.svg?t=158106664' title='Gitee — 基于 Git 的代码托管和研发协作平台' width='95'>
+<img alt='Gitee — 基于 Git 的代码托管和研发协作平台' class='ui inline black image' height='28' src='/static/images/logo-black.svg?t=158106664' title='Gitee — 基于 Git 的代码托管和研发协作平台' width='95'>
+</a></div>
+<a title="开源软件" class="item " href="/explore">开源软件
+</a><a title="企业版" class="item " sa_evt="click_GiteeCommunity_tab_En" href="/enterprises">企业版
+<sup class='ui red label'>
+特惠
+</sup>
+</a><a title="高校版" class="item " href="/education">高校版
+</a><a title="私有云" class="item" target="_blank" href="https://gitee.cn?utm_source=giteecom">私有云
+</a><a title="博客" class="item" id="gitee-blog" target="_blank" href="https://blog.gitee.com/?utm_sources=site_nav">博客
+</a><div class='dropdown item ui' id='my-gitee-dropdown'>
+<a href="/">我的</a>
+<i class='dropdown icon'></i>
+<div class='menu'>
+<div class='ui active dimmer inverted js-my-gitee-dropdown-loader'>
+<div class='ui loader'></div>
+</div>
+<div class='header user-enterprises'>
+<a class="pull-right" target="_blank" href="/yourfriendyo/dashboard/enterprises">全部</a>
+企业
+<span class='count'></span>
+</div>
+<div class='disabled item tip user-enterprises'>
+无企业
+</div>
+<div class='header user-groups'>
+<a class="pull-right" target="_blank" href="/yourfriendyo/dashboard/groups">全部</a>
+组织
+<span class='count'></span>
+</div>
+<div class='disabled item tip user-groups'>
+无组织
+</div>
+<div class='header user-programs'>
+项目
+<span class='count'></span>
+</div>
+<div class='disabled item tip user-programs'>
+<span class="translation_missing" title="translation missing: zh-CN.layouts.header.empty_programs">Empty Programs</span>
+</div>
+<div class='header user-projects'>
+<a class="pull-right" target="_blank" href="/yourfriendyo/projects">全部</a>
+仓库
+<span class='count'></span>
+</div>
+<div class='disabled item tip user-projects'>
+无项目
+</div>
+</div>
+</div>
+<div class='center responsive-logo'>
+<a href="https://gitee.com"><img alt='Gitee — 基于 Git 的代码托管和研发协作平台' class='ui inline image' height='24' src='/static/images/logo.svg?t=158106664' title='Gitee — 基于 Git 的代码托管和研发协作平台' width='85'>
+<img alt='Gitee — 基于 Git 的代码托管和研发协作平台' class='ui inline black image' height='24' src='/static/images/logo-black.svg?t=158106664' title='Gitee — 基于 Git 的代码托管和研发协作平台' width='85'>
+</a></div>
+<div class='right menu userbar right-header' id='git-nav-user-bar'>
+<form class="ui item" id="navbar-search-form" data-text-require="搜索关键字不能少于1个" data-text-filter="搜索格式不正确" action="/search" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+<input type="hidden" name="type" id="navbar-search-type" />
+<input type="hidden" name="fork_filter" id="fork_filter" value="on" />
+<div class='ui search header-search'>
+<input type="text" name="q" id="navbar-search-input" value="" class="prompt" placeholder="搜开源" />
+</div>
+</form>
+
+<script>
+  var can_search_in_repo = 1,
+      repo = "VFdwamVrMXFXVFJPVkVab1RucFplbHBuUFQxaE56WXpaZz09YTc2M2Y=",
+      reponame = "yourfriendyo/cpp_code_review";
+  
+  $(function() {
+    var $search = $('#navbar-search-form .ui.search');
+    $search.search({
+      apiSettings: {
+        url: '/search/relative_project?q={query}',
+        onResponse: function (res) {
+          if (res && res.status === 200 && res.data) {
+            var query = htmlSafe($search.search('get value'));
+  
+            res.data.map(function (item) {
+              item.path_ns = '/' + item.path_ns;
+              item.icon = 'iconfont icon-project-public';
+            });
+            res.data.unshift({
+              name_ns: "在全站搜索 <b class='hl'>" + query +"</b> 相关项目",
+              path_ns: '/search?fork_filter=on&q=' + query,
+              icon: 'iconfont icon-search'
+            });
+            return res;
+          } else {
+            return { data: [] };
+          }
+        }
+      },
+      fields: {
+        results: 'data',
+        description: 'name_ns',
+        url: 'path_ns',
+        icon: 'icon'
+      },
+      minCharacters: 1,
+      maxResults: 10,
+      searchDelay: 250,
+      showNoResults: false,
+      transition: 'fade'
+    });
+  });
+</script>
+
+<div class='item ui dropdown empty' data-count-path='/notifications/unread_count' data-enable data-mark-notice-path='/notifications/mark' id='notice-dropdown'>
+<a class="remind-button" href="/notifications"><i class='iconfont icon-remind'></i>
+<div class='notice-count total'></div>
+</a><div class='notice-dropdown-panel menu'>
+<div class='notice-dropdown-panel-header'>
+<div class='tab active' data-data-path='/notifications/notices?scope=referer' data-html-path='/notifications/referer' data-scope='referer'>
+<div class='content'>
+@ 我
+<div class='notice-count referer'></div>
+</div>
+</div>
+<div class='tab' data-data-path='/notifications/notices?scope=infos' data-html-path='/notifications/infos' data-scope='infos'>
+<div class='content'>
+通知
+<div class='notice-count infos'></div>
+</div>
+</div>
+<div class='tab' data-data-path='/notifications/notices?scope=messages' data-html-path='/notifications/messages' data-scope='messages'>
+<div class='content'>
+私信
+<div class='notice-count messages'></div>
+</div>
+</div>
+</div>
+<div class='item notice-dropdown-panel-container'>
+<div class='ui dimmer over active'>
+<div class='ui loader'></div>
+</div>
+<div class='notice-list'></div>
+<div class='notice-dropdown-panel-blank'>
+暂没有新消息
+</div>
+</div>
+<div class='notice-dropdown-panel-footer'>
+<div class='action'>
+<div class='side left'>
+<a class="mark-notices" href="javascript: void(0);">当前标记为已读
+</a></div>
+<div class='side right'>
+<a class="load-all" target="_blank" href="javascript: void(0);">查看全部
+</a></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class='ui item' id='feature-update-notice'>
+<div class='notice-update-icon'>
+<a class="notice-update-popup click-knowed" title="" href="javascript:void(0)"><img alt="功能更新" title="" class="bubl_icon bubl-off-icon" src="https://cn-assets.gitee.com/assets/bulb_off-24ee940be20998aace89a3f040cbc704.svg" />
+<img alt="功能更新" title="" class="bubl_icon bubl-on-icon" src="https://cn-assets.gitee.com/assets/bulb_on-3986b1dc417285398e3d15671bd8f261.svg" />
+</a></div>
+<div class='feature-update-notice-panel menu'>
+<div class='notice-img'>
+<img alt="" title="" class="notice-img-show" src="" />
+</div>
+<div class='notice-update-title'></div>
+<div class='notice-update-des'></div>
+<div class='notice-btn-list d-flex-between'>
+<button name="button" type="button" class="ui basic orange button btn-notice btn-knowed click-knowed" style="margin-right: 0">我知道了</button>
+<a class="ui button orange btn-notice btn-details click-knowed" target="_blank" href="">查看详情</a>
+</div>
+</div>
+</div>
+
+<div class='ui dropdown link item' id='git-nav-create'>
+<i class='iconfont icon-add-thin'></i>
+<div class='right menu'>
+<a class="item" href="/projects/new"><i class='add square icon'></i>
+新建仓库
+</a><a class="item" href="/yourfriendyo/codes/new"><i class='code icon'></i>
+发布代码片段
+</a><a class="item" href="/organizations/new"><i class='group icon'></i>
+创建组织
+</a><a class="item" sa_evt="click_GiteeCommunity_tab_plus_EnSignup" href="/enterprises/new"><i class='icon iconfont icon-enterprise'></i>
+开通企业版
+</a><a class="item" href="/projects/import/url"><i class='github icon'></i>
+从 GitHub / GitLab 导入仓库
+</a></div>
+</div>
+<div class='ui dropdown item' id='git-nav-user'>
+<img class="ui avatar image" src="https://foruda.gitee.com/avatar/1677168033061655674/9213128_yourfriendyo_1622635900.png!avatar30" alt="9213128 yourfriendyo 1622635900" />
+<i class='dropdown icon'></i>
+<div class='right menu'>
+<a class="item" href="/yourfriendyo"><i class='iconfont icon-ic-home'></i>
+个人主页
+</a><a class="item" href="/yourfriendyo/starred"><i class='iconfont icon-star'></i>
+我的星选集
+</a><a class="item" sa_evt="recommenderClick" sa_click_location="头像-成为推荐官" href="/profile/cps/overview"><img src="https://cn-assets.gitee.com/assets/cps_icon-9c17338b5d65451ce5190ddb75fce3c7.svg" alt="Cps icon" />
+成为推荐官
+</a><a class="item" href="/profile/account_information"><div class='mayun-icon my-ic-edit my-ic-edit-dims'></div>
+设置
+</a><div class='divider'></div>
+<a class="item" target="_blank" href="https://help.gitee.com"><div class='mayun-icon my-ic-help my-ic-help-dims'></div>
+帮助
+</a><div class='divider'></div>
+<a class="item destroy-user-session" rel="nofollow" data-method="delete" href="/logout"><div class='mayun-icon my-ic-exit my-ic-exit-dims'></div>
+退出
+</a></div>
+</div>
+<script>
+  $('.destroy-user-session').on('click', function() {
+    $.cookie('access_token', null, { path: '/' });
+  })
+</script>
+
+</div>
+</div>
+</div>
+</header>
+<script>
+  Gitee.initNavbar()
+  Gitee.initRepoRemoteWay()
+  $.cookie('user_locale',null)
+</script>
+
+<script>
+  var userAgent = navigator.userAgent;
+  var isLessIE11 = userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1;
+  if(isLessIE11){
+    var can_access = ""
+    if (can_access != "true"){
+      window.location.href = "/incompatible.html";
+    }
+  }
+</script>
+
+<div class='fixed-notice-infos'>
+<div class='all-messages'>
+</div>
+<div class='ui container'>
+<div class='flash-messages' id='messages-container'></div>
+</div>
+<script>
+  (function() {
+    $(function() {
+      var $error_box, alertTip, notify_content, notify_options, template;
+      template = '<div data-notify="container" class="ui {0} message" role="alert">' + '<i data-notify="dismiss" class="close icon"></i>' + '<span data-notify="message">{2}</span>' + '</div>';
+      notify_content = null;
+      notify_options = {};
+      alertTip = '';
+      $error_box = $(".flash_error.flash_error_box");
+      if (notify_options.type === 'error' && $error_box.length > 0 && !$.isEmptyObject(notify_content.message)) {
+        if (notify_content.message === 'captcha_fail') {
+          alertTip = "验证码不正确";
+        } else if (notify_content.message === 'captcha_expired') {
+          alertTip = "验证码已过期，请点击刷新";
+        } else if (notify_content.message === 'not_found_in_database') {
+          alertTip = "帐号或者密码错误";
+        } else if (notify_content.message === 'not_found_and_show_captcha') {
+          alertTip = "帐号或者密码错误";
+        } else if (notify_content.message === 'phone_captcha_fail') {
+          alertTip = "手机验证码不通过";
+        } else {
+          alertTip = notify_content.message;
+        }
+        return $error_box.html(alertTip).show();
+      } else if (notify_content) {
+        if ("edit" === 'third_party_binding') {
+          return $('#third_party_binding-message').html(notify_content.message).addClass('ui message red');
+        }
+        notify_options.delay = 3000;
+        notify_options.template = template;
+        notify_options.offset = {
+          x: 10,
+          y: 30
+        };
+        notify_options.element = '#messages-container';
+        return $.notify(notify_content, notify_options);
+      }
+    });
+  
+  }).call(this);
+</script>
+
+</div>
+<script>
+  (function() {
+    $(function() {
+      var setCookie;
+      setCookie = function(name, value) {
+        $.cookie(name, value, {
+          path: '/',
+          expires: 365
+        });
+      };
+      $('#remove-bulletin, #remove-bulletin-dashboard').on('click', function() {
+        setCookie('remove_bulletin', "gitee-maintain-1684304554");
+        $('#git-bulletin').hide();
+      });
+      $('#remove-member-bulletin').on('click', function() {
+        setCookie('remove_member_bulletin', "gitee_member_bulletin");
+        $(this).parent().hide();
+      });
+      return $('#remove-gift-bulletin').on('click', function() {
+        setCookie('remove_gift_bulletin', "gitee-gift-bulletin");
+        $(this).parent().hide();
+      });
+    });
+  
+  }).call(this);
+</script>
+<script>
+  function closeMessageBanner(pthis, type, val) {
+    var json = {}
+  
+    val = typeof val === 'undefined' ? null : val
+    $(pthis).parent().remove()
+    if (type === 'out_of_enterprise_member') {
+      json = {type: type, data: val}
+    } else if (type === 'enterprise_overdue') {
+      json = {type: type, data: val}
+    }
+    $.post('/profile/close_flash_tip', json)
+  }
+</script>
+
+<div class='site-content'>
+<div class='git-project-header'>
+<div class='fixed-notice-infos'>
+<div class='ui info icon floating message green' id='fetch-ok' style='display: none'>
+<div class='content'>
+<div class='header status-title'>
+<i class='info icon status-icon'></i>
+代码拉取完成，页面将自动刷新
+</div>
+</div>
+</div>
+<div class='ui info icon floating message error' id='fetch-error' style='display: none'>
+<div class='content'>
+<div class='header status-title'>
+<i class='info icon status-icon'></i>
+<span class='error_msg'></span>
+</div>
+</div>
+</div>
+</div>
+<div class='ui container'>
+
+<div class='git-project-header-details'>
+<div class='git-project-header-container'>
+<div class='git-project-header-actions'>
+<div class='ui tiny modal project-donate-modal' id='project-donate-modal'>
+<i class='iconfont icon-close close'></i>
+<div class='header'>捐赠</div>
+<div class='content'>
+未开启捐赠功能，开启捐赠功能需要绑定 OSCHINA 帐号
+</div>
+<div class='actions'>
+<a class='ui blank button cancel'>取消</a>
+<a class='ui orange ok button' href='/profile/account_information' target='_blank'>马上绑定</a>
+</div>
+</div>
+<div class='ui small modal wepay-qrcode'>
+<i class='iconfont icon-close close'></i>
+<div class='header'>
+扫描微信二维码支付
+<span class='wepay-cash'></span>
+</div>
+<div class='content weqcode-center'>
+<img id='wepay-qrcode' src=''>
+</div>
+<div class='actions'>
+<div class='ui cancel blank button'>取消</div>
+<div class='ui ok orange button'>支付完成</div>
+</div>
+</div>
+<div class='ui mini modal' id='confirm-alipay-modal'>
+<div class='header'>支付提示</div>
+<div class='content'>
+将跳转至支付宝完成支付
+</div>
+<div class='actions'>
+<div class='ui approve orange button'>确定</div>
+<div class='ui blank cancel button'>取消</div>
+</div>
+</div>
+
+<span class='ui buttons basic watch-container'>
+<div class='ui dropdown button js-project-watch' data-watch-type='watching'>
+<input type='hidden' value=''>
+<i class='iconfont icon-watch'></i>
+<div class='text'>
+Watching
+</div>
+<i class='dropdown icon'></i>
+<div class='menu'>
+<a data-value="unwatch" class="item" data-remote="true" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/unwatch"><i class='iconfont icon-msg-read'></i>
+不关注
+</a><a data-value="watching" class="item" data-remote="true" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/watch"><i class='iconfont icon-msg-read'></i>
+关注所有动态
+</a><a data-value="releases_only" class="disabled item" data-remote="true" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/release_only_watch"><i class='iconfont icon-msg-read'></i>
+仅关注版本发行动态
+</a><a data-value="ignoring" class="item" data-remote="true" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/ignoring_watch"><i class='iconfont icon-msg-read'></i>
+关注但不提醒动态
+</a></div>
+</div>
+<style>
+  .js-project-watch .text .iconfont {
+    display: none; }
+  .js-project-watch a, .js-project-watch a:hover {
+    color: #000; }
+  .js-project-watch .item > .iconfont {
+    visibility: hidden;
+    margin-left: -10px; }
+  .js-project-watch .selected .iconfont {
+    visibility: visible; }
+  .js-project-watch .menu {
+    margin-top: 4px !important; }
+</style>
+<script>
+  $('.js-project-watch').dropdown({
+    action: 'select',
+    onChange: function(value, text, $selectedItem) {
+      var type = value === 'unwatch' ? 'Watch' : 'Watching';
+      $(this).children('.text').text(type);
+      $(this).dropdown('set selected', value)
+    }
+  });
+</script>
+
+<a class="ui button action-social-count" title="1" href="/yourfriendyo/cpp_code_review/watchers">1
+</a></span>
+<span class='basic buttons star-container ui'>
+<a class="ui button unstar " sa_evt="clickStar" sa_location="其他" sa_url="" sa_repo_id="27326851" data-remote="true" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/unstar"><i class='iconfont icon-star-solid'></i>
+Starred
+</a><a class="ui button star " sa_evt="clickStar" sa_location="其他" sa_url="" sa_repo_id="27326851" data-remote="true" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/star"><i class='iconfont icon-star'></i>
+Star
+</a><a class="ui button action-social-count " title="0" href="/yourfriendyo/cpp_code_review/stargazers">0
+</a></span>
+<span class='ui basic buttons fork-container' title=''>
+<a id="fork-top-button" class="ui button fork " sa_evt="repoFork" sa_repo_id="27326851" sa_is_self="true" sa_is_member="true" href="#"><i class='iconfont icon-fork'></i>
+Fork
+</a><a class="ui button action-social-count " title="0" href="/yourfriendyo/cpp_code_review/members">0
+</a></span>
+</div>
+<h2 class='git-project-title mt-0 mb-0'>
+<span class="project-title"><i class="project-icon iconfont icon-project-public" title="这是一个公开仓库"></i> <a title="AKA你的闺蜜" class="author" href="/yourfriendyo">AKA你的闺蜜</a> / <a title="cpp_code_review" class="repository" target="" style="padding-bottom: 0px; margin-right: 4px" sa_evt="repoClick" sa_location="其他" sa_url="" sa_repo_id="27326851" href="/yourfriendyo/cpp_code_review">cpp_code_review</a></span><span class="project-badges"><a data-confirm="1.你的自荐申请将由我们人工审核，介绍完善、质量高的项目才能被推荐 &lt;br/&gt; 2.编辑可能会根据需要来调整推荐软件的描述信息 &lt;br/&gt; 3.申请提交后，&lt;strong&gt;如一个工作日内未得到推荐，则默认表示被拒&lt;/strong&gt;。" title="自荐" class="git-project-recommend-badge" rel="nofollow" data-method="post" href="/yourfriendyo/cpp_code_review/recomm_self"><i class='iconfont icon-recommend recommend-icon'></i>
+</a><style>
+  .gitee-modal {
+    width: 500px !important; }
+</style>
+</span>
+<input type="hidden" name="project_title" id="project_title" value="AKA你的闺蜜/cpp_code_review" />
+</h2>
+</div>
+</div>
+</div>
+<div class='ui small modal long' id='modal-fork-project'>
+<i class='icon-close iconfont close'></i>
+<div class='header'>
+Fork 仓库
+</div>
+<div class='content fork-project-content'>
+<div class='fork-info-content'>
+<div class='ui segment fork_project_loader'>
+<div class='ui active inverted dimmer'>
+<div class='ui text loader'>加载中</div>
+</div>
+</div>
+</div>
+</div>
+<div class='actions fork-action d-flex-between hide'>
+<div>
+</div>
+<div>
+<a class='cancel'>&emsp;取消&emsp;</a>
+<div class='ui disabled button orange ok'>&emsp;确认&emsp;</div>
+</div>
+</div>
+</div>
+<script>
+  var title_import_url = "false";
+  var title_post_url = "/yourfriendyo/cpp_code_review/update_import";
+  var title_fork_url = "/yourfriendyo/cpp_code_review/sync_fork";
+  var title_project_path = "cpp_code_review";
+  var title_p_name = "cpp_code_review";
+  var title_p_id= "27326851";
+  var title_description = "C++代码复习日记";
+  var title_form_authenticity_token = "ff1b4Gr2yt3xhorLNh/FdqbBB0bJgENYlP1ue/lAp1A/UO/taUwsYEAokHLmxDlSBoXc287qk+/t8KUplSN2og==";
+  var watch_type = "watching";
+  var checkFirst = false;
+  
+  $('.js-project-watch').dropdown('set selected', watch_type);
+  $('.checkbox.sync-wiki').checkbox();
+  $('.checkbox.team-member-checkbox').checkbox();
+</script>
+<script>
+  $(function () {
+    // SemticUI 校验表单等地方要求直接return 值, 对异步支持非常不友好...
+    // 从提交表单处 再用异步校验 ,控制是否提交
+    var $modalFork = $('#modal-fork-project');
+    var $okBtn = $modalFork.find('.ui.ok.button');
+    var $currentTarget = null;
+    var isSameProject = false;
+  
+    $('#fork-top-button, #fork-btm-button').on('click', function (e) {
+      e.preventDefault();
+      $modalFork.modal('show');
+      setTimeout(function () {
+        $.ajax({ url: '/yourfriendyo/cpp_code_review/fork_project_info' }).done(function () {
+          // 自定义错误消息模板,  inline : true 每个输入框后面都插入消息提示, 而非集中到一处提醒
+          $.fn.form.settings.templates.prompt = function (errors) {
+            return $('<div />').addClass('ui error message custom prompt label').html(errors[0]);
+          };
+          // 表单的内容是异步传输的js动态生成的....
+          var $repoForm = $('#modal-fork-project .repo-form');
+          $repoForm.form({
+            on: 'change',
+            inline: true,
+            fields: {
+              projectName: {
+                identifier: 'project-name',
+                rules: [
+                  {
+                    type: 'empty',
+                    prompt: "仓库名不能为空"
+                  },
+                  {
+                    type: 'regExp',
+                    value: window.giteeRegex.projectName,
+                    prompt: "仓库名只允许包含中文、字母、数字或者下划线(_)、中划线(-)、英文句号(.)、加号(+)，必须以字母、数字或者点(.)开头，不能以下划线/中划线结尾，且长度为2~191个字符"
+                  },
+                  {
+                    type: 'maxLength[255]',
+                    prompt: "仓库名只允许包含中文、字母、数字或者下划线(_)、中划线(-)、英文句号(.)、加号(+)，必须以字母、数字或者点(.)开头，不能以下划线/中划线结尾，且长度为2~191个字符"
+                  }
+                ]
+              },
+              projectPath: {
+                identifier: 'project-path',
+                rules: [
+                  {
+                    type: 'empty',
+                    prompt: "路径不能为空"
+                  },
+                  {
+                    type: 'regExp',
+                    value: window.giteeRegex.projectPath,
+                    prompt: "路径只允许包含字母、数字或者下划线(_)、中划线(-)、英文句号(.)，必须以字母、数字或者点(.)开头，且长度为2~191个字符"
+                  }
+                ]
+              }
+            }
+          });
+  
+          $modalFork.find('.namespace-img-area.ui.checkbox').checkbox({
+            onChecked: function () {
+              $currentTarget = $(this).closest('.ui.checkbox');
+              // 当前选中的空间
+              isSameProject = $currentTarget[0].hasAttribute('data-any-same-projects');
+              var conflictProjectName = $currentTarget.data('conflict-project-title');
+              var conflictProjectUrl = $currentTarget.data('conflict-project-url');
+              var conflictProjectNameSpacePath = $currentTarget.data('conflict-namespace');
+              var conflictPathType = $currentTarget.find('.path-type').text();
+              // fork目标
+              var targetProjectName = $currentTarget.data('target-project-name');
+              var targetProjectPath = $currentTarget.data('target-project-path');
+              // 命名空间名称(@xxx)
+              var conflictNameSpaceName = $currentTarget.find('.path-name').text();
+              var $forkTargetNamespace = $('.fork-target-namespace-area');
+              var $forkTargetNamespaceItem = $(this).closest('.fork-target-namespace-item')
+              // 冲突 显示修改表单
+              if (isSameProject) {
+                //$forkTargetNamespace.addClass('same-name-editing');
+                $('.fork-target-namespace-item').removeClass('same-name-editing')
+                $forkTargetNamespaceItem.addClass('same-name-editing')
+                $forkTargetNamespace
+                  .find('.conflict-namespace-name')
+                  .attr('href', `/${conflictProjectNameSpacePath}`)
+                  .text(conflictNameSpaceName);
+                $forkTargetNamespace
+                  .find('.conflict-path')
+                  .attr('href', `${conflictProjectUrl}`)
+                  .text(`${conflictProjectNameSpacePath}/${targetProjectPath}`);
+                $forkTargetNamespace
+                  .find('.prefix-path')
+                  .text(`${window.location.origin}/${conflictProjectNameSpacePath}/`);
+                $forkTargetNamespace
+                  .find('.conflict-path-type')
+                  .text(conflictPathType.toLowerCase())
+                var $nameInput = $forkTargetNamespace.find('[name="project-name"]');
+                var $pathInput = $forkTargetNamespace.find('[name="project-path"]');
+                $nameInput.val(targetProjectName);
+                $pathInput.val(targetProjectPath);
+                checkFirst = true
+                // 立即校验一次
+                asyncValidateForkRepoForm();
+              } else {
+                $('.fork-target-namespace-item').removeClass('same-name-editing')
+                $forkTargetNamespaceItem.addClass('same-name-editing');
+              }
+              $okBtn.removeClass('disabled');
+            }
+          });
+        });
+      }, 500);
+    });
+    // 异步校验
+    function asyncValidateForkRepoForm (successCallback) {
+      var $repoForm = $('#modal-fork-project .same-name-editing .repo-form');
+      var $forkTargetNamespace = $('.fork-target-namespace-area .same-name-editing');
+      var $nameInput = $forkTargetNamespace.find('[name="project-name"]');
+      var $pathInput = $forkTargetNamespace.find('[name="project-path"]');
+      var name = $nameInput.val().trim();
+      var path = $pathInput.val().trim();
+      var namespace = $currentTarget ? $currentTarget.data('conflict-namespace') : '';
+      if (!name || !path) return;
+      $okBtn.addClass('loading');
+      $.ajax('/projects/check_fork_form', {
+        type: 'get',
+        data: { project_name: name, project_path: path, target_namespaces: namespace },
+        success: function (data) {
+          if (data.status == 0) {
+            successCallback && successCallback();
+          } else if (data.status == -1 && Array.isArray(data.conflict_keys)) {
+            if (!checkFirst) {
+              data.conflict_keys.includes('name') && $repoForm.form('add prompt', 'project-name', "已存在相同仓库名");
+              data.conflict_keys.includes('path') && $repoForm.form('add prompt', 'project-path', "已存在相同路径");
+            } else {
+              data.conflict_keys.includes('name') && data.new_name && $nameInput.val(data.new_name);
+              data.conflict_keys.includes('path') && data.new_path && $pathInput.val(data.new_path);
+            }
+          } else {
+            Flash.error("校验失败");
+          }
+          checkFirst = false
+        },
+        error: function (err) {
+          Flash.error(err.responseJSON.message);
+        },
+        complete: function () {
+          $okBtn.removeClass('loading');
+          // 添加提示 弹窗变高后 刷新弹窗位置
+          $modalFork.modal('refresh');
+        }
+      });
+    }
+    function forkSubmit () {
+      $modalFork.modal('hide');
+      // 构造一些 input 用于表单提交
+      var $form = $('<form></form>');
+      var $input = $('<input type="hidden" name="authenticity_token" />');
+      var $inputCheck = $('<input type="hidden" name="members" />');
+      var $inputCheck2 = $('<input type="hidden" name="namespace_path" />');
+      var checkedPath = $('.checkbox.checked > input[name=namespace_path]').val();
+      // fork存在冲突, 修改后的表单:
+      if (isSameProject) {
+        // 获取最新表单数据
+        var $forkTargetNamespace = $('.fork-target-namespace-area .same-name-editing');
+        var name = $forkTargetNamespace.find('[name="project-name"]').val().trim();
+        var path = $forkTargetNamespace.find('[name="project-path"]').val().trim();
+        var $projectName = $('<input type="hidden" name="name" />');
+        var $projectPath = $('<input type="hidden" name="path" />');
+        $projectName.val(name);
+        $projectPath.val(path);
+        $form.append($projectName);
+        $form.append($projectPath);
+      }
+      $form.hide();
+      $form.attr('method', 'post');
+      $form.attr('action', '/' + checkedPath + '/fork_project/yourfriendyo/cpp_code_review');
+      $input.attr('value', $('meta[name="csrf-token"]').attr('content'));
+      $inputCheck.attr('value', $('.checkbox.checked > input[name=members]').val());
+      $inputCheck2.attr('value', checkedPath);
+      $form.append($input);
+      $form.append($inputCheck);
+      $form.append($inputCheck2);
+      $form.appendTo('body');
+      $form.submit();
+    }
+    $modalFork.modal({
+      transition: 'fade',
+      closable: true,
+      centered: false,
+      observeChanges:true,
+      onApprove: function () {
+        // 存在同名冲突时, 需要修改仓库信息, 再进行校验同名
+        // 判断当前选中的空间类型, 用于决定是否需要修改路径仓库名,验证表单
+        if (isSameProject) {
+          var $repoForm = $('#modal-fork-project .same-name-editing .repo-form');
+          $repoForm.form('validate form');
+          var isRepoInfoValid = $repoForm.form('is valid'); // 前端校验通过
+          // 由于是form提交和ajax检测结合..., 防止意外篡改 提交前必定校验一次, 通过后自动submit
+          if (isRepoInfoValid) {
+            // SemticUI add prompt 自定义验证连续执行太快, 会消失掉重复再出现再消失.
+            setTimeout(function () {
+              asyncValidateForkRepoForm(function () {
+                forkSubmit();
+              });
+            }, 200);
+          } else {
+            $repoForm.form('validate form');
+          }
+        } else {
+          // 正常 frok
+          forkSubmit();
+        }
+        return false;
+      }
+    });
+    $modalFork.find('.close-button').on('click', function () {
+      $modalFork.modal('hide');
+    });
+  });
+</script>
+<style>
+  i.loading, .icon-sync.loading {
+    -webkit-animation: icon-loading 1.2s linear infinite;
+    animation: icon-loading 1.2s linear infinite;
+  }
+  .qrcode_cs {
+    float: left;
+  }
+  .check-sync-wiki {
+    float: left;
+    height: 28px;
+    line-height: 28px;
+  }
+  .sync-wiki-warn {
+    color: #e28560;
+  }
+</style>
+
+<div class='git-project-nav'>
+<div class='ui container'>
+<div class='ui secondary pointing menu'>
+<a class="item active" href="/yourfriendyo/cpp_code_review"><i class='iconfont icon-code'></i>
+代码
+</a><a class="item " href="/yourfriendyo/cpp_code_review/issues"><i class='iconfont icon-task'></i>
+Issues
+<span class='ui mini circular label'>
+0
+</span>
+</a><a class="item " href="/yourfriendyo/cpp_code_review/pulls"><i class='iconfont icon-pull-request'></i>
+Pull Requests
+<span class='ui mini circular label'>
+0
+</span>
+</a><a class="item " href="/yourfriendyo/cpp_code_review/wikis"><i class='iconfont icon-wiki'></i>
+Wiki
+</a><a class="item  " href="/yourfriendyo/cpp_code_review/repository/stats/master"><i class='iconfont icon-statistics'></i>
+统计
+</a><a class="item " href="/yourfriendyo/cpp_code_review/gitee_go"><i class='iconfont icon-workflow'></i>
+流水线
+</a><div class='item'>
+<div class='ui pointing top right dropdown git-project-service'>
+<div>
+<i class='iconfont icon-service'></i>
+服务
+<i class='dropdown icon'></i>
+</div>
+<div class='menu' style='display:none'>
+<a class="item" href="/yourfriendyo/cpp_code_review/pages"><img src="/static/images/logo-en.svg" alt="Logo en" />
+<div class='item-title'>
+Gitee Pages
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/javadoc"><img src="https://cn-assets.gitee.com/assets/maven-bd58aee84f266d64d4b8ce5b006a9fcf.png" alt="Maven" />
+<div class='item-title'>
+JavaDoc
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/phpdoc"><img src="https://cn-assets.gitee.com/assets/phpdoc-a99f87c2feaa2fd99e5065377a39487e.png" alt="Phpdoc" />
+<div class='item-title'>
+PHPDoc
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/quality_analyses?platform=sonar_qube"><img src="https://cn-assets.gitee.com/assets/sonar_mini-5e1b54bb9f6c951d97fb778ef623afea.png" alt="Sonar mini" />
+<div class='item-title'>
+质量分析
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/quality_analyses?platform=codesafe"><img width="100%" src="https://cn-assets.gitee.com/assets/codesafe_mini-accbe1e555e9864c552620240d10e4de.png" alt="Codesafe mini" />
+<div class='item-title'>
+代码卫士
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/gitee_scans"><img src="https://cn-assets.gitee.com/assets/giteescan-cd9ab4076bd751faf7e30888eb10f782.png" alt="Giteescan" />
+<div class='item-title'>Gitee Scan</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/codecheck/report?branch=master"><img src="https://cn-assets.gitee.com/assets/CodeCheck-70a10cf889c51df6f00bf159c8e12374.svg" alt="Codecheck" />
+<div class='item-title'>CodeCheck</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/fosseye_scans"><img src="https://cn-assets.gitee.com/assets/lic-f8b7d30ff49218d2c5fd1fdce2f235fd.svg" alt="Lic" />
+<div class='item-title'>
+许可证合规分析
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/fosseye_cves"><img src="https://cn-assets.gitee.com/assets/service/cve-73044c7335decc74687a3196913c347b.svg" alt="Cve" />
+<div class='item-title'>
+CVE 漏洞扫描
+</div>
+</a><a class="item" target="_blank" href="https://gitee.com/help/articles/4193"><img src="https://cn-assets.gitee.com/assets/jenkins_for_gitee-554ec65c490d0f1f18de632c48acc4e7.png" alt="Jenkins for gitee" />
+<div class='item-title'>
+Jenkins for Gitee
+</div>
+</a><a class="item" target="_blank" href="https://gitee.com/help/articles/4285"><img src="https://cn-assets.gitee.com/assets/baidu_efficiency_cloud-81a98c2eb67fac83b1453ca3d2feb326.svg" alt="Baidu efficiency cloud" />
+<div class='item-title'>
+百度效率云
+</div>
+</a><a class="item" target="_blank" href="https://gitee.com/help/articles/4318"><img src="https://cn-assets.gitee.com/assets/cloudbase-1197b95ea3398aff1df7fe17c65a6d42.png?20200925" alt="Cloudbase" />
+<div class='item-title'>
+腾讯云托管
+</div>
+</a><a class="item" target="_blank" href="https://gitee.com/help/articles/4330"><img src="https://cn-assets.gitee.com/assets/cloud_serverless-686cf926ced5d6d2f1d6e606d270b81e.png" alt="Cloud serverless" />
+<div class='item-title'>
+腾讯云 Serverless
+</div>
+</a><a class="item" href="/yourfriendyo/cpp_code_review/open_sca"><img src="https://cn-assets.gitee.com/assets/open_sca/logo-9049ced662b2f9936b8001e6f9cc4952.png" alt="Logo" />
+<div class='item-title'>
+悬镜安全
+</div>
+</a><button class='ui orange basic button quit-button' id='quiting-button'>
+我知道了，不再自动展开
+</button>
+</div>
+</div>
+</div>
+<a class="item d-flex d-flex-center " href="/yourfriendyo/cpp_code_review/settings"><i class='iconfont icon-settings'></i>
+<div class='text ml-05 setting-text'>管理</div>
+</a></div>
+</div>
+</div>
+<script>
+  $('.git-project-nav .ui.dropdown').dropdown({ action: 'nothing' });
+  var gitee_reward_config = JSON.parse(localStorage.getItem('gitee_reward_config') || null) || false
+  var $settingText = $('.setting-text')
+  // 如果没有访问过
+  if(!gitee_reward_config) $settingText.addClass('red-dot')
+</script>
+<style>
+  .git-project-nav i.checkmark.icon {
+    color: green;
+  }
+  #quiting-button {
+    display: none;
+  }
+  
+  .git-project-nav .dropdown .menu.hidden:after {
+    visibility: hidden !important;
+  }
+</style>
+<script>
+  isSignIn = true
+  isClickGuide = true
+  $('#git-versions.dropdown').dropdown();
+  $.ajax({
+    url:"/yourfriendyo/cpp_code_review/access/add_access_log",
+    type:"GET"
+  });
+  $('#quiting-button').on('click',function() {
+    $('.git-project-service').click();
+    if (isSignIn) {
+      $.post("/projects/set_service_guide")
+    }
+    $.cookie("Serve_State", true, { expires: 3650, path: '/'})
+    $('#quiting-button').hide();
+  });
+  if (!(isClickGuide || $.cookie("Serve_State") == 'true')) {
+    $('.git-project-service').click()
+    $('#quiting-button').show()
+  }
+</script>
+
+</div>
+<div class='ui container'>
+<form action="/yourfriendyo/cpp_code_review/edit/master/README.md" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="PZhMSqZXUXPMJt38FlFSHJNuZoed5Y45nylBEpdWmsZ/NfhHpe23zn2Ix0XGiq44Myq9GpqPXo7mJIpA+zVLNA==" />
+<link rel="stylesheet" media="all" href="https://cn-assets.gitee.com/assets/editor-44a51c1d9f3a36ad52fc1bbbd61822cc.css" />
+<link rel="stylesheet" media="all" href="https://cn-assets.gitee.com/webpacks/css/markdown_image_upload-dd408fc84a3df91ed372.css" />
+<div class='ui form blob-form' id='js-blob-form'>
+<div class='field blob-form__path-wrapper'>
+<div class='blob-form__license-select'>
+<select class='ui search dropdown' id='js-license-select' name='license'>
+<option value='no'>请选择开源许可证</option>
+<option value='MulanPSL-2.0'>MulanPSL-2.0</option>
+<option value='0BSD'>0BSD</option>
+<option value='AFL-3.0'>AFL-3.0</option>
+<option value='AGPL-3.0'>AGPL-3.0</option>
+<option value='Apache-2.0'>Apache-2.0</option>
+<option value='Artistic-2.0'>Artistic-2.0</option>
+<option value='BSD-2-Clause'>BSD-2-Clause</option>
+<option value='BSD-3-Clause'>BSD-3-Clause</option>
+<option value='BSD-3-Clause-Clear'>BSD-3-Clause-Clear</option>
+<option value='BSL-1.0'>BSL-1.0</option>
+<option value='CC-BY-4.0'>CC-BY-4.0</option>
+<option value='CC-BY-SA-4.0'>CC-BY-SA-4.0</option>
+<option value='CC0-1.0'>CC0-1.0</option>
+<option value='ECL-2.0'>ECL-2.0</option>
+<option value='EPL-1.0'>EPL-1.0</option>
+<option value='EPL-2.0'>EPL-2.0</option>
+<option value='EUPL-1.1'>EUPL-1.1</option>
+<option value='EUPL-1.2'>EUPL-1.2</option>
+<option value='GPL-2.0'>GPL-2.0</option>
+<option value='GPL-3.0'>GPL-3.0</option>
+<option value='ISC'>ISC</option>
+<option value='LGPL-2.1'>LGPL-2.1</option>
+<option value='LGPL-3.0'>LGPL-3.0</option>
+<option value='LPPL-1.3c'>LPPL-1.3c</option>
+<option value='MIT'>MIT</option>
+<option value='MPL-2.0'>MPL-2.0</option>
+<option value='MS-PL'>MS-PL</option>
+<option value='MS-RL'>MS-RL</option>
+<option value='MulanPSL-1.0'>MulanPSL-1.0</option>
+<option value='MulanPubL-1.0'>MulanPubL-1.0</option>
+<option value='MulanPubL-2.0'>MulanPubL-2.0</option>
+<option value='NCSA'>NCSA</option>
+<option value='OFL-1.1'>OFL-1.1</option>
+<option value='OSL-3.0'>OSL-3.0</option>
+<option value='PostgreSQL'>PostgreSQL</option>
+<option value='UPL-1.0'>UPL-1.0</option>
+<option value='Unlicense'>Unlicense</option>
+<option value='WTFPL'>WTFPL</option>
+<option value='Zlib'>Zlib</option>
+
+</select>
+</div>
+<div class='blob-form__path'>
+<i class='iconfont icon-file'></i>
+<a href="/yourfriendyo/cpp_code_review">cpp_code_review</a>
+<span class='blob-form__dirpath' id='js-file-dirpath'></span>
+<input class='blob-form__path-input' id='file_name' name='file_name' placeholder='文件名称或文件路径' value='README.md'>
+<span class='ml-1'>
+<strong>
+提示:
+</strong>
+输入 / 可以将文件创建到新文件夹下
+</span>
+</div>
+</div>
+<div class='ui warning message blob-form__draft-message'>
+上次编辑的内容尚未保存，是否继续编辑？
+<div class='pull-right actions'>
+<a class='ui orange button'>继续编辑</a>
+<a class='ui blank button'>删除草稿</a>
+</div>
+</div>
+<div id='markdown-image-upload-container'></div>
+<div>
+<div class='field blob-form__md-editor'>
+<textarea id='js-md-editor'></textarea>
+</div>
+<div class='field blob-form__monaco-editor'>
+<div class='ui inverted dimmer' id='js-editor-loader'>
+<div class='ui text loader'>
+正在加载编辑器...
+</div>
+</div>
+<div class='monaco-editor-container' id='js-editor-container'></div>
+</div>
+<div class='field blob-form__commit'>
+<div class='field commit-message-container'>
+<label for="commit_message"><span class='text required-icon'>提交信息</span>
+<i class='iconfont icon-help-circle text-green js-popup-default' data-popup-hoverable='1'></i>
+<div class='ui popup'>
+<a target="blank" href="/help/articles/4231">了解更多：Git Commit Message 编写指南</a>
+</div>
+</label><div class='ui input'>
+<input type="text" name="commit_message_header" id="commit_message_header" placeholder="必填，描述主要修改类型和内容。（相当于 Git Commit message 的 Header）" />
+</div>
+</div>
+<div class='field commit_message-group'>
+<label for="extended_information">扩展信息
+</label><textarea name="extended_information" id="extended_information" placeholder="此处可填写为什么修改，做了什么样的修改，以及开发的思路等更加详细的提交信息。（相当于 Git Commit message 的 Body）" rows="2">
+</textarea>
+<div class='signed-off-by'>
+<div class='ui checkbox' id='signed-off-by-checkbox'>
+<input name='signed_off_by' type='checkbox'><label>
+添加署名
+<i class='iconfont icon-help-circle text-green signed-off-by-tips-popup'></i>
+<div class='ui popup'>
+相当于在 git commit 时使用 “--signoff” 参数（简写为 “-s”），将在 Commit Message 末尾添加你的署名
+</div>
+</label></div>
+<div class='signed-off-by-text'>
+Signed-off-by: AKA你的闺蜜 &lt;3395537299@qq.com&gt;
+<a class='signed-off-by-change-email' href='/profile/emails' target='_blank'>
+更换邮箱
+</a>
+</div>
+</div>
+</div>
+<div class='field commit-branch'>
+<label for="branch_name">目标分支
+</label><input type="text" name="branch_name" id="branch_name" value="master" placeholder="指定将此次更改提交到哪个分支" />
+</div>
+<script>
+  $('.signed-off-by-tips-popup').popup({
+    on: 'hover',
+    position: 'right center',
+    hoverable: true
+  })
+  
+  $("#signed-off-by-checkbox").checkbox('check');
+</script>
+
+</div>
+<div class='field blob-form__actions'>
+<input type="hidden" name="file_path" id="file_path" value="README.md" />
+<input type="hidden" name="content" id="js-blob-content" value="# C++代码复习日记
+
+在学习完C/C++内容后，又对C/C++知识点展开复习工作，本仓库存放所有的复习代码。
+
+复习内容包括`C`、数据结构、`C++`、`Linux`系统网络、数据库等。
+
+原仓库地址：[C++总路线代码日记](https://gitee.com/yourfriendyo/CppLearnDaily) 
+" />
+<button name="button" type="submit" id="js-commit-button" class="ui large submit orange button">提交</button>
+<a class="btn-cancel" data-confirm="内容尚未保存，取消将会丢失，确认取消？" href="/yourfriendyo/cpp_code_review/blob/master/README.md">取消</a>
+<div class='ui error message'></div>
+</div>
+</div>
+<div class='clearfix'></div>
+</div>
+<script src="https://cn-assets.gitee.com/assets/editor-79ff31209516fe5f95d78e3573bbf2a4.js"></script>
+<script src="/monaco-editor/min/vs/loader.js"></script>
+<template id='image-upload-dropdown-template'><div class='ui dropdown'>
+<div class='menu'>
+<a class="item" data-value="import-from-repo" href="javascript:;">引用仓库内图片</a><a class="item" data-value="upload-localfile" href="javascript:;">上传本地图片</a><a class="item" data-value="import-from-http" href="javascript:;">插入网络图片地址</a></div>
+</div></template>
+<script>
+  $.extend(window.gon, {
+    editBlobPath: "/",
+    fileTreePath: "/yourfriendyo/cpp_code_review/file_tree?ref=master",
+    fileListPath: "/yourfriendyo/cpp_code_review/file_list?ref=master",
+    blobSizePath: "/yourfriendyo/cpp_code_review/blob_size?ref=master",
+  })
+</script>
+<script src="https://cn-assets.gitee.com/webpacks/vendors_lib-7ff466a6da368d391eda.js"></script>
+<script src="https://cn-assets.gitee.com/webpacks/markdown_image_upload-386adba141bb5e2c0ad9.bundle.js"></script>
+
+<input type="hidden" name="eol_crlf" id="eol_crlf" value="false" />
+<input type="hidden" name="last_commit_sha" id="last_commit_sha" value="2072091b72caf197ba37c2c1693af95c80abbfe4" />
+</form>
+
+<script>
+  Gitee.initBlobForm({
+    type: "markdown",
+    content: "# C++代码复习日记\n\n在学习完C/C++内容后，又对C/C++知识点展开复习工作，本仓库存放所有的复习代码。\n\n复习内容包括`C`、数据结构、`C++`、`Linux`系统网络、数据库等。\n\n原仓库地址：[C++总路线代码日记](https://gitee.com/yourfriendyo/CppLearnDaily) \n",
+    locale: 'zh-cn',
+    checkLicensePath: '/yourfriendyo/cpp_code_review/check_license',
+    message: {
+      notChange: '文件内容未更改'
+    },
+    form: {
+      on: 'blur',
+      fields: {
+        file_name: {
+          identifier: 'file_name',
+          rules: [
+            {
+              type: 'empty',
+              prompt: '文件名不能为空'
+            }
+          ]
+        },
+        commit_message_header: {
+          identifier: 'commit_message_header',
+          rules: [
+            {
+              type: 'empty',
+              prompt: '提交信息不能为空'
+            },
+            {
+              type: 'maxLength[100]',
+              prompt: '提交信息长度不应该超过 100 个字符，请尽可能简单的描述此次改动'
+            }
+          ]
+        }
+      }
+    },
+    action: 'edit'
+  });
+</script>
+
+</div>
+<script>
+  (function() {
+    var donateModal;
+  
+    Gitee.modalHelper = new GiteeModalHelper({
+      alertText: '提示',
+      okText: '确定'
+    });
+  
+    donateModal = new ProjectDonateModal({
+      el: '#project-donate-modal',
+      alipayUrl: '/yourfriendyo/cpp_code_review/alipay',
+      wepayUrl: '/yourfriendyo/cpp_code_review/wepay',
+      nameIsBlank: '名称不能为空',
+      nameTooLong: '名称过长（最多为 36 个字符）',
+      modalHelper: Gitee.modalHelper
+    });
+  
+    if (null === 'true') {
+      donateModal.show();
+    }
+  
+    $('#project-donate').on('click', function() {
+      return donateModal.show();
+    });
+  
+  }).call(this);
+</script>
+<script>
+  Tree.initHighlightTheme('white')
+</script>
+
+
+</div>
+<div class='gitee-project-extension'>
+<div class='extension public'>1</div>
+<div class='extension https'>https://gitee.com/yourfriendyo/cpp_code_review.git</div>
+<div class='extension ssh'>git@gitee.com:yourfriendyo/cpp_code_review.git</div>
+<div class='extension namespace'>yourfriendyo</div>
+<div class='extension repo'>cpp_code_review</div>
+<div class='extension name'>cpp_code_review</div>
+<div class='extension branch'>master</div>
+</div>
+<style>
+  .gfm-team_member[data-username="yourfriendyo"] {
+    padding: 0 4px;
+    background: rgba(44,126,248,0.10);
+    border-radius: 2px;
+  }
+</style>
+
+<script>
+  $(function() {
+    GitLab.GfmAutoComplete.dataSource = "/yourfriendyo/cpp_code_review/autocomplete_sources"
+    GitLab.GfmAutoComplete.Emoji.assetBase = '/assets/emoji'
+    GitLab.GfmAutoComplete.setup();
+  });
+</script>
+
+<footer id='git-footer-main'>
+<div class='ui container'>
+<div class='logo-row'>
+<a href="https://gitee.com"><img alt='Gitee — 基于 Git 的代码托管和研发协作平台' class='logo-img' src='/static/images/logo-black.svg?t=158106666'>
+</a></div>
+<div class='name-important'>
+深圳市奥思网络科技有限公司版权所有
+</div>
+<div class='ui two column grid d-flex-center'>
+<div class='nine wide column git-footer-left'>
+<div class='ui four column grid' id='footer-left'>
+<div class='column'>
+<div class='ui link list'>
+<div class='item'>
+<a class="item" href="/all-about-git">Git 大全</a>
+</div>
+<div class='item'>
+<a class="item" rel="nofollow" href="https://oschina.gitee.io/learn-git-branching/">Git 命令学习</a>
+</div>
+<div class='item'>
+<a class="item" rel="nofollow" href="https://copycat.gitee.com/">CopyCat 代码克隆检测</a>
+</div>
+<div class='item'>
+<a class="item" href="/appclient">APP与插件下载</a>
+</div>
+</div>
+</div>
+<div class='column'>
+<div class='ui link list'>
+<div class='item'>
+<a class="item" href="/gitee_reward">Gitee Reward</a>
+</div>
+<div class='item'>
+<a class="item" href="/gitee-stars">Gitee 封面人物</a>
+</div>
+<div class='item'>
+<a class="item" href="/gvp">GVP 项目</a>
+</div>
+<div class='item'>
+<a class="item" rel="nofollow" href="https://blog.gitee.com/">Gitee 博客</a>
+</div>
+<div class='item'>
+<a class="item" href="/enterprises#nonprofit-plan">Gitee 公益计划</a>
+</div>
+<div class='item'>
+<a class="item" href="https://gitee.com/features/gitee-go">Gitee 持续集成</a>
+</div>
+</div>
+</div>
+<div class='column'>
+<div class='ui link list'>
+<div class='item'>
+<a class="item" href="/api/v5/swagger">OpenAPI</a>
+</div>
+<div class='item'>
+<a class="item" href="https://help.gitee.com">帮助文档</a>
+</div>
+<div class='item'>
+<a class="item" href="/self_services">在线自助服务</a>
+</div>
+<div class='item'>
+<a class="item" href="/help/articles/4378">更新日志</a>
+</div>
+</div>
+</div>
+<div class='column'>
+<div class='ui link list'>
+<div class='item'>
+<a class="item" href="/about_us">关于我们</a>
+</div>
+<div class='item'>
+<a class="item" rel="nofollow" href="https://www.oschina.net/news/131099/oschina-hiring">加入我们</a>
+</div>
+<div class='item'>
+<a class="item" href="/terms">使用条款</a>
+</div>
+<div class='item'>
+<a class="item" href="/oschina/git-osc/issues">意见建议</a>
+</div>
+<div class='item'>
+<a class="item" href="/links.html">合作伙伴</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='seven wide column right aligned followus git-footer-right'>
+<div class='qrcode mini_app'>
+<img alt="微信小程序" src="https://cn-assets.gitee.com/assets/mini_app-e5eee5a21c552b69ae6bf2cf87406b59.jpg" />
+<p class='mini_app-text'>微信小程序</p>
+</div>
+<div class='qrcode weixin'>
+<img alt="微信服务号" src="https://cn-assets.gitee.com/assets/qrcode-weixin-9e7cfb27165143d2b8e8b268a52ea822.jpg" />
+<p class='weixin-text'>微信服务号</p>
+</div>
+<div class='phone-and-qq column'>
+<div class='ui list official-support-container'>
+<div class='item'>
+<a class="icon-popup" title="点击加入 Gitee 官方群" rel="nofollow" href="//qm.qq.com/cgi-bin/qm/qr?k=FOdoYurYb10aXeAiViAgsqWX0fsgykNZ"><i class='iconfont icon-logo-qq'></i>
+<span>官方技术交流QQ群：777320883</span>
+</a></div>
+<div class='item mail-and-zhihu'>
+<a rel="nofollow" href="mailto: git@oschina.cn"><i class='iconfont icon-msg-mail'></i>
+<span id='git-footer-email'>git#oschina.cn</span>
+</a></div>
+<div class='item mail-and-zhihu'>
+<a target="_blank" rel="nofollow" href="https://www.zhihu.com/org/ma-yun-osc/"><i class='iconfont icon-zhihu'></i>
+<span>Gitee</span>
+</a></div>
+<div class='item tel'>
+<a>
+<i class='iconfont icon-tel'></i>
+<span>售前及售后使用咨询：400-606-0201</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='bottombar'>
+<div class='ui container'>
+<div class='ui d-flex d-flex-between'>
+<div class='seven wide column partner d-flex'>
+<div class='open-atom d-flex-center'>
+<img class="logo-openatom mr-1" alt="开放原子开源基金会" src="https://cn-assets.gitee.com/assets/logo-openatom-d083391cc8a54e283529f3fc11cc38ca.svg" />
+<a target="_blank" rel="nofollow" href="https://www.openatom.org/">开放原子开源基金会</a>
+<div class='sub-title ml-1'>合作代码托管平台</div>
+</div>
+<div class='report-12377 d-flex-center ml-3'>
+<img class="report-12377__logo mr-1" alt="违法和不良信息举报中心" src="https://cn-assets.gitee.com/assets/12377@2x-1aa42ed2d2256f82a61ecf57be1ec244.png" />
+<a target="_blank" rel="nofollow" href="https://12377.cn">违法和不良信息举报中心</a>
+</div>
+<div class='copyright ml-3'>
+<a rel="nofollow" href="http://beian.miit.gov.cn/">粤ICP备12009483号</a>
+</div>
+</div>
+<div class='nine wide column right aligned'>
+<i class='icon world'></i>
+<a href="/language/zh-CN">简 体</a>
+/
+<a href="/language/zh-TW">繁 體</a>
+/
+<a href="/language/en">English</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+
+<script>
+  var officialEmail = $('#git-footer-email').text()
+  $('#git-footer-main .icon-popup').popup({ position: 'bottom center' })
+  $('#git-footer-email').text(officialEmail.replace('#', '@'))
+  window.gon.popover_card_locale = {
+    follow:"关注",
+    unfollow:"已关注",
+    gvp_title: "GVP - Gitee 最有价值开源项目",
+    project: "项目",
+    org: "开源组织",
+    member: "",
+    author: "作者",
+    user_blocked: "该用户已被屏蔽或已注销",
+    net_error: "网络错误",
+    unknown_exception: "未知异常"
+  }
+  window.gon.select_message = {
+    placeholder: "请输入个人空间地址或完整的邮箱地址"
+  }
+</script>
+<script src="https://cn-assets.gitee.com/webpacks/popover_card-47521aef1a03d1904ceb.bundle.js"></script>
+<link rel="stylesheet" media="all" href="https://cn-assets.gitee.com/webpacks/css/gitee_nps-69491f94919350b0258c.css" />
+<script src="https://cn-assets.gitee.com/webpacks/gitee_nps-548cf00696f895086765.bundle.js"></script>
+<script src="https://cn-assets.gitee.com/webpacks/gitee_icons-3cce3cb0d49977ab50c9.bundle.js"></script>
+
+
+<div class='side-toolbar'>
+<div class='button toolbar-help'>
+<i class='iconfont icon-help'></i>
+</div>
+<div class='ui popup left center dark'>点此查找更多帮助</div>
+<div class='toolbar-help-dialog'>
+<div class='toolbar-dialog-header'>
+<h3 class='toolbar-dialog-title'>搜索帮助</h3>
+<form class="toolbar-help-search-form" action="/help/load_keywords_data" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+<div class='ui icon input fluid toolbar-help-search'>
+<input name='keywords' placeholder='请输入产品名称或问题' type='text'>
+<i class='icon search'></i>
+</div>
+</form>
+
+<i class='iconfont icon-close toolbar-dialog-close-icon'></i>
+</div>
+<div class='toolbar-dialog-content'>
+<div class='toolbar-help-hot-search'>
+<div class='toolbar-roll'>
+<a class="init active" title="Git 命令在线学习" href="https://oschina.gitee.io/learn-git-branching/?utm_source==gitee-help-widget"><i class='Blue icon icon-command iconfont'></i>
+<span>Git 命令在线学习</span>
+</a><a class="init " title="如何在 Gitee 导入 GitHub 仓库" href="https://gitee.com/help/articles/4261?utm_source==gitee-help-widget"><i class='icon icon-clipboard iconfont orange'></i>
+<span>如何在 Gitee 导入 GitHub 仓库</span>
+</a></div>
+<div class='toolbar-list'>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4114">Git 仓库基础操作</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4166">企业版和社区版功能对比</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4191">SSH 公钥设置</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4194">如何处理代码冲突</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4232">仓库体积过大，如何减小？</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4279">如何找回被删除的仓库数据</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4283">Gitee 产品配额说明</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4284">GitHub仓库快速导入Gitee及同步更新</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4328">什么是 Release（发行版）</a>
+</div>
+<div class='toolbar-list-item'>
+<a href="/help/articles/4354">将 PHP 项目自动发布到 packagist.org</a>
+</div>
+</div>
+</div>
+<div class='toolbar-help-search-reseult'></div>
+</div>
+</div>
+<script>
+  var opt = { position: 'left center'};
+  var $helpSideToolbar = $('.button.toolbar-help');
+  var $toolbarRoll = $('.toolbar-roll');
+  
+  $(function() {
+    if (true) {
+      $helpSideToolbar.popup(opt).popup({lastResort:'left center'})
+    } else {
+      $helpSideToolbar.popup({lastResort:'left center'}).popup('show', opt);
+      setTimeout(function() {
+        $helpSideToolbar.popup('hide', opt);
+      }, 3000);
+    }
+  
+    if ($toolbarRoll.length) {
+      setInterval(function() {
+        var $nextActiveLink = $toolbarRoll.find('a.active').next();
+        if (!$nextActiveLink.length) {
+          $nextActiveLink = $toolbarRoll.find('a:first-child');
+        }
+        $nextActiveLink.attr('class', 'active').siblings().removeClass('active init');
+      }, 5000);
+    }
+  })
+</script>
+
+<div class='ui popup dark left center transition hidden js-feedback-popup'>发送反馈</div>
+<div class='button' id='feedback-btn'>
+<i class='iconfont icon-feedback'></i>
+</div>
+<div class='popup button' id='home-comment'>
+<i class='iconfont icon-comment'></i>
+</div>
+<div class='ui popup dark'>评论</div>
+<div class='button gotop popup' id='gotop'>
+<i class='iconfont icon-top'></i>
+</div>
+<div class='ui popup dark'>回到顶部</div>
+</div>
+<style>
+  .side-toolbar .bdsharebuttonbox a {
+    font-size: 24px;
+    color: white !important;
+    opacity: 0.9;
+    margin: 6px 6px 0px 6px;
+    background-image: none;
+    text-indent: 0;
+    height: auto;
+    width: auto;
+  }
+</style>
+<style>
+  #udesk_btn a {
+    margin: 0px 20px 217px 0px !important;
+  }
+  #ent-sale-img-wrap {
+    margin: 0px 15px 294px 0px !important;
+  }
+</style>
+<script>
+  (function() {
+    $('#project-user-message').popup({
+      position: 'left center'
+    });
+  
+  }).call(this);
+</script>
+<script>
+  Gitee.initSideToolbar({
+    hasComment: true,
+    commentUrl: '/yourfriendyo/cpp_code_review#tree_comm_title'
+  })
+</script>
+<link rel="stylesheet" media="all" href="https://cn-assets.gitee.com/webpacks/css/side_toolbar_feedback-5dcc1be9cca438cc952f.css" />
+<script src="https://cn-assets.gitee.com/webpacks/side_toolbar_feedback-293c6f31948b1c33bc8c.bundle.js"></script>
+
+
+
+<style>
+  .gitee-stars-main-widget {
+    display: none;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 106; }
+    .gitee-stars-main-widget .close-icon {
+      width: 20px;
+      right: 10px;
+      position: absolute;
+      top: 0px;
+      cursor: pointer; }
+    .gitee-stars-main-widget .people-image {
+      width: 200px;
+      margin: 0 10px; }
+  
+  .gitee-stars-main-widget.gitee-stars-widget .close-icon {
+    left: 20px; }
+</style>
+<div class='gitee-stars-main-widget pendan-widget'>
+<a target="_blank" href="https://gitee.com/gitee-community/gitee-talk/blob/master/%E5%BC%80%E6%BA%90%E7%88%B1%E4%BD%A0%E4%BD%95%E6%AD%A2%E5%8D%81%E5%B9%B4.md"><img class="people-image" src="https://foruda.gitee.com/images/1684304316934113387/e16b1a42_1850385.png" alt="E16b1a42 1850385" />
+<img class="close-icon" src="https://foruda.gitee.com/images/1684304316254922020/3c21edeb_1850385.png" alt="3c21edeb 1850385" />
+</a></div>
+<script>
+  $(function () {
+    var $giteeStarsWidget = $('.gitee-stars-main-widget')
+    var cookieKey = "visit-gitee--2023-05-17 14:19:02 +0800"
+  
+    if ($.cookie(cookieKey) == 1) {
+      $giteeStarsWidget.hide()
+    } else {
+      $giteeStarsWidget.show()
+    }
+  
+    $giteeStarsWidget.on('click', '.close-icon', function (e) {
+      e.preventDefault()
+      $.cookie(cookieKey, 1, {path: '/', expires: 60})
+      $giteeStarsWidget.hide()
+    })
+  })
+</script>
+
+
+<script>
+  (function() {
+    this.__gac = {
+      domain: 'www.oschina.net'
+    };
+  
+  }).call(this);
+</script>
+
+<script src="https://cn-assets.gitee.com/webpacks/build_status-a3ee4cc8489b2defc1a8.bundle.js"></script>
+<script src="https://cn-assets.gitee.com/webpacks/scan_status-ec5f3b73a17207658c98.bundle.js"></script>
+<script src="https://cn-assets.gitee.com/webpacks/mermaid_render-80437a0d645e9044f9e8.bundle.js"></script>
+</body>
+</html>

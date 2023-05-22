@@ -49,7 +49,6 @@ stack 的底层可以使用任何容器，只要该容器支持`empty`、`back`�
 | `value_type& top()`                                          | 栈顶元素 |
 | `void push (const value_type& val)`                          | 尾插     |
 | `void pop()`                                                 | 尾删     |
-| `template <class... Args> void emplace (Args&&... args)`     |          |
 | `bool operator== (const stack<T,Ctnr>& lhs, const stack<T,Ctnr>& rhs)` | 关系运算 |
 
 ### 2.2 queue
@@ -70,14 +69,13 @@ queue也是容器适配器。底层容器要求和stack一样。
 | `value_type& back()`                                         | 队尾元素 |
 | `void push (const value_type& val)`                          | 尾插     |
 | `void pop()`                                                 | 头删     |
-| `template <class... Args> void emplace (Args&&... args)`     |          |
 | `bool operator== (const stack<T,Ctnr>& lhs, const stack<T,Ctnr>& rhs)` | 关系运算 |
 
 ## 3. OJ
 
 ### 3.1 最小栈
 
-[最小栈 (leetcode.com)](https://leetcode-cn.com/problems/min-stack/)
+[最小栈](https://leetcode-cn.com/problems/min-stack/)
 
 ~~~cpp
 class MinStack {
@@ -115,7 +113,7 @@ private:
 
 <img src="07-stack&queue.assets/双栈实现最小栈图示示例.gif" style="zoom: 60%;" />
 
-### 3.2 栈的出入序列匹配
+### 3.2 验证栈序列
 
 [验证栈序列](https://leetcode.cn/problems/validate-stack-sequences/) / [剑指 Offer 31. 栈的压入、弹出序列](https://leetcode.cn/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/)
 
@@ -125,25 +123,23 @@ private:
 class Solution {
 public:
     bool IsPopOrder(vector<int> pushV, vector<int> popV) {
-        int popi = 0;//出数组指针
+    	stack<int> st; // 模拟栈
+        int popi = 0;  // 出数组指针
         for (auto& e : pushV) {
-            st.push(e); //入栈数组只管向栈中入元素
-            //出栈数组和模拟栈进行比较
-            while (!st.empty() && st.top() == popV[popi]) {
+            st.push(e); // 入栈数组只管向栈中入元素
+            while (!st.empty() && st.top() == popV[popi]) { // 出栈数组和模拟栈进行比较
                 st.pop();
                 ++popi;
             }
         }
-        return st.empty();//出栈数组遍历结束或栈为空
+        return st.empty(); // 出栈数组遍历结束或栈为空
     }
-private:
-    stack<int> st;//模拟栈
 };
 ~~~
 
 定义一个模拟栈，定义两个指针指向出入数组的起始位置，向后遍历。
 
-入栈数组只管向栈中入元素，只有出栈数组和模拟栈进行比较：当栈顶元素和出栈指针所指元素相等时，将栈顶元素出栈并 ++ 出栈指针。
+入栈数组只管向栈中入元素，只有出栈数组和模拟栈进行比较：当栈顶元素和出栈指针所指元素相等时，将栈顶元素出栈并++出栈指针。
 
 **成功示例图示**
 
@@ -157,7 +153,7 @@ private:
 
 ### 3.3 逆波兰表达式求值
 
-[逆波兰表达式求值 (leetcode.com)](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+[逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
 
 中缀表达式转后缀表达式的目的是，将操作符按照运算顺序从左到右依次排好，方便计算机进行运算。
 
@@ -166,10 +162,9 @@ private:
 遍历中缀字符串：
 
 - 遇到操作数，直接输出。
--  遇到操作符，如果是空栈，直接入栈；如果栈非空，将其与栈顶比较优先级：
-  - 优先级比栈顶元素高，则入栈，比栈顶低或相等，栈顶出栈并输出。
-
-遍历结束后，将栈中元素全部输出。
+- 遇到操作符，如果是空栈，直接入栈；如果栈非空，将其与栈顶比较优先级；
+- 优先级比栈顶元素高，则入栈，比栈顶低或相等，栈顶出栈并输出。
+- 遍历结束后，将栈中元素全部输出。
 
 **后缀运算**
 
@@ -177,8 +172,7 @@ private:
 
 - 遇到操作数，直接入栈。
 - 遇到操作符，连续取两个栈顶元素（先出为右，后出为左）作操作数与其运算，运算结果入栈。
-
-遍历结束后，栈顶即结果。
+- 遍历结束后，栈顶即结果。
 
 ~~~cpp
 class Solution {
@@ -218,7 +212,7 @@ public:
 
 ### 3.4 用栈实现队列
 
-[用栈实现队列 (leetcode.com)](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
+[用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
 
 使用两个栈，一个用来入，一个用来出。
 
@@ -262,7 +256,7 @@ private:
 
 ### 3.5 用队列实现栈
 
-[用队列实现栈 (leetcode.com)](https://leetcode-cn.com/problems/implement-stack-using-queues/)
+[用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
 
 用队列实现栈，需要考虑栈是先进后出的结构，都是顺序容器插入操作一致，删除操作需要将队列中的前`n-1`个元素移入另一个队列，只留最后一个元素。
 
@@ -345,24 +339,29 @@ STL直接将容器类型作为类模板参数传入，支持自定义底层容�
 ### 4.2 queue
 
 ~~~cpp
-template <class T, class Container = deque<T>>
-class queue {
+template<class T, class Container = deque<T>>
+class queue
+{
 public:
-    void push(int x) {
+    void push(const T& x) {
         _con.push_back(x);
     }
     void pop() {
         _con.pop_front();
     }
-    bool empty() const {
-        return _con.empty();
-    }
-    bool size() const {
-        return _con.size();
-    }
-    T& front() const {
+    T& front() {
         return _con.front();
     }
+    T& back() {
+        return _con.back();
+    }
+    size_t size() {
+        return _con.size();
+    }
+    bool empty() {
+        return _con.empty();
+    }
+
 private:
     Container _con;
 };
@@ -374,15 +373,52 @@ private:
 
 #### deque的介绍
 
-因为容器 vector 和 list 在随机访问和插入删除的方面各有不足又各有优势，为均衡一下二者的特性，C++ 设计者设计了一种容器叫做双端队列 deque。
+vector和list在随机访问和插入删除的方面各有优劣，为均衡二者的特性，STL设计了一种容器叫做双端队列 deque。
 
-双端队列 deque 是一种双端的“连续”空间的数据结构。双端的含义是可以在头尾两端进行插入和删除操作，且时间复杂度为O(1)。
+双端队列deque是一种双端的、“连续”空间的数据结构。双端表示可以在头尾两端进行插入和删除，且时间复杂度为O(1)。
 
 <img src="07-stack&queue.assets/deque双端队列的原理介绍图示.png" style="zoom:60%;" />
 
+| 增删接口                                  | 解释     |
+| ----------------------------------------- | -------- |
+| `void push_back (const value_type& val)`  | 尾插     |
+| `void push_front (const value_type& val)` | 头插     |
+| `void pop_back()`                         | 尾删     |
+| `void pop_front()`                        | 头删     |
+| **访问接口**                              | **解释** |
+| `reference operator[] (size_type n)`      | 随机访问 |
+| `reference front()`                       | 头部元素 |
+| `reference back()`                        | 尾部元素 |
+
+#### deque的原理
+
+deque底层并不是真正连续的空间，而是由一个中控指针数组保存每个用来存储数据的小连续空间buffer的地址。类似于一个动态的二维数组，如下图所示：
+
+<img src="07-stack&queue.assets/deque底层实现原理示例图示.gif" style="zoom:60%;" />
+
+从中控数组的中部开始使用，头插使用前面的buffer，尾插使用后面的buffer。头插就向前开辟，尾插就向后开辟。
+
+- 头部操作无需挪动数据，头插头删效率高。
+- 扩容只开辟buffer，空间浪费少。
+- 中控数组扩容只拷贝指针，扩容代价低。
+- 先计算所在buffer再计算buffer内位置，可以支持随机访问。
+
+<img src="07-stack&queue.assets/deque的迭代器底层实现结构.png" style="zoom:60%;" />
+
+> 如果单个buffer大小不固定，则需要迭代器支持随机访问，效率变低。
+
+deque的迭代器有四个指针：
+
+- `cur`指向buffer当前数据位置
+- `first`指向buffer起始位置
+- `last`指向buffer结束位置
+- `node`反向指向本buffer在中控数组的位置
+
+#### deque的优劣
+
 | vector的缺点                                 | deque                                      |
 | -------------------------------------------- | ------------------------------------------ |
-| 扩容消耗高，空间浪费，非尾部插入删除效率低   | 扩容消耗低，空间浪费不严重，头插头删效率高 |
+| 扩容消耗高，空间浪费，头插头删效率低         | 扩容消耗低，空间浪费不严重，头插头删效率高 |
 | **vector的优点**                             | **deque**                                  |
 | 支持随机访问，连续空间缓存命中率高           | 支持伪随机访问，连续空间缓存命中率较高     |
 | **list的缺点**                               | **deque**                                  |
@@ -390,21 +426,11 @@ private:
 | **list的优点**                               | **deque**                                  |
 | 任意位置的插入删除效率高，按需申请不存在浪费 | 头尾插入删除效率高，空间浪费不严重         |
 
-> 与 vector 比较，头插效率高，不需要移动元素；扩容消耗低，空间浪费不严重。与 list 比较，空间利用率比较高，申请次数少，支持随机访问。
+deque基本兼具两大容器的优点，缺点是中部增删效率低，且做不到两大容器的极致。
 
-两大容器的优点，deque 基本都可匹敌，两大容器的缺点，deque 基本都可避免。栈和队列不需要中间的修改，只需要头尾的插入删除，所以 stack 和 queue 使用 deque 作为默认适配容器。
+但栈和队列只需要头尾的插入删除，所以stack和queue使用deque作为默认适配容器。
 
-#### deque的原理
-
-deque 的底层实现并不是真正连续的空间，而是由一段段连续的小空间拼接而成的，实际 deque 类似于一个动态的二维数组，其底层结构如下图所示：
-
-<img src="07-stack&queue.assets/deque底层实现原理示例图示.gif" style="zoom:60%;" />
-
-deque 底层实际上是分段连续的，使用迭代器维护其“整体连续”以及随机访问的假象。
-
-<img src="07-stack&queue.assets/deque的迭代器底层实现结构.png" style="zoom:60%;" />
-
-> deque 使用颇具局限性，仅作了解。
+> deque颇具局限性，仅作了解。
 
 &nbsp;
 
@@ -412,47 +438,44 @@ deque 底层实际上是分段连续的，使用迭代器维护其“整体连�
 
 ### 5.1 接口使用
 
-优先级队列 priority_queue 同样是个容器适配器，不同于之前的 stack 和 queue 只是简单对所适配的容器进行封装，它有三个模板参数：
+优先级队列priority_queue同样是个容器适配器，不同于stack和queue只是对容器的简单封装。它有三个模板参数：
 
 ~~~cpp
 template <class T, /* 数据类型 */
 	      class Container = vector<T>, /* 适配容器 */
 		  class Compare = less<typename Container::value_type> > /* 仿函数 */
-	class priority_queue;
+class priority_queue;
 ~~~
 
-priority_queue 要求适配的底层容器必须具有随机访问迭代器，支持`empty()`,`size()`,`front()`,`push_back()`,`pop_back()`几种接口，故一般默认使用 vector 作其底层容器。
+priority_queue要求底层容器必须具有随机访问迭代器，支持`empty`,`size`,`front`,`push_back`,`pop_back`几种接口，一般使用vector作底层容器。
 
-priority_queue 也就是堆 heap，能够实现堆的各种算法。一般容器适配器都不支持遍历，因为要维护容器本身的特性。
-
-<img src="07-stack&queue.assets/priority_queue的各种接口图示.png" style="zoom:80%;" />
-
-~~~cpp
-priority_queue<int> pq;
-pq.push(1);
-pq.push(2);
-pq.push(3);
-while (!pq.empty()) {
-    cout << pq.top() << " ";
-    pq.pop();
-}
-~~~
+priority_queue就是堆，能够实现堆的各种算法。因为要维护容器本身的特性，所以不支持遍历。
 
 ~~~cpp
 class Compare = less<typename Container::value_type>
 ~~~
 
-priority_queue 默认是数值大的元素的优先级高，也就是默认为大堆。若想要排成小堆，需要指定 priority_queue 的仿函数参数，传入`greator<T>`是排小堆，默认的`less<T>`是排大堆。
+priority_queue默认数值大优先级高，也就是默认大堆。想要排成小堆，需要指定priority_queue的仿函数参数，传入`greator<T>`。
 
-[Top-K (leetcode.com)](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+| 接口声明                                                     | 解释     |
+| ------------------------------------------------------------ | -------- |
+| `priority_queue (Compare& cmp = Compare(), Container& ctnr = Container())` | 构造函数 |
+| `bool empty() const`                                         | 判空     |
+| `size_type size() const`                                     | 元素个数 |
+| `value_type& top()`                                          | 栈顶元素 |
+| `void push (const value_type& val)`                          | 尾插     |
+| `void pop()`                                                 | 尾删     |
+
+[Top-K](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 ~~~cpp
 class Solution {
 public:
+    //建大堆会选出整个数组的最大值，减小堆才能选出第k大的数
     int findKthLargest(vector<int>& nums, int k) {
         vector<int>::iterator pos = nums.begin() + k;
-        //建大堆会选出整个数组的最大值，减小堆才能选出第k大的数
-        priority_queue<int, vector<int>, greater<int>> pq(nums.begin(), pos);//k个数的小堆
+        //k个数的小堆
+        priority_queue<int, vector<int>, greater<int>> pq(nums.begin(), nums.begin() + k);
         while (pos != nums.end()) {
             if (*pos > pq.top()) {
                 pq.pop();
@@ -461,13 +484,6 @@ public:
             ++pos;
         }
         return pq.top();
-    }
-};
-class Solution {
-public:
-    int findKthLargest(vector<int>& nums, int k) {
-        sort(nums.begin(), nums.end(), greater<int>());
-        return nums[k-1];
     }
 };
 ~~~
@@ -479,11 +495,10 @@ public:
 #### 基本接口
 
 ~~~cpp
-template <class T, class Container = vector<T>>
-class priority_queue {
+template<class T, class Container = std::vector<T>, class Compare = less<T>>
+class priority_queue
+{
 public:
-    priority_queue() 
-    {}
     void push(const T& x) {
         _con.push_back(x);
         adjust_up(_con.size() - 1); //向上调整
@@ -504,157 +519,220 @@ public:
     }
 private:
     Container _con;
+    Compare _cmp;
 };
 ~~~
-
-以上是 priority_queue 的基本框架。
 
 #### 向上向下调整算法
 
 ~~~cpp
-void adjust_up(int child) 
+void adjust_up(int child)
 {
-    while (child > 0) {
-        int parent = (child - 1) / 2;
-        if (_con[child] > _con[parent]) {
-            swap(_con[child], _con[parent]);
-            child = parent;
-            parent = (child - 1) / 2;
-        }
-        else {
+    int parent = (child - 1) / 2;
+
+    while (child > 0)
+    {
+        if (_cmp(_con[parent], _con[child]))
+            swap(_con[parent], _con[child]);
+        else
             break;
-        }
+
+        child = parent;
+        parent = (child - 1) / 2;
     }
 }
-void adjust_down(int parent) {
+
+void adjust_down(int parent)
+{
     int child = parent * 2 + 1;
-    while (child < _con.size()) {
-        if (child + 1 < _con.size() && _con[child + 1] > _con[child]) {
-            child = child + 1;
-        }
-        if (_con[child] > _con[parent]) {
-            swap(_con[child], _con[parent]);
-            parent = child;
-        }
-        else {
+
+    while (child < _con.size())
+    {
+        if (child + 1 < _con.size() && _cmp(_con[child], _con[child + 1]))
+            child++;
+
+        if (_cmp(_con[parent], _con[child]))
+            swap(_con[parent], _con[child]);
+        else
             break;
-        }
+
+        parent = child;
+        child  = parent * 2 + 1;
     }
 }
 ~~~
 
-堆插入也就是数组的尾插，等于在二叉树上加一个叶结点。此时堆的性质可能被破坏，不过只会影响该结点到根结点所在路径上的所有结点，故需要顺势向上调整：一直交换结点数值直到满足堆的性质即可。
+堆插入就是数组尾插一个元素，然后向上调整。
 
-<img src="07-stack&queue.assets/二叉树堆插入结点示例.gif" style="zoom:80%;" />
+此时堆的性质可能被破坏，不过只会影响该结点到根结点所在路径上的所有结点，故顺势向上调整：一直交换结点数值直到满足堆的性质即可。
 
-删除需要将尾元素换到堆顶，必然会改变堆的性质，不过只是根结点不满足性质，其左右子树还是保持不变。所以只需要将堆顶元素逐步向下调整：将根结点与其较大（小）的子结点进行交换，只要满足父结点比其二者子结点中任意一个大或小的条件，就让其与子结点进行交换，直到交换到叶结点或不满足条件为止。
+<img src="07-stack&queue.assets/二叉树堆插入结点示例.gif" style="zoom:60%;" />
 
-<img src="07-stack&queue.assets/二叉树堆删除结点示例.gif" style="zoom:80%;" />
+堆删除就是将尾元素覆盖到堆顶，然后向下调整。
+
+只是堆顶元素不满足性质，其左右子树还是原样。只需将堆顶元素逐步向下调整：将根结点与其较大/小的子结点交换，只要父结点比子结点中任意一个大/小，就进行交换，直到交换到叶结点或不满足条件为止。
+
+<img src="07-stack&queue.assets/二叉树堆删除结点示例.gif" style="zoom:60%;" />
 
 #### 仿函数
 
-确定堆为大堆还是小堆，在于向上调整算法和向下调整算法中的父子节点的比较关系：
+决定大堆还是小堆，在于向上/向下调整算法中的父子节点的比较关系：
 
 ~~~cpp
-if (_con[child] > _con[parent]) {
-    //...
+if (_cmp(_con[parent], _con[child])) {
+	swap(_con[parent], _con[child]);
 }
-if (child + 1 < _con.size() && _con[child + 1] > _con[child]) {
-	//...
+
+if (child + 1 < _con.size() && _cmp(_con[child], _con[child + 1])) {
+    child++;
 }
 ~~~
 
-但是这样的大小关系操作符不方便让用户在调用函数时修改，可以通过宏定义，函数指针的方式但都比较复杂，还有一种简单的方式就是仿函数。
+比较大小操作符写死不便用户修改，使用宏定义，函数指针都比较复杂，还有一种简单的方式就是仿函数。
 
-仿函数又名函数对象，顾名思义，模仿函数的调用方式。其实仿函数就是定义的类实例化的对象，通过类重载操作符`()`的方式实现具体的功能。
+仿函数又名函数对象，本质是对象，通过重载`()`操作符模仿函数的调用方式。
+
+仿函数相当于更高级的泛型，使用仿函数能够改变执行逻辑，仿函数内部的实现完全由用户自定，拥有极大的自定义空间。
 
 ~~~cpp
 template <class T>
-struct Less {
+struct less {
     bool operator()(const T& left, const T& right) const {
         return left < right;
     }
 };
 template <class T>
-struct Greater {
+struct greater {
     bool operator()(const T& left, const T& right) const {
         return left > right;
     }
 };
-//使用方式
+
 Less less;
-bool ret = less(1, 2);
+less(1, 2);
 Greater greater;
-bool ret = greater(1, 2);
-~~~
-
-~~~cpp
 greater(1, 2);
-greater.opeartor()(1, 2);
 ~~~
 
-通过类重载函数调用操作符`()`，因此可以像函数一样使用它，将其应用到向上向下调整算法中的逻辑判断处，就可以通过传入的模板参数不同来调用不同的仿函数以完成对应的逻辑。
+仿函数本质是一种类型，所以可以作模版参数，让用户定义类的时候指定。
 
 ~~~cpp
-template <class T, class Container = vector<T>, class Compare = Less<T>> /* 仿函数类型 Compare */
+template <class T, class Container = vector<T>, class Compare = Less<T>> 
 class priority_queue {
-private:
     void adjust_up(int child) {
-        //if (_con[child] > _con[parent])
-        if (Compare()(_con[parent], _con[child])) {
+        if (_cmp(_con[parent], _con[child]))
             //...
-        }
     }
     void adjust_down(int parent) {
-        //if (child + 1 < _con.size() && _con[child + 1] > _con[child]) 
-        if (child + 1 < _con.size() && Compare()(_con[child], _con[child + 1])) {
+        if (child + 1 < _con.size() && _cmp(_con[child], _con[child + 1]))
             //...
-        }
-        //if (_con[child] > _con[parent]) 
-        if (Compare()(_con[parent], _con[child])) {
+        if (_cmp(_con[parent], _con[child]))
             //...
-        }
     }
+    Compare _cmp;
+};
 ~~~
 
-<img src="07-stack&queue.assets/priority_queue模板参数仿函数调用图示示例.png" style="zoom:80%;" />
+<img src="07-stack&queue.assets/priority_queue模板参数仿函数调用图示示例.png" style="zoom:60%;" />
 
-仿函数相当于更高级的泛型，普通的模板参数只是增添了类型的普适性，而使用仿函数不仅能够改变执行逻辑，仿函数内部的实现完全由用户自定，拥有极大的自定义空间。
 
-这里的实现比较功能的仿函数类似于C语言库函数`qsort`参数中的函数指针，传入一个用于比较的函数。由于支持泛型，仿函数要比函数指针的方式更优秀。
-
-#### 基本框架
 
 ~~~cpp
-template <class T> struct Less;
-template <class T> struct Greater;
-template <class T, class Container = vector<T>, class Compare = Less<T>>
-class priority_queue {
-private:
-    void adjust_up(int child);
-    void adjust_down(int parent);
+#include <iostream>
+#include <vector>
+
+namespace test
+{
+template<class T>
+struct less
+{
+    bool operator()(const T& x, const T& y)
+    {
+        return x < y;
+    }
+};
+
+template<class T>
+struct greater
+{
+    bool operator()(const T& x, const T& y)
+    {
+        return x > y;
+    }
+};
+
+template<class T, class Container = std::vector<T>, class Compare = less<T>>
+class priority_queue
+{
 public:
-    priority_queue() 
-    {}
-    template <class InputIterator>
-	priority_queue(InputIterator first, InputIterator last)
-        :_con(first, last)
-	{
-    	if (_con.size() < 2) {
-        	return;
-		}
-    	//建堆
-        for (int i = (_con.size() - 1 - 1) / 2; i >= 0; i--) {
-        	adjust_down(i);
-		}
-	}
-    void push(const T& x);
-    void pop();
-    bool empty() const;
-    int size() const;
-    T& top();
+    void adjust_up(int child)
+    {
+        int parent = (child - 1) / 2;
+
+        while (child > 0)
+        {
+            if (_cmp(_con[parent], _con[child]))
+                swap(_con[parent], _con[child]);
+            else
+                break;
+
+            child = parent;
+            parent = (child - 1) / 2;
+        }
+    }
+
+    void adjust_down(int parent)
+    {
+        int child = parent * 2 + 1;
+
+        while (child < _con.size())
+        {
+            if (child + 1 < _con.size() && _cmp(_con[child], _con[child + 1]))
+                child++;
+
+            if (_cmp(_con[parent], _con[child]))
+                swap(_con[parent], _con[child]);
+            else
+                break;
+
+            parent = child;
+            child  = parent * 2 + 1;
+        }
+    }
+
+    void push(const T& x)
+    {
+        _con.push_back(x);
+        adjust_up(_con.size() - 1);
+    }
+
+    void pop()
+    {
+        _con[0] = _con[_con.size() - 1];
+        _con.pop_back();
+        adjust_down(0);
+    }
+
+    size_t size()
+    {
+        return _con.size();
+    }
+
+    bool empty()
+    {
+        return _con.empty();
+    }
+
+    T& top()
+    {
+        return _con[0];
+    }
+
 private:
     Container _con;
+    Compare _cmp;
 };
+
+}
 ~~~
 
