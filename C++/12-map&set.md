@@ -1,49 +1,35 @@
-# map和set
+## map和set
 
 > STL容器分为序列式容器和关联式容器。
 
-- 序列式容器vector、list等底层为线性序列数据结构，数据元素之间没有联系，只是用来存储数据。
-- 关联式容器map、set等底层采用平衡搜索树这样的数据结构，存储的是`<key/value>`式的键值对，数据检索效率高。
+- 序列式容器vector、list等底层为线性数据结构，数据元素之间没有联系，一般用来存储数据。
+- 关联式容器map、set等底层采用平衡搜索树，存储的是`<key/value>`式的键值对，数据检索效率高。
 
-## 1.1 键值对
+# 1.容器
 
-用来表示具有一一对应关系的一种结构，该结构中一般只包含两个成员变量 key 和 value，key 代表键值，
-value 表示与 key 对应的信息。
-
-> 比如建立一个英汉互译的字典，字典中有单词和对应的翻译，单词与中文含义是——对应的关系。通过单词可找到对应的中文含义。
+## 1.1 set
 
 ```cpp
-template <class T1, class T2>
-struct pair
-{
-  typedef T1 first_type;
-  typedef T2 second_type;
-  T1 first;
-  T2 second;
-  pair(): first(T1()), second(T2())
-  {}
-  pair(const T1& a, const T2& b): first(a), second(b)
-  {}
-}
-```
-
-&nbsp;
-
-## 1.2 set
-
-```cpp
-template < class T,                        // type 元素数据类型
+template < class T,                        // T 元素数据类型
            class Compare = less<T>,        // compare 该数据类型的比较函数
-           class Alloc = allocator<T>      // allocator_type 空间配置器
-           > class set;
+           class Alloc = allocator<T>>     // Alloc 空间配置器
+class set;
 ```
 
-set 是按照一定次序存储元素的容器，所以set天然具有排序和去重的功能。set中的元素不能被修改，元素总是const，但是可以从容器中插入或删除它们。
+set就是K模型的容器，按照搜索树的规则存储元素，具有排序和去重的功能。
 
-### insert
+**set等搜索树容器都不支持修改元素，会破坏搜索树结构**。find的返回值被`const`修饰。
+
+### 接口
+
+| 增加                                                         | 解释         |
+| ------------------------------------------------------------ | ------------ |
+| **`pair<iterator,bool> insert (const value_type& val)`**     | **单个插入** |
+| `iterator insert (iterator position, const value_type& val)` | 迭代器插入   |
+| `void insert (InputIterator first, InputIterator last)`      | 范围插入     |
 
 ```cpp
-std::set<int> s;
+set<int> s;
 s.insert(3);
 s.insert(1);
 s.insert(5);
@@ -51,74 +37,72 @@ s.insert(8);
 s.insert(8);
 s.insert(2);
 s.insert(2);
-std::set<int>::iterator it = s.begin();
 
-while (it != s.end())
-{
-    std::cout << *it << " ";
+std::set<int>::iterator it = s.begin();
+while (it != s.end()) {
+    cout << *it << " ";
     ++it;
 }
-// 1 2 3 5 8
+// 1 2 3 5 8 //set底层是平衡搜索树，所以可以去重和排序
 ```
 
-set 底层采用的是平衡搜索树的结构，**自带去重和排序的机制**。
+| 删除                                          | 解释           |
+| --------------------------------------------- | -------------- |
+| **`size_type erase (const value_type& val)`** | **指定值删除** |
+| `void erase (iterator position)`              | 迭代器删除     |
+| `void erase (iterator first, iterator last)`  | 范围删除       |
 
-### erase
-
-```cpp
-     void erase (iterator position);
-size_type erase (const value_type& val);
-     void erase (iterator first, iterator last);
-```
-
-使用值删除时，返回值是删除元素的个数，可通过此判断是否删除成功。
+**值删除接口返回的是删除元素的个数，可通过此判断是否删除成功。**
 
 ```cpp
 size_t ret = s.erase(30);
-std::cout << "ret: " << ret << std::endl; // 使用值删除时，返回值是删除元素的个数
+std::cout << ret << std::endl; // 使用值删除时，返回值是删除元素的个数
+```
 
-std::set<int>::iterator pos = s.find(30);
+| 查找                                              | 解释       |
+| ------------------------------------------------- | ---------- |
+| **`iterator find (const value_type& val) const`** | **值查找** |
+| `size_type count (const value_type& val) const`   | 返回个数   |
 
+```cpp
+set<int>::iterator pos = s.find(30);
 if (pos != s.end())
-{
-    s.erase(pos); // 删除不存在迭代器位置会报错
-}
+    s.erase(pos);
+
+int cnt = s.count(30);
+if (cnt == 1)
+    cout << "ok" << endl;
 ```
 
-## 2.2 multiset
+## 1.2 multiset
 
-multiset 和 set 相比区别在于 multiset 没有去重机制，存储的元素可以重复。
+**multiset没有去重机制，允许键值重复。**其底层也是搜索树，插入相同元素时，可以放到该节点的任意子节点。
+
+**对于键值重复的节点，查找返回的是中序遍历遇到的第一个节点**。
+
+> 比如查找值为10的节点，在找到第一个10时，会到他的左子树去找，直到遇到比10小的数。      
 
 ```cpp
-void TestMultiSet()
-{
-    std::multiset<int> s;
+std::multiset<int> s;
+s.insert(3);
+s.insert(1);
+s.insert(5);
+s.insert(5);
+s.insert(2);
+s.insert(2);
 
-    s.insert(3);
-    s.insert(1);
-    s.insert(5);
-    s.insert(8);
-    s.insert(2);
-    s.insert(5);
-    s.insert(2);
-
-    std::set<int>::iterator it = s.begin();
-
-    while (it != s.end())
-    {
-        std::cout << *it << " ";
-        ++it;
-    }
+multiset<int>::iterator it = s.begin();
+while (it != s.end()) {
+    std::cout << *it << " ";
+    ++it;
 }
-// 1 2 2 3 5 5 8 8 
+// 1 2 2 3 5 5
 ```
 
-底层也是搜索二叉树，如果相同的话，可以插入左节点也可以是右节点。**对于多个重复值的节点，查找返回的是中序遍历的第一个遇到的节点**。
-
-### erase
+### 接口
 
 ```cpp
-std::set<int>::iterator pos = s.find(1);
+multiset<int>::iterator pos = s.find(1);
 while (pos != s.end() && *pos == 1)
 {
     s.erase(pos);
@@ -126,7 +110,7 @@ while (pos != s.end() && *pos == 1)
 }
 ```
 
-删除和迭代器遍历操作不可以放在一起，删除就改变了原有树的结构，再`++pos`就访问非法空间了。可以用下面更简单的方式。
+**删除和迭代器遍历操作不可以放在一起，删除就改变了原有树的结构，再`++pos`就访问非法空间了**。可以用下面更简单的方式。
 
 ```cpp
 while (pos != s.end())
@@ -144,138 +128,130 @@ while (ret)
 }
 ```
 
-**set 和 multiset 不支持修改已存在元素的值，因为会破坏搜索树结构**，返回值是`const`类型的，通过迭代器修改值也会直接报错。
+&nbsp;
+
+## 1.3 map
+
+map底层也是平衡搜索树，map的元素按照键值key进行排序。map支持下标访问符，可以找到与key对应的value。
+
+### 定义
+
+键值对是表示具有对应关系的一种结构，一般只有两个成员key和value，key代表键值，value表示对应的数据。
 
 ```cpp
-std::multiset<int>::iterator pos = s.find(2);
-if (pos != s.end())
+template <class T1, class T2>
+struct pair
 {
-    *pos = 1; // Err
+  typedef T1 first_type;
+  typedef T2 second_type;
+  first_type first;
+  second_type second;
+    
+  pair(const T1& a, const T2& b) : first(a = T1()), second(b = T2())
+  {}
+};
+```
+
+pair就是键值对，实际上是一个结构体，被map当作元素类型使用。
+
+```cpp
+template < class Key,                                     // map::key_type
+           class T,                                       // map::mapped_type
+           class Compare = less<Key>,                     // map::key_compare
+           class Alloc = allocator<pair<const Key,T> >    // map::allocator_type
+         > class map;
+```
+
+### 接口
+
+```cpp
+typedef Key key_type;
+typedef T mapped_type;
+typedef pair<const Key, T> value_type;
+```
+
+| 增加                                                     | 解释         |
+| -------------------------------------------------------- | ------------ |
+| **`pair<iterator,bool> insert (const value_type& val)`** | **单个插入** |
+
+```cpp
+dict.insert(pair<string, string>("arrary", "数组"));
+dict.insert(make_pair("string", "字符串"));
+dict.insert({"sort", "排序"});
+
+auto ret = m.insert({"sort", "[[排序]]"});
+cout <<(ret.first)->first << (ret.first)->second << ret.second << endl; // sort 排序 0
+```
+
+插入返回的是迭代器和布尔值的键值对。布尔值表示插入是否成功。
+
+- 树中无重复key值的元素则插入成功，迭代器表示插入位置。
+- **树中存在相同key值的元素则插入失败，迭代器表示该相同key值元素的位置**。
+
+| 查找                                    | 解释     |
+| --------------------------------------- | -------- |
+| **`iterator find (const key_type& k)`** | **查找** |
+
+```cpp
+string str;
+while (cin >> str) {
+    map<string, string>::iterator it = m.find(str);
+    if (it != m.end()) {
+        cout << it->first << "-" << it->second << endl;
+    }
 }
 ```
 
-## 2.3 map
+| 删除                                         | 解释           |
+| -------------------------------------------- | -------------- |
+| **`size_type erase (const key_type& k)`**    | **指定值删除** |
+| `void erase (iterator position)`             | 迭代器删除     |
+| `void erase (iterator first, iterator last)` | 范围删除       |
 
-在map中，键值 key 通常用于排序和唯一地标识元素，键值 key 和值 value 的类型可能不同，key与value通过成员类型 value_type绑定在一起。
+`erase`删除节点可以传迭代器，也可以传`key`进行遍历删除。
 
-- map中的元素按照键值 key 进行排序。
-- map支持下标访问符，可以找到与key对应的value。map通常被实现为平衡二叉搜索树（红黑树）。
+| 下标访问                                          | 解释         |
+| ------------------------------------------------- | ------------ |
+| **`mapped_type& operator[] (const key_type& k)`** | **下标访问** |
+| `mapped_type& at (const key_type& k)`             | 下标访问     |
 
-### pair
-
-理解 map 需要先熟悉一个概念 pair，pair 就是键值对是`key`和`value`的对应组合类型。实际上 pair 是被封装成一个结构体，被 map 使用的。
-
-```cpp
-template <class T1, class T2> struct pair;
-
-typedef pair<const Key, Value> value_type;
-```
-
-T1 和 T2 两个模版参数分别对应 key 和 value。
-
-### insert
+`[]`**基本功能是查找，此外兼具插入和修改**。
 
 ```cpp
-//1. 
-pair<iterator, bool> insert (const value_type& val);
-//2. 
-iterator insert (iterator position, const value_type& val);
-//3.
-template <class InputIterator>
-void insert (InputIterator first, InputIterator last);
+count_map["pg"];         // 插入
+cout << count_map["pg"]; // 查找
+count_map["pg"] = 111;   // 修改
+count_map["tz"] = 888;   // 插入+修改
 ```
 
-| 类型          | 定义                                 | 解释                                   |
-| ------------- | ------------------------------------ | -------------------------------------- |
-| `value_type`  | `pair<const key_type,mapped_type>`   | 插入的元素类型，实际上是个`pair`键值对 |
-| `key_type`    | `The first template parameter (Key)` | `pair`的第一个参数                     |
-| `mapped_type` | `The second template parameter (T)`  | `pair`的第二个参数                     |
+调用`insert`，无则插入有则查找，返回value的引用表示支持修改。
 
-> 可见`key`值是不可修改的，因为要依次构建树。
-
-```cpp
-//1. 插入pair对象
-dict.insert(kv1);
-//2. 插入匿名对象
-dict.insert(pair<string, string>("string", "字符串"));
-//3. 使用函数间接调用构造
-dict.insert(make_pair("arrary", "数组"));
-```
-
-> 上述三种都是调用第一种插入函数，`make_pair`的优势是简单方便。
-
-插入返回的是迭代器和布尔值的键值对，布尔值返回是否插入成功，**如果插入成功迭代器返回的是插入位置，失败是已存在相同`key`值的元素位置**。
-
-### erase
-
-```cpp
-     void erase (iterator position);
-size_type erase (const key_type& k);
-     void erase (iterator first, iterator last);
-```
-
-`erase`删除节点可以传迭代器，也可以传`key`进行遍历查找并删除。
-
-### operator[]
-
-```cpp
-for (auto& kv : str) {
-    countMap[str]++; // 统计次数
-}
-```
-
-`[]`操作符就是用来通过`key`查找并返回对应的`value`。他的内部实现大概是：
+> 他的内部实现是：
 
 ```cpp
 mapped_type& operator[] (const key_type& k)
 {
-    return (
-              *(
-                   (
-                        this->insert( make_pair(k,mapped_type()) ) // 返回值是键值对
-                   ).first // 获得键值对中的key 迭代器
-               ) // 对迭代器解引用
-           ).second; // 解引用迭代器访问value
-    
-    // 简单版本
-    pair<iterator, bool> ret = insert(make_pair(k, mapped_type()));
-    return ret.first->second;
+    return insert(make_pair(k,mapped_type())).first->second;
+    // pair<iterator, bool> ret = insert(make_pair(k, mapped_type()));
+    // return ret.first->second;
 }
 ```
 
-> 一句话总结就是，从返回值中的迭代器获取元素对应的 value。
-
-`[]`的功能包含：**插入、查找、修改**。调用`insert`函数，无则插入有则查找，返回类型是引用表示能够修改。
-
 ```cpp
-map<string, string> dict;
-dict.insert(make_pair("sort", "排序"));
-dict.insert(make_pair("left", "左边"));
-// 修改
-dict["left"] = "剩余";       
-// 插入 
-dict["test"];                 
-// 查找
-cout << dict["sort"] << endl; 
-// 插入+修改
-dict["string"] = "字符串";     
+string arr[] = {"西瓜","西瓜","苹果","西瓜","苹果","苹果","西瓜","苹果","香蕉","苹果","香蕉","梨"};
+map<string, int> count_map;
+
+for (auto& e : arr)
+	count_map[e]++;
+for (auto& kv: count_map)
+	cout << kv.first << ": " << kv.second << endl;
 ```
 
-## 2.4 multimap
+## 1.4 multimap
 
-`multimap`和`map`的区别是可存在重复数据。所以`multimap`没有`[]`操作符。
+`multimap`和`map`的区别是可存在重复数据。所以`multimap`无法重载`[]`操作符。
 
-### count
-
-`count`可以用来统计`key`的出现次数。
-
-```cpp
-cout << dict.count("left") << endl;
-```
-
-### 前K个高频单词
-
-https://leetcode.cn/problems/top-k-frequent-words/
+`count`可以用来统计同一`key`值元素的出现次数。
 
 &nbsp;
 
@@ -283,44 +259,73 @@ https://leetcode.cn/problems/top-k-frequent-words/
 
 ## 2.1 AVL树
 
-二叉搜索树的查找效率很高，但如果数据有序或者接近有序，搜索树就会退化成单支树，查找效率就会变成线性的。
+### AVL树的定义
 
-解决上述问题的方法就是AVL树和红黑树：当向二叉搜索树中插入新结点后，**对树中的结点进行调整，保证每个结点的左右子树高度之差的绝对值不超过1**，降低了树的高度，从而减少平均搜索长度。
+搜索树的查找效率高，但如果数据有序或接近有序，搜索树就会退化成单支树，查找效率就会变成线性的。
 
-故AVL树又称为高度平衡二叉搜索树。
+使用AVL树插入新结点时会对树进行调整，保证每个结点的左右子树高度之差的绝对值不超过1。从而降低树的高度，减少平均搜索长度。
 
-一棵AVL树要么是空树，要么是具有如下性质的二叉搜素树：
+一棵AVL树要么是空树，要么是具有如下性质的搜索树：
 
 - 该树的左右子树都是AVL树，
-- 左右子树的高度之差（简称平衡因子）的绝对值不超过1（-1/0/1）。
+- **左右子树的高度之差（简称平衡因子）的绝对值不超过1**。 
 
-<img src="12-map&set.assets/AVL树结构图示.png" style="zoom:40%;" />
+<img src="12-map&set.assets/AVL树结构图示.png" style="zoom:30%;" />
 
-> AVL树不一定需要平衡因子，使用平衡因子是一种控制实现的方式。
+> 使用平衡因子只是AVL树的一种实现方式。
 
-这样的AVL树是高度平衡的，那么它的高度基本维持在 $log_2n$，搜索的时间复杂度也就维持在 $O(log_2n)$ 了。
+这样的树是高度平衡的，它的高度维持在 $logn$ 左右，搜索的时间复杂度就是 $O(logn)$。
 
-### AVL树的插入
+```cpp
+template<class K, class V>
+struct avl_node
+{
+    avl_node<K, V>* _left;
+    avl_node<K, V>* _right;
+    avl_node<K, V>* _parent;
 
-<img src="12-map&set.assets/AVL插入破坏平衡图示.png" style="zoom:50%;" />
+    pair<K, V> _kv;
+    int _bf; // balance factor
 
-由于搜索二叉的特性，插入节点之后可能会违反AVL树的定义，如图所示，**新节点到根结点所在路径上的祖先节点的平衡因子都会发生改变**。
+    avl_node<K, V>(const pair<K, V>& kv)
+    	: _kv(kv), _bf(0), _left(nullptr), _right(nullptr), _parent(nullptr)
+    {}
+};
 
-#### 更新平衡因子
+template<class K, class V>
+class avl_tree
+{
+    typedef avl_node<K, V> node;
+private:
+    node* _root = nullptr;
+};
+```
 
-- 如果插入在父节点的左边，父节点的平衡因子要减1；
-- 如果插入在父节点的右边，父节点的平衡因子要加1；
+#### AVL树的性能
 
-1. 如果父节点的平衡因子更新后为0，说明所在树高度不变且已经平衡，不会影响到上层节点。
-2. 如果父节点的平衡因子更新后为1/-1，说明所在树高度变化；
-3. 如果父节点的平衡因子更新后为2/-2，说明子树已经不平衡，需要旋转处理。
+AVL是一棵严格平衡的二叉搜索树，可以保证查询效率 $O(logn)$ 。但插入删除时要维护平衡，会出现多次旋转，性能很低下。
 
-<img src="12-map&set.assets/AVL插入示例图示.svg" style="zoom:50%;" />
+因此，如果需要一种查询高效且有序的数据结构，且不常改变结构，可以考虑AVL树。AVL树在实际中不太常用，因为存在红黑树。
+
+### 更新平衡因子
+
+如图所示，**插入节点会改变新节点到根的路径上所有节点的平衡因子**。所以要先更新平衡因子，再对树旋转处理。
+
+<img src="12-map&set.assets/AVL插入破坏平衡图示.png" style="zoom:30%;" />
+
+如果插入在父节点的左边，父节点的平衡因子要减1；如果插入在父节点的右边，父节点的平衡因子要加1。
+
+1. 如果父节点的平衡因子更新为0，说明所在树已经平衡且高度未变，不会影响到上层节点。
+2. 如果父节点的平衡因子更新为1/-1，说明所在树高度发生变化；
+3. 如果父节点的平衡因子更新为2/-2，说明子树已经不平衡，需要旋转处理。
+
+<img src="12-map&set.assets/AVL插入示例图示.svg" style="zoom:30%;" />
 
 ```cpp
 bool Insert(const pair<K, V>& kv)
 {
-    if (_root == nullptr) {
+    if (_root == nullptr) 
+    {
         _root = new Node(kv);
         return true;
     }
@@ -328,7 +333,8 @@ bool Insert(const pair<K, V>& kv)
     Node* parent = nullptr;
     Node* curr = _root;
 
-    while (curr) {
+    while (curr) 
+    {
         if (curr->_kv.first < kv.first) {
             parent = curr;
             curr = curr->_right;
@@ -343,26 +349,24 @@ bool Insert(const pair<K, V>& kv)
     }
 
     curr = new Node(kv);
-    if (parent->_kv.first < kv.first) { // 链接在右边
+    if (parent->_kv.first < kv.first)
         parent->_right = curr;
-        curr->_parent = parent;
-    }
-    else { // 链接在左边
+    else
         parent->_left = curr;
-        curr->_parent = parent;
-    }
+    curr->_parent = parent;
 
     // 控制平衡
     // 1. 更新平衡因子
     // 2. 旋转处理异常平衡因子
 
-    while (parent) { // 更新到根
+    while (parent) // 更新到根
+    { 
         // 更新
         if (curr == parent->_left)
             parent->_bf--;
         else if (curr == parent->_right)
             parent->_bf++;
-
+        
         // 检测
         if (parent->_bf == 0) { // 已经平衡，更新结束
             break;
@@ -384,275 +388,244 @@ bool Insert(const pair<K, V>& kv)
                 RotateRL(parent);
             break;
         }
-        else { // 树构建出错
-            assert(false);
+        else { 
+            assert(false); // 树构建出错
         }
     }
-
     return true;
 }
 ```
 
-### AVL旋转处理
+### AVL树的旋转
 
 > 先看如图所示的树结构的抽象图，节点下方的矩形代表多种可能，分别是a，b，c子树，其高度都是h。
 
 <img src="12-map&set.assets/二叉树抽象图解释图示.png" style="zoom: 30%;" />
 
-旋转的方式有四种，其**目的都是在在搜索树规则的条件下平衡二叉树**，平衡的结果就是树的整体高度减1，减少了遍历次数，提高了效率。
+旋转的方式有四种，目的是<u>在搜索树规则下平衡二叉树，平衡的结果就是树的整体高度减1</u>，提高搜索效率。
+
+旋转后树中各节点的平衡因子达到最佳状态，不需要继续向上更新平衡因子。
 
 #### 右单旋
 
-<img src="12-map&set.assets/AVL右单旋示例图示.png" style="zoom:40%;" />
+<img src="12-map&set.assets/AVL右单旋示例图示.png" style="zoom:30%;" />
 
-右子树新增一个节点，高度变成`h+1`，导致父节点的平衡因子变成`-1`，爷节点的平衡因子变成`-2`。此时爷节点 60 的平衡被破坏，就会引发右单旋。
+> 左树新增节点，高度+1，导致父节点bf=–1，爷节点bf=–2。此时平衡被破坏，就会引发右单旋。
 
-**右单旋就是把平衡因子为`-2`的节点旋转至平衡因子为`-1`的节点的右子树上**。
+**右单旋就是把`bf=-2`的节点旋转至`bf=-1`的节点的右子树上**。此时，`bf=-1`的节点是否存在右子树，有两种情况但可以统一处理。
 
-此时存在有两种情况，平衡因子为`-1`的节点是否存在右子树：
+<img src="12-map&set.assets/AVL树右单旋两种情况示例图示.png" style="zoom:30%;" />
 
-<img src="12-map&set.assets/AVL树右单旋两种情况示例图示.png" style="zoom:50%;" />
+1. 先把`bf=-1`的节点的右子树链接到`bf=-2`的节点的左边，
+2. 再将`bf=-2`的节点链接到`bf=-1`的节点的右边。
+3. 最后`bf=-1`的节点作当前树的根，和整棵树链接。
 
-1. 平衡因子为`-1`的节点不存在右子树，就直接把平衡因子为`-2`的节点直接链接到右子树上。
-
-<img src="12-map&set.assets/AVL树右单旋1示例图示.gif" style="zoom:50%;" />
-
-2. 平衡因子为`-1`的节点存在右子树，就把右子树链接到平衡因子为`-2`的节点的左边，再将平衡因子为`-2`的节点链接到右子树上。
-
-<img src="12-map&set.assets/AVL树右单旋2示例图示.gif" style="zoom:50%;" />
+<img src="12-map&set.assets/AVL树右单旋图示.gif" style="zoom:30%;" />
 
 ```cpp
-void RotateR(Node* parent)
+void rotate_r(node* parent)
 {
-    Node* subL = parent->_left;
-    Node* subLR = subL->_right;
+    node* subl = parent->_left;
+    node* sublr = subl->_right;
 
-    // 右子树作父节点的左子树
-    parent->_left = subLR;
-    if (subLR)
-        subLR->_parent = parent;
+    parent->_left = sublr;
+    if (sublr) sublr->_parent = parent;
 
-    Node* parentP = parent->_parent;
+    node* pparent = parent->_parent;
 
-    // 父节点作当前节点的右子树
-    subL->_right = parent;
-    parent->_parent = subL;
+    subl->_right = parent;
+    parent->_parent = subl;
 
-    // 更新根节点或链接爷节点
     if (parent == _root)
     {
-        _root = subL;
-        _root->_parent = nullptr;
+        _root = subl;
+        subl->_parent = nullptr;
     }
     else
     {
-        if (parentP->_left == parent)
-            parentP->_left = subL;
+        if (pparent->_left == parent)
+            pparent->_left = subl;
         else
-            parentP->_right = subL;
+            pparent->_right = subl;
+        subl->_parent = pparent;
     }
-    subL->_parent = parentP; // 维护三叉链
 
-    // 更新平衡因子
-    subL->_bf = 0;
     parent->_bf = 0;
+    subl->_bf = 0;
 }
 ```
 
+<img src="12-map&set.assets/AVL右单旋过程图示.png" style="zoom:30%;" />
+
 #### 左单旋
 
-<img src="12-map&set.assets/AVL左单旋示例图示.png" style="zoom:40%;" />
+<img src="12-map&set.assets/AVL左单旋示例图示.png" style="zoom:30%;" />
 
-左单旋就是节点插入在最右边的情况，和右单旋正好相反。同样也分是否存在左子树两种情况：
+左单旋和右单旋正好相反。**左单旋就是把`bf=2`的节点旋转至`bf=1`的节点的左子树上**。
 
-<img src="12-map&set.assets/AVL树左单旋两种情况示例图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/AVL树左单旋两种情况示例图示.png" style="zoom:30%;" />
 
-1. 平衡因子为`1`的节点没有左子树
+1. 先把`bf=1`的节点的左子树链接到`bf=2`的节点的右边。
+1. 再将`bf=2`的节点链接到`bf=1`的节点的左边。
+1. 最后`bf=-1`的节点作当前树的根，和整棵树链接。
 
-<img src="12-map&set.assets/AVL树左单旋1示例动图.gif" style="zoom:50%;" />
-
-2. 平衡因子为`2`的节点存在左子树
-
-<img src="12-map&set.assets/AVL树左单旋2示例动图.gif" style="zoom:50%;" />
+<img src="12-map&set.assets/AVL树左单旋图示.gif" style="zoom:30%;" />
 
 ```cpp
-// 左单旋
-void RotateL(Node* parent)
+void rotate_l(node* parent)
 {
-    Node* subR = parent->_right;
-    Node* subRL = subR->_left;
+    node* subr = parent->_right;
+    node* subrl = parent->_left;
 
-    // 先将左子树链接到父节点下
-    parent->_left = subRL;
-    if (subRL)
-        subRL->_parent = parent;
+    parent->_right = subrl;
+    if (subrl) subrl->_parent = parent;
 
-    Node* parentP = parent->_parent; // 先保存父节点的父
-    // 再将父节点链接到当前节点下
-    subR->_left = parent;
-    parent->_parent = subR;
+    node* pparent = parent->_parent;
 
-    // 与所在树链接
-    if (_root == parent)
-    {
-        _root = subR;
-        _root->_parent = nullptr;
-    }
+    subr->_left = parent;
+    parent->_parent = subr;
+
+    if (parent == _root)
+        _root = subr;
     else
     {
-        if (parentP->_left == parent)
-            parentP->_left = subR;
+        if (pparent->_left == parent)
+            pparent->_left = subr;
         else
-            parentP->_right = subR;
-
-        subR->_parent = parentP; // 维护三叉链
+            pparent->_right = subr;
     }
+    subr->_parent = pparent;
 
-    // 更新平衡因子
-    subR->_bf = parent->_bf = 0;
+    parent->_bf = 0;
+    subr->_bf = 0;
 }
 ```
 
 #### 左右双旋
 
-左单旋右单旋分别是右边高左边旋和左边高右边旋转。双旋的情况并不是单纯的一边高，单纯单旋无法解决问题。
+左单旋右单旋分别是左高左旋和右高右旋。
 
-左右双旋的情况是新节点插入在左子树的右边，如下图所示，<u>对于`-2`这个轴点来说左边高，对于`1`来说是右边高</u>。
+左右双旋的情况如下图所示，<u>对于下半部分来说左边高，对于上半部分来说右边高</u>。
 
-<img src="12-map&set.assets/AVL树左右双旋简单示例图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/AVL树左右双旋简单示例图示.png" style="zoom:30%;" />
 
-具体步骤是：
+<img src="12-map&set.assets/AVL树左右双旋示例图示.png" style="zoom:30%;" />
 
-1. **先以平衡因子为`1`的节点为轴进行左单旋**；
-2. **再以平衡因子为`-2`的节点为轴进行右单旋**。
-
-<img src="12-map&set.assets/AVL树左右双旋动图图示.gif" style="zoom:50%;" />	
+1. **先以`bf=1`的节点为轴进行左单旋**；
+2. **再以`bf=-2`的节点为轴进行右单旋**。
 
 ```cpp
-void RotateLR(Node* parent) {
-    //...
+void RotateLR(Node* parent) { // 双旋就是由两个单旋组成
     RotateL(parent->_left);
     RotateR(parent);
     //...
 }
 ```
 
-<img src="12-map&set.assets/AVL树左右双旋示例图示.png" style="zoom:50%;" />
+##### 更新平衡因子
 
-> 双旋就是由两个单旋组成，直接调用即可。
+两个单旋会把节点的平衡因子都变成0，显然是不正确的。根据插入节点的位置不同，左右双旋的平衡因子更新有三种情况：
 
-##### 平衡因子的更新
+> 可以通过`subLR`节点的平衡因子的值来判断三种情况。不管树有多高，我们只在乎新节点在`subLR`的左右。
 
-<img src="12-map&set.assets/AVL树左右双旋插入情况分类图示.png" style="zoom:50%;" />
+| 插入情况              | 如何判断      | 结果                                    |
+| --------------------- | ------------- | --------------------------------------- |
+| `subLR`本身就是新节点 | `subLR.bf=0`  | `parent.bf=0`,`subL.bf=0`,`subLR.bf=0`  |
+| 新节点在`subLR`的左边 | `subLR.bf=-1` | `parent.bf=0`,`subL.bf=-1`,`subLR.bf=0` |
+| 新节点在`subLR`的右边 | `subLR.bf=1`  | `parent.bf=1`,`subL.bf=0`,`subLR.bf=0`  |
+
+<img src="12-map&set.assets/AVL树左右双旋插入情况分类图示.png" style="zoom:30%;" />
 
 ```cpp
-void RotateLR(Node* parent)
+void rotate_lr(node* parent)
 {
-    // 提前保存
-    Node* subL = parent->_left;
-    Node* subLR = subL->_right;
-    int bf = subLR->_bf;  // 保存旋转前的左子树的右孩子的平衡因子
+    node* subl = parent->_left;
+    node* sublr = subl->_right;
 
-    RotateL(parent->_left);
-    RotateR(parent);
+    int bf = sublr->_bf; // 记录sublr的平衡因子用以判断
 
-    // subRL的平衡因子以区分情况
-    if (bf == 1)         // 插入在右孩子的左边
+    rotate_l(parent->_left);
+    rotate_r(parent);
+
+    if (bf == 0) // sublr就是新节点
+    {
+        parent->_bf = 0;
+        subl->_bf = 0;
+        sublr->_bf = 0;
+    }
+    else if (bf == 1) // 插入在sublr的左边
+    {
+        parent->_bf = 0;
+        subl->_bf = -1;
+        sublr->_bf = 0;
+    }
+    else if (bf == -1) // 插入在sublr的右边
     {
         parent->_bf = 1;
-        subL->_bf = 0;
-        subLR->_bf = 0;
+        subl->_bf = 0;
+        sublr->_bf = 0;
     }
-    else if (bf == -1)   // 插入在右孩子的右边
+    else
     {
-        parent->_bf = 0;
-        subL->_bf = -1;
-        subLR->_bf = 0;
-    }
-    else if (bf == 0)    // 插入在中间
-    {
-        parent->_bf = 0;
-        subL->_bf = 0;
-        subLR->_bf = 0;
-    }
-    else {
         assert(false);
     }
 }
 ```
 
-> 更新平衡因子的问题放到下一个双旋中讲。
-
 #### 右左双旋
 
-右左双旋和左右双旋正好相反，<u>对于`-1`这个轴点来说左边高，对于`2`来说是右边高</u>。
+右左双旋和左右双旋正好相反，<u>对于下半部分来说右边高，对于上半部分来说是左边高</u>。
 
-1. 先以平衡因子为`-1`的节点为轴进行右单旋；
-2. 再以平衡因子为`2`的节点为轴进行左单旋。
+1. **先以`bf=-1`的节点为轴进行右单旋**；
+2. **再以`bf=2`的节点为轴进行左单旋**。
 
-<img src="12-map&set.assets/AVL树右左双旋简单示例图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/AVL树右左双旋简单示例图示.png" style="zoom:30%;" />
 
-<img src="12-map&set.assets/AVL树右左双旋动图示例.gif" style="zoom:50%;" />
-
-```cpp
-void RotateRL(Node* parent) {
-    //...
-    RotateL(parent->_right);
-    RotateR(parent);
-    //...
-}
-```
-
-<img src="12-map&set.assets/AVL树右左双旋示例图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/AVL树右左双旋示例图示.png" style="zoom:30%;" />
 
 ##### 更新平衡因子
 
-双旋后仍然要更新平衡因子，两个单旋中更新平衡因子并不适用于双旋的情况。
+右左双旋同样存在如下三种情况：
 
-> 如下图所示，对这样的一棵树插入一个值为`14`的节点，触发右左双旋，旋转完成后节点的平衡因子出现错误。
+| 插入情况              | 如何判断      | 结果                                    |
+| --------------------- | ------------- | --------------------------------------- |
+| `subRL`本身就是新节点 | `subRL.bf=0`  | `parent.bf=0`,`subR.bf=0`,`subRL.bf=0`  |
+| 新节点在`subRL`的左边 | `subRL.bf=-1` | `parent.bf=0`,`subR.bf=1`,`subRL.bf=0`  |
+| 新节点在`subRL`的右边 | `subRL.bf=1`  | `parent.bf=-1`,`subR.bf=0`,`subRL.bf=0` |
 
-<img src="12-map&set.assets/AVL树右左双旋后平衡因子出错图示.png" style="zoom:50%;" />
-
-右左双旋存在下图的三种的情况，前两种的平衡因子都需要特判并更新，三者的区别就是插入位置不同：
-
-<img src="12-map&set.assets/AVL树右左双旋插入情况分类图示.png" style="zoom:50%;" />
-
-三种分别是**插入在左边，插入在右边，插入在中间，60的节点的平衡因子因此不同，分别为`-1, 1, 0`**。
-
-因此可以按右子树的左孩子`subRL`的平衡因子来区分不同情况：
+<img src="12-map&set.assets/AVL树右左双旋插入情况分类图示.png" style="zoom:30%;" />
 
 ```cpp
-// 右左双旋
-void RotateRL(Node* parent)
+void rotate_rl(node* parent)
 {
-    // 提前保存
-    Node* subR = parent->_right;
-    Node* subRL = subR->_left;
-    int bf = subRL->_bf; // 保存旋转前的右子树的左孩子的平衡因子
+    node* subr = parent->_right;
+    node* subrl = subr->_left;
 
-    RotateR(parent->_right);
-    RotateL(parent);
+    int bf = subrl->_bf;
 
-    // subRL的平衡因子以区分情况
-    if (bf == 1)         // 插入在左孩子的左边
+    rotate_r(parent->_right);
+    rotate_l(parent);
+
+    if (bf == 0)
+    {
+        parent->_bf = 0;
+        subr->_bf = 0;
+        subrl->_bf = 0;
+    }
+    else if (bf == -1)
+    {
+        parent->_bf = 0;
+        subr->_bf = 1;
+        subrl->_bf = 0;
+    }
+    else if (bf == 1)
     {
         parent->_bf = -1;
-        subR->_bf = 0;
-        subRL->_bf = 0;
+        subr->_bf = 0;
+        subrl->_bf = 0;
     }
-    else if (bf == -1)   // 插入在左孩子的右边
+    else
     {
-        parent->_bf = 0;
-        subR->_bf = 1;
-        subRL->_bf = 0;
-    }
-    else if (bf == 0)    // 插入在中间
-    {
-        parent->_bf = 0;
-        subR->_bf = 0;
-        subRL->_bf = 0;
-    }
-    else {
         assert(false);
     }
 }
@@ -661,71 +634,57 @@ void RotateRL(Node* parent)
 ### AVL树的验证
 
 ```cpp
-// 中序遍历
-void Inorder()
+void inorder()
 {
-    _Inorder(_root);
+    _inorder(_root);
     cout << endl;
 }
-void _Inorder(Node* root)
+void _inorder(node* root)
 {
-    if (root == nullptr)
-        return;
-    if (root->_left) _Inorder(root->_left);
+    if (!root) return;
+
+    _inorder(root->_left);
     cout << root->_kv.first << ":" << root->_kv.second << " ";
-    if (root->_right) _Inorder(root->_right);
+    _inorder(root->_right);
 }
 
-// 判断平衡
-bool IsBalance()
+bool is_balance()
 {
-    return _IsBalance(_root);
+    return _is_balance(_root);
 }
-bool _IsBalance(Node* root)
+bool _is_balance(node* root)
 {
-    if (root == nullptr)
+    if (!root)
         return true;
 
-    // 检查
-    int leftHeight = Height(root->_left);
-    int rightHeight = Height(root->_right);
+    int lh  = height(root->_left);
+    int rh = height(root->_right);
 
-    if (rightHeight - leftHeight != root->_bf)
+    if (rh - lh != root->_bf)
     {
-        cout << root->_kv.first << "现在是：" << root->_bf << endl;
-        cout << root->_kv.first << "应该是：" << rightHeight - leftHeight << endl;
+        cout << root->_kv.first << "  but now:" << root->_bf << endl;
+        cout << root->_kv.first << "should be:" << rh - lh << endl;
         return false;
     }
 
-    // 判断高度差是否满足
-    return abs(rightHeight - leftHeight) < 2 &&
-        _IsBalance(root->_left) && _IsBalance(root->_right);
+    return abs(rh - lh) < 2
+        && _is_balance(root->_left) && _is_balance(root->_right);
 }
 
-// 计算高度
-int Height(Node* root)
+int height(node* root)
 {
-    if (root == nullptr)
+    if (!root)
         return 0;
 
-    int leftHeight = Height(root->_left);
-    int rightHeight = Height(root->_right);
+    int lh = height(root->_left);
+    int rh = height(root->_right);
 
-    return rightHeight > leftHeight ? rightHeight + 1 : leftHeight + 1;
+    return rh > lh ? rh + 1 : lh + 1;
 }
 ```
 
-> 至此，AVL树的学习就完成了，AVL树是为下面的红黑树作铺垫。
+> AVL树、红黑树、B树都是了解性的数据结构，到此足矣。
 >
-> 它的删除等其他操作我们不讲，包括之后的红黑树、B树也是这样。这些数据结构都是了解性的数据结构，理解即可。
-
-### AVL树的性能
-
-AVL是一棵严格平衡的搜索二叉树，可以保证查询效率高即 $log(N)$ 。但是对AVL树做一些结构修改的操作，性能却很低下。插入时要维护平衡，会出现多次旋转，更尤其是删除，可能要一直旋转到根。
-
-因此，如果需要一种查询高效且有序的数据结构，而且不太常改变结构，可以考虑AVL树。
-
-> AVL树在实际中不太常用，因为存在红黑树。
 
 &nbsp;
 
@@ -733,36 +692,36 @@ AVL是一棵严格平衡的搜索二叉树，可以保证查询效率高即 $log
 
 ### 红黑树的定义
 
-红黑树也是一种二叉搜索树，每个结点上都有一个颜色字段，可以是红或黑。 
+红黑树也是一种二叉搜索树，每个结点上都带有红或黑两种颜色。 
 
-通过对任何一条从根到叶的路径上各个结点着色方式的限制，**使之确保最长路径不超过最短路径的两倍，因而是接近平衡的**。 
+通过限制整条从根到叶路径上的结点的着色方式，**确保整棵树中最长路径的长度不超过最短路径的两倍，因而是接近平衡的**。 
 
-<img src="12-map&set.assets/红黑树示例图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/红黑树示例图示.png" style="zoom:30%;" />
 
 #### 红黑树的性质
 
-1. 每个结点只有两种颜色：红色和黑色。
+1. 每个结点不是红色就是黑色。
 2. 根节点是黑色的。
-3. **红色节点的两个子结点都是黑色的**。（说明不能出现连续的红色节点）
+3. **红色节点的子结点必须都是黑色的**。（不能出现连续的红色节点）
 4. **每条路径所含的黑色结点数量相等**。
+5. 每个空结点都是黑色的，空节点也认为是叶结点。
+6. 对于红黑树，我们认为从根到空算一条路径。  
 
-> 5. 每个叶结点都是黑色的，此处的叶子结点指的是空结点。
->
-> 对于红黑树，我们认为从根到空节点算一条路径，也就是整棵树有11条路径。
+#### 搜索效率推导
 
-- 由加粗两条性质来看，最短路径肯定全是黑色节点，最长路径肯定是黑红相间的。
+从红黑树的性质看，最短路径肯定全是黑色节点，最长路径肯定是黑红相间的。
 
-- **假设每条路径黑节点数量为$X$，则任意一条路径的长度满足 $X≤path\_length≤2X$**，即红黑树的高度满足 $X≤h≤2X$。
-- 首先完全二叉树的高度和节点数量的关系是 $2^h-1=N$。推导到红黑树的节点个数满足：
+假设黑节点数量为$X$，则路径的长度满足 $X≤path\_length≤2X$，即红黑树的高度满足 $X≤h≤2X$。
 
+首先完全二叉树的高度和节点数量的关系是 $2^h-1=N$。推导到红黑树的节点个数满足：
 $$
 2^{X}-1≤N≤2^{2X}-1\\
 => \frac{1}{2}×log_2N≤X≤log_2N \quad => \quad log_4N≤X≤log_2N
 $$
 
-也就是说，红黑树的查找时间复杂度为 $log_2N≤O(N)≤2×log_2N$，显然AVL树的搜索效率 $log_2N$ 更高，红黑树只是接近平衡。
+**红黑树的搜索效率为 $logN≤O(N)≤2logN$**。
 
-但由于CPU的速度足够快，二倍的差距并不明显，但AVL树存在更多的旋转维护树的结构更花时间，所以AVL树的应用没有红黑树多。
+红黑树是接近平衡，AVL树是严格平衡。但CPU的速度快，二者差距不明显，且维护AVL树结构更花时间，所以红黑树应用更多。
 
 #### 红黑树的结构
 
@@ -773,101 +732,82 @@ enum COLOR {
 };
 
 template <class K, class V>
-struct RBTNode {
-    RBTNode* _left;
-    RBTNode* _right;
-    RBTNode* _parent;
-
+struct rbtree_node {
+    rbtree_node* _left;
+    rbtree_node* _right;
+    rbtree_node* _parent;
     pair<K, V> _kv;
-    enum COLOR _col;
+    COLOR _col;
 };
 
 template <class K, class V> 
-class RBTree {
-    typedef RBTNode<K, V> Node;
-private:
-    Node* _root;
+class rb_tree {
+    rbtree_node<K, V>* _root;
+    // ...
 };
 ```
 
 ### 红黑树的插入
 
-红黑树也是搜索二叉树，插入的步骤都是一样的，不同的是维护插入后树的结构。由于红黑树的性质，每条路径的黑节点数量必须相同，**故新插入节点统一采用红色，对整个树的影响最小**。
+红黑树也是搜索二叉树，插入的步骤都是一样的，不同的是维护插入后树的结构。
+
+由于红黑树的性质，每条路径的黑节点数量必须相同，**故新插入节点统一采用红色，对整个树的影响最小**。
 
 ```cpp
-bool Insert(const pair<K, V> kv)
+bool insert(const pair<K, V> kv)
 {
     if (_root == nullptr) {
         _root = new Node(kv);
-		curr->_col = BLACK;
+		cur->_col = BLACK;
         return true;
     }
 
-    Node* parent = nullptr;
-    Node* curr = nullptr;
+    node* parent = nullptr;
+    node* cur = _root;
 
-    while (curr) {
-        if (curr->_kv.first < kv.first) {
-            parent = curr;
-            curr = curr->_right;
+    while (cur) {
+        if (cur->_kv.first < kv.first) {
+            parent = cur;
+            cur = cur->_right;
         }
-        else if (curr->_kv.first > kv.first) {
-            parent = curr;
-            curr = curr->_left;
+        else if (cur->_kv.first > kv.first) {
+            parent = cur;
+            cur = cur->_left;
         }
         else {
             return false;
         }
     }
 
-    curr = new Node(kv);
-	curr->_col = RED;
-    if (parent->_kv.first < kv.first) {
-        parent->_right = curr;
-        curr->_parent = parent;
-    }
-    else if (parent->_kv.first > kv.first) {
-        parent->_left = curr;
-        curr->_parent = parent;
-    }
+    cur = new Node(kv);
+    if (parent->_kv.first < kv.first)
+        parent->_right = cur;
+    else
+        parent->_left = cur;
+    cur->_parent = parent;
 
     // 控制平衡
     // ...
 }
 ```
 
-插入红节点后：
-
 > 处理红黑树我们需要确认三个节点：插入新节点 $cur$、父节点 $p$、叔节点 $u$、爷节点 $g$。
 
-- 如果其父节点是黑节点，则不影响树结构，不需要处理。
-- 如果其父节点是红节点，则破坏了树中不能出现连续红节点的性质，需要进一步修改。
+插入后，如果父节点是黑节点，则无需处理。**只有当父节点是红节点时，就出现了连续红节点，需要处理**：
 
-故修改树中节点的颜色须注意：
+| 情况                            | 解决方案  |
+| ------------------------------- | --------- |
+| p为红，g为黑，**u为红**         | 变色      |
+| p为红，g为黑，**u为黑或不存在** | 旋转+变色 |
 
+#### 变色情况
 
-1. 把一个节点由红变黑，那么其兄弟节点必须全部变黑。
-2. 把一个节点由黑变红，那么其子节点必须全部变黑。
+p为红，g为黑，**u为红**
 
-这样所有路径的黑节点个数才不变。
+- **将父节点叔节点变黑，爷节点变红。**
+- `cur`指向爷节点，继续向上遍历。直到父节点为空或条件不满足。
 
-| 情况                        | 解决方案           |
-| --------------------------- | ------------------ |
-| p为红，g为黑，u为红         | 变色+向上调整      |
-| p为红，g为黑，u为黑或不存在 | 旋转+变色+向上调整 |
-
-#### 情况一
-
-**p为红，g为黑，u为红**。
-
-<img src="12-map&set.assets/红黑树父叔为红爷为黑变色情况抽象图图示.png" style="zoom:40%;" />
-
-1. 直接将父节点叔节点变黑和爷节点变红，这样就维护住了整个子树颜色。
-2. 向上调整的时候`curr`直接调整到爷节点的位置。
-
-如仍满足条件继续变色，并向上遍历。如果父节点为空或存在但为黑则停止循环。
-
-<img src="12-map&set.assets/红黑树父叔为红爷为黑变色情况具象图图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/红黑树父叔为红爷为黑变色情况具象图图示.png" style="zoom:30%;" />
 
 ```cpp
 if (grandpa->_left == parent) // 父在左
@@ -906,84 +846,69 @@ else // 父在右
 }
 ```
 
-#### 情况二
+#### 旋转情况
 
-**p为红，g为黑，u不存在或存在但为黑**。
+p为红，g为黑，**u为黑或不存在**。
 
-<img src="12-map&set.assets/红黑树父红爷黑叔无或黑旋转情况抽象图图示.png" style="zoom: 40%;" />
+> 此时我们根据爷父子三个节点呈现出的“形状”而选择旋转方式。
 
-##### 单旋情况
+| 情况                   | 旋转方案 |
+| ---------------------- | -------- |
+| 子是父的左，父是爷的左 | 右单旋   |
+| 子是父的右，父是爷的右 | 左单旋   |
+| 子是父的右，父是爷的左 | 左右双旋 |
+| 子是父的左，父是爷的右 | 右左双旋 |
 
-- 当前节点是父节点的左孩子，父节点是爷节点的左孩子，则进行右单旋；
-- 当前节点是父节点的右孩子，父节点是爷节点的右孩子，则进行左单旋；
-- 再将`curr`节点置黑，`g`置红。
+旋转后需要改色，**上面的一个改为黑色，下面的两个改红色。**
 
-> 下图过程仅作右单旋示例，左单旋同理。
-
-<img src="12-map&set.assets/红黑树父红爷黑叔无或黑单旋情况具象图图示.png" style="zoom:50%;" />
-
-##### 双旋情况
-
-- 当前节点是父节点的右孩子，父节点是爷节点的左孩子，则进行左右双旋；
-- 当前节点是父节点的左孩子，父节点是爷节点的右孩子，则进行右左双旋；
-- 再将`curr`节点置黑，`g`置红。
-
-<img src="12-map&set.assets/红黑树父红爷黑叔无或黑双旋情况具象图图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/红黑树旋转示例图.png" style="zoom:30%;" />
 
 ```cpp
-if (grandpa->_left == parent) { // 父在左
-    Node* uncle = grandpa->_right;
+if (grandpa->_left == parent)
+{
+    node* uncle = grandpa->_right;
 
-    /* 情况一：u存在且为红 */
-    if (uncle && uncle->_col == RED) { // 叔节点存在且为红
-    	//...
-    }
-    /* 情况二：u不存在或存在但为黑 */
-    else {
-        if (parent->_left == curr) { // 本在左，父在左 -- 右单旋
-            // 旋转
-            RotateR(grandpa);
-            // 变色
+    if (uncle && uncle->_col == RED)
+    {}
+    else
+    {
+        if (parent->_left == cur)
+        {
+            rotate_r(grandpa);
+            cur->_col = grandpa->_col = RED;
             parent->_col = BLACK;
-            grandpa->_col = RED;
         }
-        else { // 本在右，父在左 -- 左右双旋
-            // 旋转
-            RotateL(parent);
-            RotateR(grandpa);
-            // 变色
-            curr->_col = BLACK;
-            grandpa->_col = RED;
+        else
+        {
+            rotate_l(parent);
+            rotate_r(grandpa);
+            grandpa->_col = parent->_col = RED;
+            cur->_col = BLACK;
         }
-        
         break;
     }
 }
-else { // 父在右
-    Node* uncle = grandpa->_left;
+else
+{
+    node* uncle = grandpa->_left;
 
-    /* 情况一：u存在且为红 */
-    if (uncle && uncle->_col == RED) { // 叔节点存在且为红
-		//...
-    }
-    /* 情况二：u不存在或存在但为黑 */
-    else {
-        if (parent->_right == curr) { // 新在右，父在右 -- 左单旋
-            // 旋转
-            RotateL(grandpa);
-            // 变色
+    if (uncle && uncle->_col == RED)
+    {}
+    else
+    {
+        if (parent->_left == cur)
+        {
+            rotate_r(parent);
+            rotate_l(grandpa);
+            grandpa->_col = parent->_col = RED;
+            cur->_col = BLACK;
+        }
+        else
+        {
+            rotate_l(grandpa);
+            cur->_col = grandpa->_col = RED;
             parent->_col = BLACK;
-            grandpa->_col = RED;
         }
-        else { // 新在左，父在右 -- 右左双旋
-            // 旋转
-            RotateR(parent);
-            RotateL(grandpa);
-            // 变色
-            curr->_col = BLACK;
-            grandpa->_col = RED;
-        }
-        
         break;
     }
 }
@@ -991,689 +916,650 @@ else { // 父在右
 
 #### 代码实现
 
-##### 大致框架
-
 ```cpp
-bool Insert(const pair<K, V>& kv)
+bool insert(const pair<K, V>& kv)
 {
-    if (_root == nullptr) 
-
-    while (curr) {
-        if (curr->_kv.first < kv.first)
-        else if (curr->_kv.first > kv.first)
-        else
-    }
-
-    curr = new Node(kv);
-    if (parent->_kv.first < kv.first)
-    else
-
-    // 控制平衡
-    while (parent && parent->_col == RED) // 父节点存在且为红
+    if (!_root)
     {
-        if (grandpa->_left == parent) // 父在左
-        {
-            /* 情况一：u存在且为红 */
-            if (uncle && uncle->_col == RED) // 叔节点存在且为红
-            
-            /* 情况二：u不存在或存在但为黑 */
-            else {
-                if (parent->_left == curr) // 本在左，父在左 -- 右单旋
-
-                else // 本在右，父在左 -- 左右双旋
-                
-                break;
-            }
-        }
-        else // 父在右
-        {
-            /* 情况一：u存在且为红 */
-            if (uncle && uncle->_col == RED) // 叔节点存在且为红
-
-            /* 情况二：u不存在或存在但为黑 */
-            else {
-                if (parent->_right == curr) // 新在右，父在右 -- 左单旋
-             
-                else // 新在左，父在右 -- 右左双旋
-         
-                break;
-            } 
-        }
-    }
-    //...
-}
-```
-
-```cpp
-bool Insert(const pair<K, V>& kv)
-{
-    if (_root == nullptr)
-    {
-        _root = new Node(kv);
+        _root = new node(kv);
         _root->_col = BLACK;
         return true;
     }
 
-    Node* parent = nullptr;
-    Node* curr = nullptr;
+    node* parent = nullptr;
+    node* cur = _root;
 
-    while (curr)
+    while (cur)
     {
-        if (curr->_kv.first < kv.first)
+        if (cur->_kv.first < kv.first)
         {
-            parent = curr;
-            curr = curr->_right;
+            parent = cur;
+            cur = cur->_right;
         }
-        else if (curr->_kv.first > kv.first)
+        else if (cur->_kv.first > kv.first)
         {
-            parent = curr;
-            curr = curr->_left;
+            parent = cur;
+            cur = cur->_left;
         }
-        else {
+        else
+        {
             return false;
         }
     }
 
-    curr = new Node(kv);
-    curr->_col = RED;
-
+    cur = new node(kv);
     if (parent->_kv.first < kv.first)
+        parent->_right = cur;
+    else
+        parent->_left = cur;
+    cur->_parent = parent;
+
+    while (parent && parent->_col == RED)
     {
-        parent->_right = curr;
-        curr->_parent = parent;
+        node* grandpa = parent->_parent;
+
+        if (grandpa->_left == parent)
+        {
+            node* uncle = grandpa->_right;
+
+            if (uncle && uncle->_col == RED)
+            {
+                parent->_col = uncle->_col = BLACK;
+                grandpa->_col = RED;
+
+                cur = grandpa;
+                parent = cur->_parent;
+            }
+            else
+            {
+                if (parent->_left == cur)
+                {
+                    rotate_r(grandpa);
+                    cur->_col = grandpa->_col = RED;
+                    parent->_col = BLACK;
+                }
+                else
+                {
+                    rotate_l(parent);
+                    rotate_r(grandpa);
+                    grandpa->_col = parent->_col = RED;
+                    cur->_col = BLACK;
+                }
+                break;
+            }
+        }
+        else
+        {
+            node* uncle = grandpa->_left;
+
+            if (uncle && uncle->_col == RED)
+            {
+                parent->_col = uncle->_col = BLACK;
+                grandpa->_col = RED;
+
+                cur = grandpa;
+                parent = cur->_parent;
+            }
+            else
+            {
+                if (parent->_left == cur)
+                {
+                    rotate_r(parent);
+                    rotate_l(grandpa);
+                    grandpa->_col = parent->_col = RED;
+                    cur->_col = BLACK;
+                }
+                else
+                {
+                    rotate_l(grandpa);
+                    cur->_col = grandpa->_col = RED;
+                    parent->_col = BLACK;
+                }
+                break;
+            }
+        }
+    }
+
+    _root->_col = BLACK;
+    return true;
+}
+
+private:
+void rotate_l(node* parent)
+{
+    node* subr = parent->_right;
+    node* subrl = subr->_left;
+
+    parent->_right = subrl;
+    if (subrl) subrl->_parent = parent;
+
+    node* pparent = parent->_parent;
+
+    subr->_left = parent;
+    parent->_parent = subr;
+
+    if (parent == _root)
+        _root = subr;
+    else
+    {
+        if (pparent->_left == parent)
+            pparent->_left = subr;
+        else
+            pparent->_right = subr;
+    }
+    subr->_parent = pparent;
+}
+
+void rotate_r(node* parent)
+{
+    node* subl = parent->_left;
+    node* sublr = subl->_right;
+
+    parent->_left = sublr;
+    if (sublr) sublr->_parent = parent;
+
+    node* pparent = parent->_parent;
+
+    subl->_right = parent;
+    parent->_parent = subl;
+
+    if (parent == _root)
+    {
+        _root = subl;
+        subl->_parent = nullptr;
     }
     else
     {
-        parent->_left = curr;
-        curr->_parent = parent;
+        if (pparent->_left == parent)
+            pparent->_left = subl;
+        else
+            pparent->_right = subl;
+        subl->_parent = pparent;
     }
-
-    // 控制平衡
-
-    while (parent && parent->_col == RED) // 父节点存在且为红
-    {
-        Node* grandpa = parent->_parent; // 父为红则不可能为根，此时一定存在爷节点
-
-        if (grandpa->_left == parent) // 父在左
-        {
-            Node* uncle = grandpa->_right;
-
-            /* 情况一：u存在且为红 */
-            if (uncle && uncle->_col == RED) // 叔节点存在且为红
-            {
-                // 变色
-                parent->_col = uncle->_col = BLACK;
-                grandpa->_col = RED;
-
-                // 向上调整
-                curr = grandpa; // 越过父节点直接跳到爷节点
-                parent = grandpa->_parent;
-            }
-
-            /* 情况二：u不存在或存在但为黑 */
-            else
-            {
-                if (parent->_left == curr) // 本在左，父在左 -- 右单旋
-                {
-                    // 旋转
-                    RotateR(grandpa);
-                    // 变色
-                    parent->_col = BLACK;
-                    grandpa->_col = RED;
-                }
-                else // 本在右，父在左 -- 左右双旋
-                {
-                    // 旋转
-                    RotateL(parent);
-                    RotateR(grandpa);
-                    // 变色
-                    curr->_col = BLACK;
-                    grandpa->_col = RED;
-                }
-
-                break;
-            }
-        }
-        else // 父在右
-        {
-            Node* uncle = grandpa->_left;
-
-            /* 情况一：u存在且为红 */
-            if (uncle && uncle->_col == RED) // 叔节点存在且为红
-            {
-                // 变色
-                parent->_col = uncle->_col = BLACK;
-                grandpa->_col = RED;
-
-                // 向上调整
-                curr = grandpa; // 越过父节点直接跳到爷节点
-                parent = grandpa->_parent;
-            }
-
-            /* 情况二：u不存在或存在但为黑 */
-            else
-            {
-                if (parent->_right == curr) // 新在右，父在右 -- 左单旋
-                {
-                    // 旋转
-                    RotateL(grandpa);
-                    // 变色
-                    parent->_col = BLACK;
-                    grandpa->_col = RED;
-                }
-                else // 新在左，父在右 -- 右左双旋
-                {
-                    // 旋转
-                    RotateR(parent);
-                    RotateL(grandpa);
-                    // 变色
-                    curr->_col = BLACK;
-                    grandpa->_col = RED;
-                }
-                
-                break;
-            }
-        }
-    }
-
-    _root->_col = BLACK; // 维护根节点颜色
-    return true;
-
 }
 ```
+
+<img src="12-map&set.assets/红黑树两个实例图示.png" style="zoom: 33%;" />
 
 ### 红黑树的验证
 
-验证红黑树就是验证它的几个性质。
-
 ```cpp
-
-bool IsBalance()
+bool is_rbtree()
 {
     if (_root && _root->_col == RED)
-    {
-        cout << "root point is not black" << endl;
         return false;
-    }
 
-    Node* curr = _root;
-    int bench_mark = 0;
-
-    while (curr)
-    {
-        if (curr->_col == BLACK) bench_mark++;
-        curr = curr->_left;
-    }
-
-    int black_cnt = 0;
-    return _IsBalance(_root, bench_mark, black_cnt);
+    int mark = -1;
+    return check(_root, mark, 0);
 }
-bool _IsBalance(Node* root, int& bench_mark, int black_cnt)
+
+bool check(node* root, int& mark, int cnt)
 {
-    if (root == nullptr)
+    if (!root)
     {
-        if (black_cnt != bench_mark) return false;
+        if (mark == -1)
+            mark = cnt;
+        else if (mark != cnt)
+        {
+            cout << "block nodes count error\n" << endl;
+            return false;
+        }
         return true;
     }
 
+    if (root->_col == BLACK)
+        cnt++;
+
     if (root->_col == RED && root->_parent->_col == RED)
     {
-        cout << root->_kv.first << ":" << root->_col << " ";
-        cout << root->_parent->_kv.first << ":" << root->_parent->_col << endl;
-        cout << "连续出现红色节点" << endl;
+        cout << "consecutive red nodes "
+             << root->_parent->_kv.first << " and "
+             << root->_kv.first << endl;
         return false;
     }
 
-    if (root->_col == BLACK)
-        black_cnt++;
-
-    return _IsBalance(root->_left, bench_mark, black_cnt) &&
-        _IsBalance(root->_right, bench_mark, black_cnt);
+    return check(root->_left, mark, cnt) && check(root->_right, mark, cnt);
 }
 ```
 
-> 红黑树的删除不作讨论，可参考：《算法导论》或者《STL源码剖析》
-
-https://www.cnblogs.com/fornever/archive/2011/12/02/2270692.html
-
-https://blog.csdn.net/chenhuajie123/article/details/11951777
+[红黑树](https://www.cnblogs.com/fornever/archive/2011/12/02/2270692.html)
 
 &nbsp;
 
-# 3. map&set模拟实现
+# 3. 实现封装
 
-> map和set分别是kv和k结构的容器，如何复用同一棵红黑树呢？先看看源码。
+> map和set如何复用同一棵红黑树呢？
 
-<img src="12-map&set.assets/红黑树兼容mapset结构设计图示.png" style="zoom:50%;" />
+<img src="12-map&set.assets/红黑树兼容mapset结构设计图示.png" style="zoom:40%;"/>
 
-### 设计思路
-
-红黑树节点并不直接使用`pair`结构。
-
-- 对于红黑树的第一个模版参数，`map`和`set`都传`key`。
-
-- 对于红黑树的第二个模版参数，`map`就传`pair`结构，对于`set`仍然传`key`，虽然没用但是可以复用树的结构。
+## 3.1 整体设计
 
 ```cpp
-template <class K, class V> 
-class map
-{ 
-    public:
-    bool insert(const pair<K, V>& kv) {
-        return _t.Insert(kv);
-    }
-    private:
-    RBTree<K, pair<K, V>> _t;
-};
-template <class K> 
-class set
-{
-    public:
-    bool insert(const K& key) {
-        return _t.Insert(key);
-    }
-    private:
-    RBTree<K, K, SetKeyOfK> _t;
+template <class Key, class T, class Compare = less<Key>, class Alloc = alloc>
+class map {
+    typedef Key key_type;
+    typedef pair<const Key, T> value_type;
+    typedef rb_tree<key_type, value_type, 
+                      select1st<value_type>, key_compare, Alloc> rep_type;
+    rep_type t;
+}
+
+template <class Key, class Compare = less<Key>, class Alloc = alloc>
+class set {
+    typedef Key key_type;
+    typedef Key value_type;
+    typedef rb_tree<key_type, value_type, 
+                  identity<value_type>, key_compare, Alloc> rep_type;
+    rep_type t;  
+}
+
+template <class Key, class Value, class KeyOfValue, class Compare, class Alloc = alloc>
+class rb_tree {
+	typedef __rb_tree_node<Value> rb_tree_node;
+}
+
+template <class Value>
+struct __rb_tree_node {
+	Value value_field;
 };
 
-// set RBTree<K, K>
-// map RBTree<K, T>
-template <class K, class T> class RBTree
-{
-    typedef RBTNode<T> Node;
-};        
+set<K>    -> rb_tree<K, K>                 -> rb_tree_node<K>
+map<K, V> -> rb_tree<K, pair<const K, V> > -> rb_tree_node<pair<const K, V> >
 ```
 
-由于`map`传过来的是键值对`pair`，无法确定比较方式，也无法统一进行比较，所以为红黑树再添一个模版参数`KeyOfT`，用来传递自身结构中需要比较的那个值。
+| 模版参数     | 作用                                                         |
+| ------------ | ------------------------------------------------------------ |
+| `Key`        | **可以直接拿到`Key`类型，编译模版的时候需要确定`Key`类型**   |
+| `Value`      | **决定了树节点元素存储的数据的类型**                         |
+| `KeyOfValue` | 仿函数，用来获取`Value`中的`Key`值，如果是`map`就是取`kv.first`如果是`set`就是`K` |
+| `Compare`    | 仿函数，`Key`类型的比较函数                                  |
 
 ```cpp
-template <class K, class V> 
-class map
-{
-    struct MapKeyOfT {
-        const operator()(const pair<K, V>& kv) {
-            return kv.first;
-        }
-    };
-    //...
-    RBTree<K, pair<K, V>, MapKeyOfT> _t;
-};
-template <class K> 
+template<class V>
+struct rbt_node
+{};
+template<class K, class V, class KeyOfValue, class Compare>
+class rb_tree
+{};
+
+template<class K, class CmpOfKey = less<K>>
 class set
 {
-    struct SetKeyOfK {
-        const operator()(const K& key) {
-            return key;
-        }
-    };
-	//...
-    RBTree<K, K, SetKeyOfK> _t;
+    bool insert(const K& key) { t.insert(key); }
+    class KeyOfVal { K& operator()(const K& key) { return key; } };
+    rb_tree<K, K, KeyOfVal, CmpOfKey> t;
 };
 
-// set RBTree<K, K>
-// map RBTree<K, T>
-template <class K, class T, class KeyOfT> class RBTree
+template<class K, class V, class CmpOfKey = less<K>>
+class map
 {
-    typedef RBTNode<T> Node;
-};     
+    bool insert(const pair<const K, V>& kv) { t.insert(kv); }
+    class KeyOfVal { K& operator()(const pair<const K, V>& kv) { return kv.first; } };
+    rb_tree<K, pair<const K, V>, KeyOfVal, CmpOfKey> t;
+};
 ```
 
-然后将红黑树插入中的所有比较的地方将`kv.first`替换成`KeyOfT(data)`即可。
+## 3.2 红黑树
 
-### RBTree
+### 默认函数
 
 ```cpp
-template <class T>
-struct RBTNode
+template<class V>
+struct rbt_node
 {
-    RBTNode<T>* _left;
-    RBTNode<T>* _right;
-    RBTNode<T>* _parent;
-    //...
+    rbt_node<V>* _left;
+    rbt_node<V>* _right;
+    rbt_node<V>* _parent;
+
+    V _val;
+    COLOR _col;
+
+    rbt_node<V>(const V& val)
+        : _left(nullptr), _right(nullptr), _parent(nullptr)
+        , _val(val), _col(RED)
+    {}
 };
 
-template <class K, class T, class KeyOfT>
-class RBTree
+template<class K, class V, class KeyOfValue, class Compare>
+class rb_tree
 {
-    typedef RBTNode<T> Node;
-    KeyOfT kot;
-    //...
-    bool Insert(const T& data)
-    {
-        //...
-        if (kot(curr->_data) < kot(data))
-		else if (kot(curr->_data) > kot(data))
-		//...
-	}
-};
+public:
+    typedef rbt_node<V> node;
 
-template <class T, class Ref, class Ptr>
-struct RBTIterator
-{
-    typedef RBTNode<T> Node;
-    typedef RBTIterator<T, Ref, Ptr> Self;
-    Node* _node;
-
-    RBTIterator(Node* node) : _node(node)
+public:
+    rb_tree()
     {}
 
-    Ref operator*() {
-        return _node->_data;
-    }
-    Ptr operator->() {
-        return &_node->_data;
-    }
-
-    Self& operator++()
+    rb_tree(const rb_tree& t)
     {
-        /* 右子树不为空，访问右子树的最左节点 */
-        if (_node->_right)
-        {
-            Node* min = _node->_right;
-            while (min->_left) {
-                min = min->_left;
-            }
-            _node = min;
-        }
-        /* 右子树为空，找到cur非其右孩子的父亲 */
-        else
-        {
-            Node* curr = _node;
-            Node* parent = curr->_parent;
+        _root = copy(_root);
+    }
 
-            while (parent && curr == parent->_right)
-            {
-                curr = curr->_parent;
-                parent = parent->_parent;
-            }
-            _node = parent;
+    rb_tree& operator=(const rb_tree t)
+    {
+        if (this != &t)
+        {
+            swap(_root, t._root);
         }
         return *this;
     }
 
-    Self& operator--()
+    ~rb_tree()
     {
-        /* 左子树不为空，访问左子树的最右节点 */
-        if (_node->_left)
-        {
-            Node* max = _node->_left;
-            while (max->_right) {
-                max = max->_right;
-            }
-            _node = max;
-        }
-        /* 左子树为空，找到cur非其左孩子的父节点 */
-        else
-        {
-            Node* curr = _node;
-            Node* parent = _node->_parent;
-
-            while (parent && parent->_left == curr)
-            {
-                curr = curr->_parent;
-                parent = parent->_parent;
-            }
-            _node = parent;
-        }
-        return *this;
+        destroy(_root);
+        _root = nullptr;
     }
 
-    bool operator==(const Self& it) {
-        return _node == it._node;
+private:
+    node* copy(node* root)
+    {
+        if (!root)
+            return nullptr;
+
+        node* new_node = new node(root->_kv);
+        new_node->_left = copy(root->_left);
+        new_node->_right = copy(root->_right);
+        return new_node;
     }
-    bool operator!=(const Self& it) {
-        return !operator==(it);
-    }
-};
-```
 
-### MySet
+    void destroy(node* root)
+    {
+        if (!root)
+            return;
 
-```cpp
-#pragma once
-#include <iostream>
-#include "RBTree.hpp"
-
-using namespace std;
-
-namespace test {
-    template <class K>
-    class set {
-    public:
-        struct SetKeyOfK {
-            const K& operator()(const K& key) {
-                return key;
-            }
-        };
-
-        bool insert(const K& key) {
-            return _t.Insert(key);
-        }
-
-    private:
-        RBTree<K, K, SetKeyOfK> _t;
-    };
-}
-```
-
-### MyMap
-
-```cpp
-#pragma once
-#include <iostream>
-#include "RBTree.hpp"
-
-using namespace std;
-
-namespace test {
-    template <class K, class V>
-    class map {
-    public:
-        struct MapKeyOfK {
-            const K& operator()(const pair<K, V>& kv) {
-                return kv.first;
-            }
-        };
-
-        bool insert(const pair<K, V>& kv) {
-            return _t.Insert(kv);
-        }
-
-    private:
-        RBTree<K, pair<K, V>, MapKeyOfK> _t;
-    };
-}
-```
-
-### Iterator
-
-#### begin&end
-
-返回迭代器类型，很简单做一层封装即可。
-
-```cpp
-template <class T, class Ref, class Ptr>
-struct RBTIterator
-{
-    typedef RBTNode<T> Node;
-    Node* _node;
-    RBTIterator(const Node* node) : _node(node)
-    {}
-
-    Ref operator*() {
-        return _node->_data;
-    }
-    Ptr operator->() {
-        return &_node->_data;
+        destroy(root->_left);
+        destroy(root->_right);
+        delete root;
     }
     
-    bool operator==(const Self& it) {
-        return _node == it._node;
+    bool insert(const V& val)
+    {
+        // ...
+        if (_kov(cur->_val) < _kov(val))
+        else if (_kov(cur->_val) > _kov(val))
+        // ...
     }
-    bool operator!=(const Self& it) {
-        return !operator==(it);
+
+private:
+    KeyOfValue _kov;
+    Compare _cmp;
+    node* _root = nullptr;
+};
+```
+
+### 插入函数
+
+```cpp
+pair<iterator, bool> insert(const V& val)
+{
+    if (!_root)
+    {
+        _root = new node(val);
+        _root->_col = BLACK;
+        return {iterator(_root), true};
+    }
+
+    node* parent = nullptr;
+    node* cur = _root;
+
+    while (cur)
+    {
+        if (_cmp(_kov(cur->_val), _kov(val)))
+        {
+            parent = cur;
+            cur = cur->_right;
+        }
+        else if (_cmp(_kov(val), _kov(cur->_val)))
+        {
+            parent = cur;
+            cur = cur->_left;
+        }
+        else
+        {
+            return {iterator(cur), false};
+        }
+    }
+
+    cur = new node(val);
+    if (_cmp(_kov(parent->_val), _kov(val)))
+        parent->_right = cur;
+    else
+        parent->_left = cur;
+    cur->_parent = parent;
+
+    while (parent && parent->_col == RED)
+    {
+        node* grandpa = parent->_parent;
+
+        if (grandpa->_left == parent)
+        {
+            node* uncle = grandpa->_right;
+
+            if (uncle && uncle->_col == RED)
+            {
+                parent->_col = uncle->_col = BLACK;
+                grandpa->_col = RED;
+
+                cur = grandpa;
+                parent = cur->_parent;
+            }
+            else
+            {
+                if (parent->_left == cur)
+                {
+                    rotate_r(grandpa);
+                    cur->_col = grandpa->_col = RED;
+                    parent->_col = BLACK;
+                }
+                else
+                {
+                    rotate_l(parent);
+                    rotate_r(grandpa);
+                    grandpa->_col = parent->_col = RED;
+                    cur->_col = BLACK;
+                }
+                break;
+            }
+        }
+        else
+        {
+            node* uncle = grandpa->_left;
+
+            if (uncle && uncle->_col == RED)
+            {
+                parent->_col = uncle->_col = BLACK;
+                grandpa->_col = RED;
+
+                cur = grandpa;
+                parent = cur->_parent;
+            }
+            else
+            {
+                if (parent->_left == cur)
+                {
+                    rotate_r(parent);
+                    rotate_l(grandpa);
+                    grandpa->_col = parent->_col = RED;
+                    cur->_col = BLACK;
+                }
+                else
+                {
+                    rotate_l(grandpa);
+                    cur->_col = grandpa->_col = RED;
+                    parent->_col = BLACK;
+                }
+                break;
+            }
+        }
+    }
+
+    _root->_col = BLACK;
+    return {iterator(cur), true};
+}
+```
+
+### 迭代器
+
+```cpp
+template<class V, class Ref, class Ptr>
+struct __rb_tree_iterator
+{
+    typedef __rb_tree_node<V> node;
+    typedef __rb_tree_iterator<V, Ref, Ptr> self;
+    
+    node* _node = nullptr;
+
+    __rb_tree_iterator<V, Ref, Ptr>(node* node)
+        : _node(node)
+    {}
+    
+    // support normal iter construt const iter
+    __rb_tree_iterator(const __rb_tree_iterator<V, V&, V*>& it)
+        : _node(it.node)
+    {}
+
+    Ref operator*()
+    {
+        return _node->_val;
+    }
+    Ptr operator->()
+    {
+        return &_node->_val;
+    }
+
+    bool operator==(const self& s)
+    {
+        return _node == s._node;
+    }
+    bool operator!=(const self& s)
+    {
+        return _node != s._node;
     }
 };
+```
 
-template <class K, class T, class KeyOfT>
-class RBTree
+库中是将根节点带个头节点，头节点的左孩子指向整个树的最左节点，右孩子指向整个树的最右节点；
+
+<img src="12-map&set.assets/MapSet迭代器beginend位置实现图示.png" style="zoom:30%;" />
+
+- 如果节点的右子树不为空，下一个位置就是节点的**右子树的最左节点**。
+- 如果节点的右子树为空，向上遍历，找到某个节点，满足该节点是其父亲的左，该父亲就是下一个位置。
+
+```cpp
+self& operator++()
 {
-    //...
-    typedef RBTIterator<T, T&, T*> iterator;
-    typedef RBTIterator<T, T&, T*> const_iterator;
-    typedef RBTIterator<T, T&, T*> reverse_iterator;
-    typedef RBTIterator<T, T&, T*> const_reverse_iterator;
-
-    iterator begin()
+    if (_node->_right)
     {
-        Node* left = _root;
-        while (left && left->_left) {
+        node* left = _node->_right;
+        while (left->_left)
+        {
             left = left->_left;
         }
-
-        return iterator(left);
+        _node = left;
     }
-    iterator end() {
-        return iterator(nullptr);
-    }
-
-    reverse_iterator rbegin()
+    else
     {
-        Node* right = _root;
-        while (right && right->_right) {
-            right = right->_right;
-        }
-        return iterator(right);
-    }
-    reverse_iterator rend() {
-        return iterator(nullptr);
-    }
+        node* cur = _node;
+        node* parent = cur->_parent;
 
-    const_iterator cbegin() {}
-    const_iterator cend() {}
-    const_reverse_iterator crbegin() {}
-    const_reverse_iterator crend() {}
-};
-```
-
-当然我们的实现比较粗暴，和库中实现的方式略有不同。库中是将根节点带个头节点，头节点的左孩子指向整个树的最左节点，右孩子指向整个树的最右节点；
-
-<img src="12-map&set.assets/MapSet迭代器beginend位置实现图示.png" style="zoom:40%;" />
-
-#### ++&––
-
-对于搜索树来说，向后遍历必然走的是中序遍历。一个迭代器向后`++`，那就是访问中序的下一个位置。
-
-> 那下一个位置，具体是哪个位置呢？
-
-- 如果当前节点的右子树不为空，下一个位置就是当前节点的**右子树的最左节点**。
-- 如果当前节点的右子树为空，说明这个结点的父节点所在子树已遍历完了，下一个位置就是**沿路经向上遍历，找到某个节点，满足其左孩子是正遍历的所在结点。**
-
-> 这个点用语言描述不清楚，看代码即可。
-
-```cpp
-template <class T, class Ref, class Ptr> 
-struct RBTIterator
-{
-    //...
-    Self& operator++()
-    {
-        if (_node->_right) // 访问右子树的最左节点
+        while (parent && parent->_right == cur)
         {
-            Node* min = _node->_right;
-
-            while (min->_left) {
-                min = min->_right;
-            }
-            _node = min;
+            cur = parent;
+            parent = cur->_parent;
         }
-        else
-        {
-            Node* curr = _node;
-            Node* parent = curr->_parent;
-
-            while (parent && curr == parent->_right) // 找到cur非其右孩子的父亲
-            {
-                curr = curr->_parent;
-                parent = parent->_parent;
-            }
-            _node = parent;
-        }
-        return *this;
+        _node = parent;
     }
-    Self& operator--()
-    {
-        /* 左子树不为空，访问左子树的最右节点 */
-        if (_node->_left)
-        {
-            Node* max = _node->_left;
-
-            while (max->_right) {
-                max = max->_right;
-            }
-            _node = max;
-        }
-        /* 左子树为空，找到cur非其左孩子的父节点 */
-        else
-        {
-            Node* curr = _node;
-            Node* parent = _node->_parent;
-
-            while (parent && parent->_left == curr)
-            {
-                curr = curr->_parent;
-                parent = parent->_parent;
-            }
-
-            _node = parent;
-        }
-
-        return *this;
-    }
-};
-```
-
-<img src="12-map&set.assets/MapSet迭代器遍历逻辑实现图示.png" style="zoom:50%;" />
-
-<img src="12-map&set.assets/MapSet迭代器自增逻辑动图示例.gif" style="zoom:40%;" />
-
-### 拷贝构造析构
-
-```cpp
-RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t) {
-    swap(_root, t._root);
     return *this;
 }
 
-RBTree(const RBTree<K, T, KeyOfT>& t) {
-    _root = Copy(t._root);
-}
-Node* Copy(Node* root, Node* parent = nullptr)
+self& operator--()
 {
-    if (root == nullptr)
-        return nullptr;
+    if (!_node) assert(false); // can't do that
 
-    Node* new_node = new Node(root->_data);
-    new_node->_col = root->_col;
-    new_node->_parent = parent; // 链接父节点
+    if (_node->_left)
+    {
+        node* right = _node->_left;
+        while (right->_right)
+        {
+            right = right->_right;
+        }
+        _node = right;
+    }
+    else
+    {
+        node* cur = _node;
+        node* parent = cur->_parent;
 
-    new_node->_left = Copy(root->_left, new_node);
-    new_node->_right = Copy(root->_right, new_node);
-
-    return new_node;
+        while (parent && parent->_left == cur)
+        {
+            cur = parent;
+            parent = cur->_parent;
+        }
+        _node = parent;
+    }
+    return *this;
 }
+```
 
-~RBTree() {
-    Destroy(_root);
-}
-void Destroy(Node* root)
+<img src="12-map&set.assets/MapSet迭代器自增逻辑动图示例.gif" style="zoom:30%;" />
+
+
+## 3.3 set
+
+```cpp
+template<class K, class Compare = less<K>>
+class set
 {
-    if (root == nullptr)
-        return;
+private:
+    struct KeyOfVal {
+        const K& operator()(const K& key) { return key; }
+    };
 
-    Destroy(root->_left);
-    Destroy(root->_right);
+public:
+    typedef rb_tree<K, K, KeyOfVal, Compare> rep_type;
+    typedef typename rep_type::const_iterator iterator; // use const iter
+    typedef typename rep_type::const_iterator const_iterator;
 
-    delete root;
-}
+public:
+    pair<iterator, bool> insert(const K& key) { return _t.insert(key); }
+    iterator find(const K& key) { return _t.find(key); }
+    void inorder() { _t.inorder(); }
+
+public:
+    iterator begin() { return _t.begin(); }
+    iterator end() { return _t.end(); }
+
+private:
+    rb_tree<K, K, KeyOfVal, Compare> _t;
+};
+```
+
+## 3.4 map
+
+```cpp
+template<class K, class V, class Compare = less<K>>
+class map
+{
+private:
+    struct KeyOfVal {
+        const K& operator()(const pair<const K, V>& kv) { return kv.first; }
+    };
+
+public:
+    typedef rb_tree<K, pair<const K, V>, KeyOfVal, Compare> rep_type;
+    typedef typename rep_type::iterator iterator;
+    typedef typename rep_type::const_iterator const_iterator;
+
+public:
+    iterator find(const K& key) { return _t.find(key); }
+    pair<iterator, bool> insert(const pair<const K, V>& kv) { return _t.insert(kv); }
+    V& operator[](const K& key) { return _t.insert(make_pair(key, V())).first->second; }
+    void inorder() { _t.inorder(); }
+
+    iterator begin() { return _t.begin(); }
+    iterator end() { return _t.end(); }
+
+private:
+    rep_type _t;
+};
 ```

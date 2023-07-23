@@ -365,7 +365,7 @@ int main()
 我们使用`cpp-httplib`来将编译服务模块打包成网络服务，`cpp-httplib`要求`gcc/g++`版本必须高于`7`。我们使用`scl`工具集安装：
 
 ```shell
-$ sudo yum install centos-release-scl scl-utils-build       # 安装scl yum源
+$ sudo yum install centos-release-scl scl-utils-build -y    # 安装scl yum源
 $ sudo yum install -y devtoolset-9-gcc devtoolset-9-gcc-c++ # 安装scl gcc版本工具集
 $ ls /opt/rh/                                               # 查看安装工具集
 $ scl enable devtoolset-9 bash                              # 启动工具集
